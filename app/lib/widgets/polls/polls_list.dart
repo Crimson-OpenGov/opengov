@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opengov_app/widgets/polls/poll_details.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/models/poll.dart';
 
@@ -21,6 +22,7 @@ class _PollsListState extends State<PollsList> {
   Future<void> _fetchPolls() async {
     const response = ListPollsResponse(polls: [
       Poll(
+          id: 0,
           topic: 'Shopping week',
           description: 'What should the UC advocate for for shopping week?'),
     ]);
@@ -41,6 +43,12 @@ class _PollsListState extends State<PollsList> {
                     ListTile(
                       leading: const Icon(Icons.poll),
                       title: Text(poll.topic),
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => PollDetails(poll: poll)));
+                      },
                     ),
                 ],
               ),

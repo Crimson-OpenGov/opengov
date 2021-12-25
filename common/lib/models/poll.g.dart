@@ -7,11 +7,13 @@ part of 'poll.dart';
 // **************************************************************************
 
 Poll _$PollFromJson(Map<String, dynamic> json) => Poll(
+      id: json['id'] as int,
       topic: json['topic'] as String,
       description: json['description'] as String,
     );
 
 Map<String, dynamic> _$PollToJson(Poll instance) => <String, dynamic>{
+      'id': instance.id,
       'topic': instance.topic,
       'description': instance.description,
     };

@@ -5,10 +5,12 @@ part 'poll.g.dart';
 
 @JsonSerializable()
 class Poll {
+  final int id;
   final String topic;
   final String description;
 
-  const Poll({required this.topic, required this.description});
+  const Poll(
+      {required this.id, required this.topic, required this.description});
 
   factory Poll.fromJson(Json json) => _$PollFromJson(json);
 
