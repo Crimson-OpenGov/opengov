@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opengov_app/widgets/polls/polls_list.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,7 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SizedBox(),
+      home: const PollsList(),
     );
   }
 }
