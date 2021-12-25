@@ -13,6 +13,7 @@ class CommentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(comment.comment),
           const SizedBox(height: 8),

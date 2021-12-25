@@ -1,8 +1,10 @@
 import 'dart:convert';
 
+import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/poll_details.dart';
 import 'package:opengov_common/models/comment.dart';
+import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -36,6 +38,20 @@ class PollService {
 
     return Response.ok(
         json.encode(PollDetailsResponse(comments: commentsResponse)));
+  }
+
+  @Route.post('/add-comment')
+  Future<Response> addComment(Request request) async {
+    final addCommentRequest =
+        AddCommentRequest.fromJson(json.decode(await request.readAsString()));
+
+    final dbResponse = await _database.insert('Comment', {
+      'poll_id': addCommentRequest.pollId,
+      'user_id': 1,
+      'comment': addCommentRequest.comment,
+    });
+
+    return Response.ok(json.encode(GenericResponse(success: dbResponse != 0)));
   }
 
   Router get router => _$PollServiceRouter(this);

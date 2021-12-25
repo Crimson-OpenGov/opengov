@@ -57,7 +57,7 @@ class _PollDetailsState extends State<PollDetails> {
                     const SizedBox(height: 16),
                     CommentStack(comments: _comments!),
                     const SizedBox(height: 16),
-                    const AddComment(),
+                    AddComment(poll: widget.poll),
                   ],
                 ),
               ),
