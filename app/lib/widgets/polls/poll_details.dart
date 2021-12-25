@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opengov_app/widgets/polls/add_comment.dart';
 import 'package:opengov_app/widgets/polls/comment_stack.dart';
 import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/actions/poll_details.dart';
@@ -78,6 +79,8 @@ class _PollDetailsState extends State<PollDetails> {
                     ),
                     const SizedBox(height: 16),
                     CommentStack(comments: _comments!),
+                    const SizedBox(height: 16),
+                    const AddComment(),
                   ],
                 ),
               ),
