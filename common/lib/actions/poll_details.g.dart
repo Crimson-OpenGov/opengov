@@ -6,16 +6,6 @@ part of 'poll_details.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PollDetailsRequest _$PollDetailsRequestFromJson(Map<String, dynamic> json) =>
-    PollDetailsRequest(
-      pollId: json['pollId'] as int,
-    );
-
-Map<String, dynamic> _$PollDetailsRequestToJson(PollDetailsRequest instance) =>
-    <String, dynamic>{
-      'pollId': instance.pollId,
-    };
-
 PollDetailsResponse _$PollDetailsResponseFromJson(Map<String, dynamic> json) =>
     PollDetailsResponse(
       comments: (json['comments'] as List<dynamic>)

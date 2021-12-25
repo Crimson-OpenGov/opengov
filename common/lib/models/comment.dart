@@ -6,7 +6,11 @@ part 'comment.g.dart';
 @JsonSerializable()
 class Comment {
   final int id;
+
+  @JsonKey(name: 'poll_id')
   final int pollId;
+
+  @JsonKey(name: 'user_id')
   final int userId;
   final String comment;
 
