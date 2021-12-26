@@ -25,7 +25,7 @@ void main(List<String> args) async {
             'username STRING, code STRING)');
         await db.execute(
             'CREATE TABLE User (id INTEGER PRIMARY KEY, username STRING, '
-            'admin BOOLEAN DEFAULT FALSE)');
+            'is_admin BOOLEAN DEFAULT FALSE)');
       },
     ),
   );

@@ -13,3 +13,28 @@ class LoginRequest {
 
   Json toJson() => _$LoginRequestToJson(this);
 }
+
+@JsonSerializable()
+class VerificationRequest {
+  final String username;
+  final String code;
+
+  const VerificationRequest({required this.username, required this.code});
+
+  factory VerificationRequest.fromJson(Json json) =>
+      _$VerificationRequestFromJson(json);
+
+  Json toJson() => _$VerificationRequestToJson(this);
+}
+
+@JsonSerializable()
+class VerificationResponse {
+  final String? token;
+
+  const VerificationResponse({required this.token});
+
+  factory VerificationResponse.fromJson(Json json) =>
+      _$VerificationResponseFromJson(json);
+
+  Json toJson() => _$VerificationResponseToJson(this);
+}

@@ -14,12 +14,14 @@ class _LoginViewState extends State<LoginView> {
   final _textController = TextEditingController();
 
   Future<void> _onButtonPressed() async {
-    final response =
-        await HttpService.login(LoginRequest(username: _textController.text));
+    final username = _textController.text;
+    final response = await HttpService.login(LoginRequest(username: username));
 
     if (response?.success ?? false) {
       Navigator.push(
-          context, MaterialPageRoute(builder: (_) => const VerificationView()));
+          context,
+          MaterialPageRoute(
+              builder: (_) => VerificationView(username: username)));
     }
   }
 

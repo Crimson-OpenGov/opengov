@@ -52,4 +52,13 @@ class HttpService {
         ? null
         : GenericResponse.fromJson(responseObject);
   }
+
+  static Future<VerificationResponse?> verify(
+      VerificationRequest request) async {
+    final responseObject =
+        json.decode(await _post('auth/verify', request.toJson()));
+    return responseObject == null
+        ? null
+        : VerificationResponse.fromJson(responseObject);
+  }
 }

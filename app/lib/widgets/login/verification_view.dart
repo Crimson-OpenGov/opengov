@@ -1,14 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/polls/polls_list.dart';
+import 'package:opengov_common/actions/login.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VerificationView extends StatefulWidget {
-  const VerificationView();
+  final String username;
+
+  const VerificationView({required this.username});
 
   @override
   _VerificationViewState createState() => _VerificationViewState();
 }
 
 class _VerificationViewState extends State<VerificationView> {
+  final _textController = TextEditingController();
+
+  Future<void> _onButtonPressed() async {
+    final username = widget.username;
+    final response = await HttpService.verify(VerificationRequest(
+        username: username, code: _textController.text));
+    final token = response?.token;
+
+    if (token != null) {
+      final sharedPreferences = await SharedPreferences.getInstance();
+      sharedPreferences.setString('username', username);
+      sharedPreferences.setString('token', token);
+
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (_) => const PollsList()),
+        (_) => false,
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         body: Center(
@@ -30,8 +56,9 @@ class _VerificationViewState extends State<VerificationView> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  const TextField(
-                    decoration: InputDecoration(
+                  TextField(
+                    controller: _textController,
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                     ),
                     keyboardType: TextInputType.number,
@@ -39,13 +66,7 @@ class _VerificationViewState extends State<VerificationView> {
                   ),
                   const SizedBox(height: 8),
                   OutlinedButton(
-                    onPressed: () {
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (_) => const PollsList()),
-                        (_) => false,
-                      );
-                    },
+                    onPressed: _onButtonPressed,
                     child: const Text('Verify'),
                   ),
                 ],
@@ -54,4 +75,10 @@ class _VerificationViewState extends State<VerificationView> {
           ),
         ),
       );
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 }
