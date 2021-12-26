@@ -1,8 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/login/verification_view.dart';
+import 'package:opengov_common/actions/login.dart';
 
-class LoginView extends StatelessWidget {
+class LoginView extends StatefulWidget {
   const LoginView();
+
+  @override
+  State<StatefulWidget> createState() => _LoginViewState();
+}
+
+class _LoginViewState extends State<LoginView> {
+  final _textController = TextEditingController();
+
+  Future<void> _onButtonPressed() async {
+    final response =
+        await HttpService.login(LoginRequest(username: _textController.text));
+
+    if (response?.success ?? false) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (_) => const VerificationView()));
+    }
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -29,8 +48,9 @@ class LoginView extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
-                  const TextField(
-                    decoration: InputDecoration(
+                  TextField(
+                    controller: _textController,
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       suffixText: '@college.harvard.edu',
                     ),
@@ -38,12 +58,7 @@ class LoginView extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   OutlinedButton(
-                    onPressed: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const VerificationView()));
-                    },
+                    onPressed: _onButtonPressed,
                     child: const Text('Log In'),
                   ),
                 ],
@@ -52,4 +67,10 @@ class LoginView extends StatelessWidget {
           ),
         ),
       );
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 }

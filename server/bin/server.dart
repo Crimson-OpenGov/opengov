@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:opengov_server/auth_service.dart';
 import 'package:opengov_server/poll_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -14,19 +15,25 @@ void main(List<String> args) async {
     options: OpenDatabaseOptions(
       version: 1,
       onCreate: (db, _) async {
-        await db.execute(
-            'CREATE TABLE Poll (id INTEGER PRIMARY KEY, topic TEXT, '
+        await db
+            .execute('CREATE TABLE Poll (id INTEGER PRIMARY KEY, topic TEXT, '
                 'description TEXT)');
         await db.execute(
             'CREATE TABLE Comment (id INTEGER PRIMARY KEY, poll_id INTEGER, '
-                'user_id INTEGER, comment TEXT)');
+            'user_id INTEGER, comment TEXT)');
+        await db.execute('CREATE TABLE PendingLogin (id INTEGER PRIMARY KEY, '
+            'username STRING, code STRING)');
+        await db.execute(
+            'CREATE TABLE User (id INTEGER PRIMARY KEY, username STRING, '
+            'admin BOOLEAN DEFAULT FALSE)');
       },
     ),
   );
 
-  final handler = const Pipeline()
-      .addMiddleware(logRequests())
-      .addHandler(Router()..mount('/api/poll', PollService(database).router));
+  final handler =
+      const Pipeline().addMiddleware(logRequests()).addHandler(Router()
+        ..mount('/api/poll', PollService(database).router)
+        ..mount('/api/auth', AuthService(database).router));
 
   final server = await serve(handler, 'localhost', 8017);
 
