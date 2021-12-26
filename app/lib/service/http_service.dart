@@ -15,50 +15,30 @@ class HttpService {
   static Uri _uri(String path) =>
       Uri(scheme: 'http', host: 'localhost', port: 8017, path: 'api/$path');
 
-  static Future<String> _get(String path) async {
-    return (await _client.get(_uri(path))).body;
+  static Future<T?> _get<T>(String path, FromJson<T> fromJson) async {
+    final responseObject = json.decode((await _client.get(_uri(path))).body);
+    return responseObject == null ? null : fromJson(responseObject);
   }
 
-  static Future<String> _post(String path, Json body) async {
-    return (await _client.post(_uri(path), body: json.encode(body))).body;
+  static Future<T?> _post<T>(
+      String path, Json body, FromJson<T> fromJson) async {
+    final responseObject = json
+        .decode((await _client.post(_uri(path), body: json.encode(body))).body);
+    return responseObject == null ? null : fromJson(responseObject);
   }
 
-  static Future<ListPollsResponse?> listPolls() async {
-    final responseObject = json.decode(await _get('poll/list'));
-    return responseObject == null
-        ? null
-        : ListPollsResponse.fromJson(responseObject);
-  }
+  static Future<ListPollsResponse?> listPolls() =>
+      _get('poll/list', ListPollsResponse.fromJson);
 
-  static Future<PollDetailsResponse?> getPollDetails(Poll poll) async {
-    final responseObject = json.decode(await _get('poll/details/${poll.id}'));
-    return responseObject == null
-        ? null
-        : PollDetailsResponse.fromJson(responseObject);
-  }
+  static Future<PollDetailsResponse?> getPollDetails(Poll poll) =>
+      _get('poll/details/${poll.id}', PollDetailsResponse.fromJson);
 
-  static Future<GenericResponse?> addComment(AddCommentRequest request) async {
-    final responseObject =
-        json.decode(await _post('poll/add-comment', request.toJson()));
-    return responseObject == null
-        ? null
-        : GenericResponse.fromJson(responseObject);
-  }
+  static Future<GenericResponse?> addComment(AddCommentRequest request) =>
+      _post('poll/add-comment', request.toJson(), GenericResponse.fromJson);
 
-  static Future<GenericResponse?> login(LoginRequest request) async {
-    final responseObject =
-        json.decode(await _post('auth/login', request.toJson()));
-    return responseObject == null
-        ? null
-        : GenericResponse.fromJson(responseObject);
-  }
+  static Future<GenericResponse?> login(LoginRequest request) =>
+      _post('auth/login', request.toJson(), GenericResponse.fromJson);
 
-  static Future<VerificationResponse?> verify(
-      VerificationRequest request) async {
-    final responseObject =
-        json.decode(await _post('auth/verify', request.toJson()));
-    return responseObject == null
-        ? null
-        : VerificationResponse.fromJson(responseObject);
-  }
+  static Future<VerificationResponse?> verify(VerificationRequest request) =>
+      _post('auth/verify', request.toJson(), VerificationResponse.fromJson);
 }
