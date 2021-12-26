@@ -20,6 +20,10 @@ class PollService {
 
   @Route.get('/list')
   Future<Response> listPolls(Request request) async {
+    if (await request.decodeAuth(_database) == null) {
+      return Response.forbidden(null);
+    }
+
     final pollsResponse = (await _database.query('Poll'))
         .map(Poll.fromJson)
         .toList(growable: false);
@@ -29,6 +33,10 @@ class PollService {
 
   @Route.get('/details/<pollId>')
   Future<Response> getPollDetails(Request request) async {
+    if (await request.decodeAuth(_database) == null) {
+      return Response.forbidden(null);
+    }
+
     final pollId = int.parse(request.params['pollId']!);
 
     final commentsResponse = (await _database
@@ -42,12 +50,18 @@ class PollService {
 
   @Route.post('/add-comment')
   Future<Response> addComment(Request request) async {
+    final user = await request.decodeAuth(_database);
+
+    if (user == null) {
+      return Response.forbidden(null);
+    }
+
     final addCommentRequest =
         await request.readAsObject(AddCommentRequest.fromJson);
 
     final dbResponse = await _database.insert('Comment', {
       'poll_id': addCommentRequest.pollId,
-      'user_id': 1,
+      'user_id': user.id,
       'comment': addCommentRequest.comment,
     });
 

@@ -8,6 +8,8 @@ import 'package:opengov_common/actions/poll_details.dart';
 import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
+import 'package:opengov_common/models/token.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpService {
   static final _client = Client();
@@ -15,15 +17,26 @@ class HttpService {
   static Uri _uri(String path) =>
       Uri(scheme: 'http', host: 'localhost', port: 8017, path: 'api/$path');
 
+  static Future<Map<String, String>> get _headers async {
+    final sharedPreferences = await SharedPreferences.getInstance();
+    final token = sharedPreferences.getString('token');
+
+    return {
+      if (token != null) 'Authorization': 'Basic ${Token.fromString(token)}',
+    };
+  }
+
   static Future<T?> _get<T>(String path, FromJson<T> fromJson) async {
-    final responseObject = json.decode((await _client.get(_uri(path))).body);
+    final responseObject = json
+        .decode((await _client.get(_uri(path), headers: await _headers)).body);
     return responseObject == null ? null : fromJson(responseObject);
   }
 
   static Future<T?> _post<T>(
       String path, Json body, FromJson<T> fromJson) async {
-    final responseObject = json
-        .decode((await _client.post(_uri(path), body: json.encode(body))).body);
+    final responseObject = json.decode((await _client.post(_uri(path),
+            body: json.encode(body), headers: await _headers))
+        .body);
     return responseObject == null ? null : fromJson(responseObject);
   }
 

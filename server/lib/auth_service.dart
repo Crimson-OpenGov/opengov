@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:opengov_common/actions/login.dart';
 import 'package:opengov_common/models/generic_response.dart';
+import 'package:opengov_common/models/token.dart';
 import 'package:opengov_common/models/user.dart';
 import 'package:opengov_server/common.dart';
 import 'package:shelf/shelf.dart';
@@ -46,20 +47,20 @@ class AuthService {
       return Response.ok(json.encode(VerificationResponse(token: null)));
     }
 
-    User user;
+    final existingUser = await _database
+        .query('User', where: 'username = ?', whereArgs: [username]);
 
-    final existingUser = await _database.query('User',
-        where: 'username = ?', whereArgs: [username]);
+    if (existingUser.isEmpty) {
+      final userId = await _database.insert('User', {'username': username});
 
-    if (existingUser.isNotEmpty) {
-      user = User.fromJson(existingUser.first);
-    } else {
-      final userId = await _database
-          .insert('User', {'username': username});
-      user = User(id: userId, username: username);
+      if (userId <= 0) {
+        return Response.internalServerError();
+      }
     }
 
-    return Response.ok(json.encode(VerificationResponse(token: user.username)));
+    final token = Token.generate(username, secretKey);
+    return Response.ok(
+        json.encode(VerificationResponse(token: token.toString())));
   }
 
   String _generateCode() => List.generate(4, (_) => _random.nextInt(10)).join();
