@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:opengov_common/actions/login.dart';
 import 'package:opengov_common/models/generic_response.dart';
+import 'package:opengov_server/common.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:sqflite_common/sqlite_api.dart';
@@ -18,8 +19,7 @@ class AuthService {
 
   @Route.post('/login')
   Future<Response> login(Request request) async {
-    final loginRequest =
-        LoginRequest.fromJson(json.decode(await request.readAsString()));
+    final loginRequest = await request.readAsObject(LoginRequest.fromJson);
 
     // Delete any current pending logins.
     await _database.delete('PendingLogin',
