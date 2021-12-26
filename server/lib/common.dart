@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/token.dart';
@@ -6,7 +7,7 @@ import 'package:opengov_common/models/user.dart';
 import 'package:shelf/shelf.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 
-const secretKey = String.fromEnvironment('secretKey');
+final secretKey = Platform.environment['secretKey']!;
 
 extension RequestExtension on Request {
   Future<T> readAsObject<T>(FromJson<T> fromJson) async =>

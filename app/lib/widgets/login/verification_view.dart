@@ -26,8 +26,6 @@ class _VerificationViewState extends State<VerificationView> {
       final sharedPreferences = await SharedPreferences.getInstance();
       sharedPreferences.setString('username', username);
       sharedPreferences.setString('token', token);
-      print(username);
-      print(token);
 
       Navigator.pushAndRemoveUntil(
         context,
