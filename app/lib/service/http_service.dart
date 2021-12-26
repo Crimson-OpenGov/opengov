@@ -5,6 +5,7 @@ import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/login.dart';
 import 'package:opengov_common/actions/poll_details.dart';
+import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
@@ -48,6 +49,9 @@ class HttpService {
 
   static Future<GenericResponse?> addComment(AddCommentRequest request) =>
       _post('poll/add-comment', request.toJson(), GenericResponse.fromJson);
+
+  static Future<GenericResponse?> vote(VoteRequest request) =>
+      _post('poll/vote', request.toJson(), GenericResponse.fromJson);
 
   static Future<GenericResponse?> login(LoginRequest request) =>
       _post('auth/login', request.toJson(), GenericResponse.fromJson);

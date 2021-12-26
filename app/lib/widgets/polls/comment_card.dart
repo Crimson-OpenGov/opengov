@@ -3,6 +3,16 @@ import 'package:opengov_common/models/comment.dart';
 
 enum CommentAction { agree, disagree, pass }
 
+extension CommentActionScore on CommentAction {
+  static const _scoreMap = {
+    CommentAction.agree: 1,
+    CommentAction.disagree: -1,
+    CommentAction.pass: 0,
+  };
+
+  int get score => _scoreMap[this]!;
+}
+
 typedef ActionPressed = void Function(CommentAction action);
 
 class CommentCard extends StatelessWidget {
@@ -12,7 +22,8 @@ class CommentCard extends StatelessWidget {
   const CommentCard({required this.comment, required this.onActionPressed});
 
   @override
-  Widget build(BuildContext context) => Column(
+  Widget build(BuildContext context) =>
+      Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(comment.comment),

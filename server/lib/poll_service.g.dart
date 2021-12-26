@@ -11,5 +11,6 @@ Router _$PollServiceRouter(PollService service) {
   router.add('GET', r'/list', service.listPolls);
   router.add('GET', r'/details/<pollId>', service.getPollDetails);
   router.add('POST', r'/add-comment', service.addComment);
+  router.add('POST', r'/vote', service.vote);
   return router;
 }

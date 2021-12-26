@@ -26,6 +26,9 @@ void main(List<String> args) async {
         await db.execute(
             'CREATE TABLE User (id INTEGER PRIMARY KEY, username STRING, '
             'is_admin BOOLEAN DEFAULT FALSE)');
+        await db.execute(
+            'CREATE TABLE Vote (id INTEGER PRIMARY KEY, user_id INTEGER, '
+            'comment_id INTEGER, score INTEGER)');
       },
     ),
   );

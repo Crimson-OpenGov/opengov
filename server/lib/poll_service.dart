@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/poll_details.dart';
+import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
@@ -63,6 +64,25 @@ class PollService {
       'poll_id': addCommentRequest.pollId,
       'user_id': user.id,
       'comment': addCommentRequest.comment,
+    });
+
+    return Response.ok(json.encode(GenericResponse(success: dbResponse != 0)));
+  }
+
+  @Route.post('/vote')
+  Future<Response> vote(Request request) async {
+    final user = await request.decodeAuth(_database);
+
+    if (user == null) {
+      return Response.forbidden(null);
+    }
+
+    final voteRequest = await request.readAsObject(VoteRequest.fromJson);
+
+    final dbResponse = await _database.insert('Vote', {
+      'user_id': user.id,
+      'comment_id': voteRequest.commentId,
+      'score': voteRequest.score
     });
 
     return Response.ok(json.encode(GenericResponse(success: dbResponse != 0)));

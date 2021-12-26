@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/polls/comment_card.dart';
+import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
 
 class CommentStack extends StatefulWidget {
@@ -12,12 +14,19 @@ class CommentStack extends StatefulWidget {
 }
 
 class _CommentStackState extends State<CommentStack> {
-  var index = 0;
+  var _index = 0;
 
-  void _onActionPressed(CommentAction action) {
-    setState(() {
-      index++;
-    });
+  Comment get _comment => widget.comments[_index];
+
+  Future<void> _onActionPressed(CommentAction action) async {
+    final response = await HttpService.vote(
+        VoteRequest(commentId: _comment.id, score: action.score));
+
+    if (response?.success ?? false) {
+      setState(() {
+        _index++;
+      });
+    }
   }
 
   @override
@@ -28,10 +37,10 @@ class _CommentStackState extends State<CommentStack> {
         ),
         child: Padding(
           padding: const EdgeInsets.all(8),
-          child: index >= widget.comments.length
+          child: _index >= widget.comments.length
               ? const Text('No more comments.')
               : CommentCard(
-                  comment: widget.comments[index],
+                  comment: _comment,
                   onActionPressed: _onActionPressed,
                 ),
         ),
