@@ -7,6 +7,7 @@ import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
+import 'package:opengov_common/models/vote.dart';
 import 'package:opengov_server/common.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
@@ -34,15 +35,26 @@ class PollService {
 
   @Route.get('/details/<pollId>')
   Future<Response> getPollDetails(Request request) async {
-    if (await request.decodeAuth(_database) == null) {
+    final user = await request.decodeAuth(_database);
+
+    if (user == null) {
       return Response.forbidden(null);
     }
 
     final pollId = int.parse(request.params['pollId']!);
 
+    // Fetch all of the comments that the user voted on.
+    final votedCommentIds = (await _database
+            .query('Vote', where: 'user_id = ?', whereArgs: [user.id]))
+        .map(Vote.fromJson)
+        .map((vote) => vote.commentId)
+        .toSet();
+
+    // Fetch all comments that the user hasn't voted on yet.
     final commentsResponse = (await _database
             .query('Comment', where: 'poll_id = ?', whereArgs: [pollId]))
         .map(Comment.fromJson)
+        .where((comment) => !votedCommentIds.contains(comment.id))
         .toList(growable: false);
 
     return Response.ok(
