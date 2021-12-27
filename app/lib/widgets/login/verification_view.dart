@@ -18,8 +18,8 @@ class _VerificationViewState extends State<VerificationView> {
 
   Future<void> _onButtonPressed() async {
     final username = widget.username;
-    final response = await HttpService.verify(VerificationRequest(
-        username: username, code: _textController.text));
+    final response = await HttpService.verify(
+        VerificationRequest(username: username, code: _textController.text));
     final token = response?.token;
 
     if (token != null) {
@@ -31,6 +31,24 @@ class _VerificationViewState extends State<VerificationView> {
         context,
         MaterialPageRoute(builder: (_) => const PollsList()),
         (_) => false,
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text(
+              'An error occurred during verification. Please ensure that you '
+              'entered the correct code.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        ),
       );
     }
   }

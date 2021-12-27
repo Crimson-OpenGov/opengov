@@ -13,6 +13,15 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final _textController = TextEditingController();
 
+  @override
+  void initState() {
+    super.initState();
+
+    _textController.addListener(() {
+      setState(() {});
+    });
+  }
+
   Future<void> _onButtonPressed() async {
     final username = _textController.text;
     final response = await HttpService.login(LoginRequest(username: username));
@@ -60,7 +69,9 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 8),
                   OutlinedButton(
-                    onPressed: _onButtonPressed,
+                    onPressed: _textController.text.isNotEmpty
+                        ? _onButtonPressed
+                        : null,
                     child: const Text('Log In'),
                   ),
                 ],
