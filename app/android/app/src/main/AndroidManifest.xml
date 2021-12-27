@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.nrubintech.app">
+    package="com.nrubintech.opengov">
    <application
         android:label="app"
         android:name="${applicationName}"

@@ -1,4 +1,4 @@
-package com.nrubintech.app
+package com.nrubintech.opengov
 
 import io.flutter.embedding.android.FlutterActivity
 

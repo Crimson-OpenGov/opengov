@@ -16,7 +16,7 @@ class HttpService {
   static final _client = Client();
 
   static Uri _uri(String path) =>
-      Uri(scheme: 'http', host: 'localhost', port: 8017, path: 'api/$path');
+      Uri(scheme: 'http', host: '192.168.2.198', port: 8017, path: 'api/$path');
 
   static Future<Map<String, String>> get _headers async {
     final sharedPreferences = await SharedPreferences.getInstance();

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:opengov_server/auth_service.dart';
+import 'package:opengov_server/firebase.dart';
 import 'package:opengov_server/poll_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -33,12 +34,16 @@ void main(List<String> args) async {
     ),
   );
 
+  await Firebase.setup();
+
   final handler =
       const Pipeline().addMiddleware(logRequests()).addHandler(Router()
         ..mount('/api/poll', PollService(database).router)
         ..mount('/api/auth', AuthService(database).router));
 
-  final server = await serve(handler, 'localhost', 8017);
+  final server = await serve(handler, '192.168.2.198', 8017);
 
   print('Serving at http://${server.address.host}:${server.port}');
+
+  Firebase.sendNotification();
 }

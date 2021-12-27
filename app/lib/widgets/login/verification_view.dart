@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/polls/polls_list.dart';
@@ -27,11 +30,15 @@ class _VerificationViewState extends State<VerificationView> {
       sharedPreferences.setString('username', username);
       sharedPreferences.setString('token', token);
 
-      Navigator.pushAndRemoveUntil(
+      unawaited(Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const PollsList()),
         (_) => false,
-      );
+      ));
+
+      FirebaseMessaging.instance
+        ..requestPermission()
+        ..subscribeToTopic('general');
     } else {
       showDialog(
         context: context,

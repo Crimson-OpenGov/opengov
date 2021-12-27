@@ -13,3 +13,6 @@ build/
 
 # Database
 db.sqlite3
+
+# Firebase
+sa.json
