@@ -53,8 +53,8 @@ class _PollsListState extends State<PollsList> {
   Widget _listHeader(String title) => ListTile(
         title: Text(title),
         visualDensity: VisualDensity.compact,
-        tileColor: Theme.of(context).primaryColor,
-        textColor: Theme.of(context).colorScheme.onPrimary,
+        textColor: Theme.of(context).primaryColor,
+        tileColor: Colors.grey.shade300,
       );
 
   Widget _pollListTile(Poll poll) {

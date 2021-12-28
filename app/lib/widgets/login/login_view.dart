@@ -36,6 +36,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(8),
@@ -43,6 +44,7 @@ class _LoginViewState extends State<LoginView> {
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
                 borderRadius: BorderRadius.circular(5),
+                color: Theme.of(context).colorScheme.onBackground,
               ),
               padding: const EdgeInsets.all(16),
               child: Column(
