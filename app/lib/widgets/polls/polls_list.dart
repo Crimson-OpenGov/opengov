@@ -40,6 +40,7 @@ class _PollsListState extends State<PollsList> {
                     ListTile(
                       leading: const Icon(Icons.poll),
                       title: Text(poll.topic),
+                      subtitle: Text('Ends in ${poll.endFormatted}.'),
                       onTap: () {
                         Navigator.push(
                             context,

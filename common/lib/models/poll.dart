@@ -1,3 +1,4 @@
+import 'package:duration/duration.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:opengov_common/common.dart';
 
@@ -9,10 +10,25 @@ class Poll {
   final String topic;
   final String description;
 
-  const Poll(
-      {required this.id, required this.topic, required this.description});
+  @JsonKey(fromJson: fromMillisecondsSinceEpoch, toJson: dateTimeToJson)
+  final DateTime end;
+
+  const Poll({
+    required this.id,
+    required this.topic,
+    required this.description,
+    required this.end,
+  });
 
   factory Poll.fromJson(Json json) => _$PollFromJson(json);
 
   Json toJson() => _$PollToJson(this);
+
+  String get endFormatted => prettyDuration(
+        end.difference(DateTime.now()),
+        tersity: DurationTersity.minute,
+        spacer: '',
+        conjunction: ', and ',
+        abbreviated: true,
+      );
 }
