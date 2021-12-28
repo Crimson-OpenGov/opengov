@@ -16,3 +16,6 @@ db.sqlite3
 
 # Firebase
 sa.json
+
+# Curse words
+curse_words.txt

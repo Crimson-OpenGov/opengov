@@ -38,6 +38,24 @@ class _AddCommentState extends State<AddComment> {
         _textController.clear();
         _addedComment = true;
       });
+    } else {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Error'),
+          content: const Text(
+              "An error occurred while posting your comment. Please ensure "
+              "that your comment doesn't contain any swear words."),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('Close'),
+            ),
+          ],
+        ),
+      );
     }
   }
 

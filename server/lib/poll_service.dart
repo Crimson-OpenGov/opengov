@@ -9,6 +9,7 @@ import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/vote.dart';
 import 'package:opengov_server/common.dart';
+import 'package:opengov_server/util/curse_words.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:sqflite_common/sqlite_api.dart';
@@ -71,6 +72,10 @@ class PollService {
 
     final addCommentRequest =
         await request.readAsObject(AddCommentRequest.fromJson);
+
+    if (CurseWords.isBadString(addCommentRequest.comment)) {
+      return Response.ok(json.encode(GenericResponse(success: false)));
+    }
 
     final dbResponse = await _database.insert('Comment', {
       'poll_id': addCommentRequest.pollId,

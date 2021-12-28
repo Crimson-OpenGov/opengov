@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:opengov_server/auth_service.dart';
-import 'package:opengov_server/firebase.dart';
+import 'package:opengov_server/util/curse_words.dart';
+import 'package:opengov_server/util/firebase.dart';
 import 'package:opengov_server/poll_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
@@ -34,6 +35,7 @@ void main(List<String> args) async {
     ),
   );
 
+  await CurseWords.setup();
   await Firebase.setup();
 
   final handler =
