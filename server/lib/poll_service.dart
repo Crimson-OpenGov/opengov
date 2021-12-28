@@ -6,6 +6,7 @@ import 'package:opengov_common/actions/poll_details.dart';
 import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
+import 'package:opengov_common/models/report.dart';
 import 'package:opengov_common/models/vote.dart';
 import 'package:opengov_server/common.dart';
 import 'package:opengov_server/util/curse_words.dart';
@@ -59,6 +60,37 @@ class PollService {
 
     return Response.ok(
         json.encode(PollDetailsResponse(comments: commentsResponse)));
+  }
+
+  @Route.get('/report/<pollId>')
+  Future<Response> getReport(Request request) async {
+    final user = await request.decodeAuth(_database);
+
+    if (user == null) {
+      return Response.forbidden(null);
+    }
+
+    final pollId = int.parse(request.params['pollId']!);
+
+    final commentsResponse = (await _database
+            .query('Comment', where: 'poll_id = ?', whereArgs: [pollId]))
+        .map(Comment.fromJson);
+
+    final comments = <ReportComment>[];
+    for (final comment in commentsResponse) {
+      final votesResponse = (await _database
+              .query('Vote', where: 'comment_id = ?', whereArgs: [comment.id]))
+          .map(Vote.fromJson);
+
+      comments.add(ReportComment(
+        comment: comment.comment,
+        agreeCount: votesResponse.where((vote) => vote.score == 1).length,
+        disagreeCount: votesResponse.where((vote) => vote.score == -1).length,
+        passCount: votesResponse.where((vote) => vote.score == 0).length,
+      ));
+    }
+
+    return Response.ok(json.encode(Report(comments: comments)));
   }
 
   @Route.post('/add-comment')

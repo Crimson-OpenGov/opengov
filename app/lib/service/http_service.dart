@@ -10,6 +10,7 @@ import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
+import 'package:opengov_common/models/report.dart';
 import 'package:opengov_common/models/token.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -57,6 +58,9 @@ class HttpService {
 
   static Future<PollDetailsResponse?> getPollDetails(Poll poll) =>
       _get('poll/details/${poll.id}', PollDetailsResponse.fromJson);
+
+  static Future<Report?> getReport(Poll poll) =>
+      _get('poll/report/${poll.id}', Report.fromJson);
 
   static Future<GenericResponse?> addComment(AddCommentRequest request) =>
       _post('poll/add-comment', request.toJson(), GenericResponse.fromJson);

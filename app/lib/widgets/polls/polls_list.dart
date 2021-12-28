@@ -5,6 +5,7 @@ import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/login/login_view.dart';
 import 'package:opengov_app/widgets/polls/poll_details.dart';
+import 'package:opengov_app/widgets/polls/poll_report.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -66,8 +67,12 @@ class _PollsListState extends State<PollsList> {
       title: Text(poll.topic),
       subtitle: Text('$subtitleLeading ${poll.endFormatted}$subtitleTrailing.'),
       onTap: () {
-        Navigator.push(context,
-            MaterialPageRoute(builder: (_) => PollDetails(poll: poll)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (_) => poll.isActive
+                    ? PollDetails(poll: poll)
+                    : PollReport(poll: poll)));
       },
     );
   }
