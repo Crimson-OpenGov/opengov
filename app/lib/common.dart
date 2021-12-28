@@ -16,3 +16,5 @@ Future<T?> showMessageDialog<T>(BuildContext context,
         ],
       ),
     );
+
+class AuthenticationException implements Exception {}

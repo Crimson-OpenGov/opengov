@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
+import 'package:opengov_app/common.dart';
 import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/login.dart';
@@ -28,16 +29,26 @@ class HttpService {
   }
 
   static Future<T?> _get<T>(String path, FromJson<T> fromJson) async {
-    final responseObject = json
-        .decode((await _client.get(_uri(path), headers: await _headers)).body);
+    final response = await _client.get(_uri(path), headers: await _headers);
+
+    if (response.statusCode == 403) {
+      throw AuthenticationException();
+    }
+
+    final responseObject = json.decode(response.body);
     return responseObject == null ? null : fromJson(responseObject);
   }
 
   static Future<T?> _post<T>(
       String path, Json body, FromJson<T> fromJson) async {
-    final responseObject = json.decode((await _client.post(_uri(path),
-            body: json.encode(body), headers: await _headers))
-        .body);
+    final response = await _client.post(_uri(path),
+        body: json.encode(body), headers: await _headers);
+
+    if (response.statusCode == 403) {
+      throw AuthenticationException();
+    }
+
+    final responseObject = json.decode(response.body);
     return responseObject == null ? null : fromJson(responseObject);
   }
 
