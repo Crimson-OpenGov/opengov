@@ -24,6 +24,8 @@ class Poll {
 
   Json toJson() => _$PollToJson(this);
 
+  bool get isActive => end.isAfter(DateTime.now());
+
   String get endFormatted => prettyDuration(
         end.difference(DateTime.now()),
         tersity: DurationTersity.minute,

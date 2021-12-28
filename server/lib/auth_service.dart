@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:opengov_common/actions/login.dart';
-import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/token.dart';
 import 'package:opengov_server/common.dart';
 import 'package:shelf/shelf.dart';
@@ -29,7 +28,7 @@ class AuthService {
     final success = await _database.insert('PendingLogin',
         {'username': loginRequest.username, 'code': _generateCode()});
 
-    return Response.ok(json.encode(GenericResponse(success: success > 0)));
+    return genericResponse(success: success > 0);
   }
 
   @Route.post('/verify')

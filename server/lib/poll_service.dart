@@ -5,7 +5,6 @@ import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/poll_details.dart';
 import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
-import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/vote.dart';
 import 'package:opengov_server/common.dart';
@@ -74,16 +73,30 @@ class PollService {
         await request.readAsObject(AddCommentRequest.fromJson);
 
     if (CurseWords.isBadString(addCommentRequest.comment)) {
-      return Response.ok(json.encode(GenericResponse(success: false)));
+      return genericResponse(success: false);
+    }
+
+    final pollsResponse = (await _database.query('Poll',
+            where: 'id = ?', whereArgs: [addCommentRequest.pollId]))
+        .map(Poll.fromJson);
+
+    if (pollsResponse.isEmpty) {
+      return genericResponse(success: false);
+    }
+
+    final poll = pollsResponse.first;
+
+    if (!poll.isActive) {
+      return genericResponse(success: false);
     }
 
     final dbResponse = await _database.insert('Comment', {
-      'poll_id': addCommentRequest.pollId,
+      'poll_id': poll.id,
       'user_id': user.id,
       'comment': addCommentRequest.comment,
     });
 
-    return Response.ok(json.encode(GenericResponse(success: dbResponse != 0)));
+    return genericResponse(success: dbResponse != 0);
   }
 
   @Route.post('/vote')
@@ -102,7 +115,7 @@ class PollService {
       'score': voteRequest.score
     });
 
-    return Response.ok(json.encode(GenericResponse(success: dbResponse != 0)));
+    return genericResponse(success: dbResponse != 0);
   }
 
   Router get router => _$PollServiceRouter(this);

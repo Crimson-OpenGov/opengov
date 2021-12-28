@@ -2,12 +2,16 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:opengov_common/common.dart';
+import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/token.dart';
 import 'package:opengov_common/models/user.dart';
 import 'package:shelf/shelf.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 
 final secretKey = Platform.environment['secretKey']!;
+
+Response genericResponse({required bool success}) =>
+    Response.ok(json.encode(GenericResponse(success: success)));
 
 extension RequestExtension on Request {
   Future<T> readAsObject<T>(FromJson<T> fromJson) async =>
