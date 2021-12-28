@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/models/poll.dart';
@@ -39,22 +40,11 @@ class _AddCommentState extends State<AddComment> {
         _addedComment = true;
       });
     } else {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Error'),
-          content: const Text(
-              "An error occurred while posting your comment. Please ensure "
-              "that your comment doesn't contain any swear words."),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        ),
+      showMessageDialog(
+        context,
+        body:
+            'An error occurred while posting your comment. Please ensure that '
+            "your comment doesn't contain any swear words.",
       );
     }
   }

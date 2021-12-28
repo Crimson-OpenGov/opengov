@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/polls/polls_list.dart';
 import 'package:opengov_common/actions/login.dart';
@@ -40,22 +41,10 @@ class _VerificationViewState extends State<VerificationView> {
         ..requestPermission()
         ..subscribeToTopic('general');
     } else {
-      showDialog(
-        context: context,
-        builder: (_) => AlertDialog(
-          title: const Text('Error'),
-          content: const Text(
-              'An error occurred during verification. Please ensure that you '
-              'entered the correct code.'),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Close'),
-            ),
-          ],
-        ),
+      showMessageDialog(
+        context,
+        body: 'An error occurred during verification. Please ensure that you '
+            'entered the correct code.',
       );
     }
   }
