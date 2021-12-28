@@ -6,7 +6,7 @@ part 'vote.g.dart';
 @JsonSerializable()
 class Vote {
   @JsonKey(name: 'user_id')
-  final int userId;
+  final int? userId;
 
   @JsonKey(name: 'comment_id')
   final int commentId;

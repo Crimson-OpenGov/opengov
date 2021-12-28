@@ -7,7 +7,7 @@ part of 'vote.dart';
 // **************************************************************************
 
 Vote _$VoteFromJson(Map<String, dynamic> json) => Vote(
-      userId: json['user_id'] as int,
+      userId: json['user_id'] as int?,
       commentId: json['comment_id'] as int,
       score: json['score'] as int,
     );

@@ -9,7 +9,7 @@ part of 'comment.dart';
 Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       id: json['id'] as int,
       pollId: json['poll_id'] as int,
-      userId: json['user_id'] as int,
+      userId: json['user_id'] as int?,
       comment: json['comment'] as String,
     );
 

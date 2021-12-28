@@ -11,7 +11,7 @@ class Comment {
   final int pollId;
 
   @JsonKey(name: 'user_id')
-  final int userId;
+  final int? userId;
   final String comment;
 
   const Comment(
