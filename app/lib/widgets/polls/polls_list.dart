@@ -85,17 +85,20 @@ class _PollsListState extends State<PollsList> {
         ),
         body: _activePolls == null || _inactivePolls == null
             ? const Center(child: CircularProgressIndicator())
-            : ListView(
-                children: [
-                  if (_activePolls!.isNotEmpty) ...[
-                    _listHeader('Active'),
-                    for (final poll in _activePolls!) _pollListTile(poll),
+            : RefreshIndicator(
+                onRefresh: _fetchPolls,
+                child: ListView(
+                  children: [
+                    if (_activePolls!.isNotEmpty) ...[
+                      _listHeader('Active'),
+                      for (final poll in _activePolls!) _pollListTile(poll),
+                    ],
+                    if (_inactivePolls!.isNotEmpty) ...[
+                      _listHeader('Inactive'),
+                      for (final poll in _inactivePolls!) _pollListTile(poll),
+                    ],
                   ],
-                  if (_inactivePolls!.isNotEmpty) ...[
-                    _listHeader('Inactive'),
-                    for (final poll in _inactivePolls!) _pollListTile(poll),
-                  ],
-                ],
+                ),
               ),
       );
 }
