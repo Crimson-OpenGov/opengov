@@ -53,6 +53,7 @@ class _PollReportState extends State<PollReport> {
                       widget.poll.description,
                       style: const TextStyle(fontSize: 20),
                     ),
+                    const SizedBox(height: 16),
                     const Text(
                       'Responses',
                       style: TextStyle(
@@ -61,22 +62,36 @@ class _PollReportState extends State<PollReport> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    for (final comment in _report!.comments)
-                      ListTile(
-                        title: Text(comment.comment),
-                        trailing: Neapolitan(
-                          pieces: [
-                            comment.agreeCount,
-                            comment.passCount,
-                            comment.disagreeCount,
-                          ],
-                          colors: const [
-                            Colors.green,
-                            Colors.white,
-                            Colors.red,
-                          ],
-                        ),
+                    for (final comment in _report!.comments) ...[
+                      Row(
+                        children: [
+                          Flexible(
+                            flex: 3,
+                            child: Text(
+                              comment.comment,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Flexible(
+                            flex: 0,
+                            child: Neapolitan(
+                              pieces: [
+                                comment.agreeCount,
+                                comment.passCount,
+                                comment.disagreeCount,
+                              ],
+                              colors: const [
+                                Colors.green,
+                                Colors.white,
+                                Colors.red,
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
+                      const Divider(),
+                    ],
                   ],
                 ),
               ),
