@@ -51,7 +51,7 @@ class _LoginViewState extends State<LoginView> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Text(
-                    'OpenGov',
+                    'Crimson OpenGov',
                     style: TextStyle(fontSize: 32),
                   ),
                   const SizedBox(height: 8),

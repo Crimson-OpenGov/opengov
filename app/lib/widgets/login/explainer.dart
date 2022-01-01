@@ -17,21 +17,32 @@ class Explainer extends StatelessWidget {
     _ExplainerPage(
       icon: Icons.person,
       title: 'What you do',
-      body: "1. PROPOSE ideas or general comments for everyone to consider\n"
-          "2. VOTE on other people's ideas to agree, disagree or no comment",
+      body: "1. PROPOSE ideas or general comments for everyone to consider.\n\n"
+          "2. VOTE on other people's ideas to agree, disagree or no "
+          "comment.\n\n"
+          '3. IMAGINE new ways to improve Harvard’s community that will be '
+          'incorporated into the decisions of campus leaders.',
     ),
     _ExplainerPage(
-      icon: Icons.access_time,
-      title: 'What OpenGov does',
-      body: 'OpenGov identifies the most supported perspectives. It also '
-          'figures out points of division and points of common ground, helping '
-          'us understand the overall picture on campus.',
+      icon: Icons.check_circle,
+      title: 'What Crimson OpenGov does',
+      body: 'Crimson OpenGov identifies the most supported perspectives. It '
+          'also figures out points of division and points of common ground, '
+          'helping us understand the overall picture on campus.\n\n'
+          'The results will influence the decision-making of administrators '
+          'who want to get new ideas from students and the Constitutional '
+          "Convention that's writing a constitution for our new student "
+          'government.\n\n'
+          'Crimson OpenGov was created by the Executive Cabinet of Michael '
+          'Cheng and Emmett de Kanter, your student body President/VP, to '
+          'increase the influence of students in our university community.',
     ),
     _ExplainerPage(
-      icon: Icons.close,
-      title: "What OpenGov doesn't do",
-      body: "OpenGov is anonymous. We don't collect names or PII. While we "
-          "collect your Harvard email to ensure that poll respondents are "
+      icon: Icons.cancel,
+      title: "What Crimson OpenGov doesn't do",
+      body:
+          "Crimson OpenGov is anonymous. We don't collect names or PII. While "
+          "we collect your Harvard email to ensure that poll respondents are "
           "Harvard students, we will never use this to identify the authors of "
           "specific comments or votes.",
     ),
@@ -39,7 +50,7 @@ class Explainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Welcome to OpenGov!')),
+        appBar: AppBar(title: const Text('Welcome to Crimson OpenGov!')),
         body: SafeArea(
           minimum: const EdgeInsets.symmetric(horizontal: 16),
           child: PageView(
@@ -51,13 +62,15 @@ class Explainer extends StatelessWidget {
                     const Spacer(),
                     Text(
                       _pages[i].title,
-                      style: const TextStyle(fontSize: 32),
+                      style: const TextStyle(fontSize: 28),
                       textAlign: TextAlign.center,
                     ),
+                    const SizedBox(height: 16),
                     Icon(_pages[i].icon, size: 128),
+                    const SizedBox(height: 16),
                     Text(
                       _pages[i].body,
-                      style: const TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 16),
                       textAlign: TextAlign.center,
                     ),
                     const Spacer(),
