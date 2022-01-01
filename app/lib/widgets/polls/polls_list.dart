@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/login/login_view.dart';
+import 'package:opengov_app/widgets/polls/create_poll.dart';
 import 'package:opengov_app/widgets/polls/poll_details.dart';
 import 'package:opengov_app/widgets/polls/poll_report.dart';
 import 'package:opengov_common/actions/list_polls.dart';
@@ -58,6 +59,17 @@ class _PollsListState extends State<PollsList> {
     }
   }
 
+  Future<void> _createPoll() async {
+    final saved = await showDialog<bool>(
+      context: context,
+      builder: (_) => const CreatePoll(),
+    );
+
+    if (saved ?? false) {
+      _fetchData();
+    }
+  }
+
   Widget _listHeader(String title) => ListTile(
         title: Text(title),
         visualDensity: VisualDensity.compact,
@@ -93,7 +105,7 @@ class _PollsListState extends State<PollsList> {
           actions: [
             if (_me?.isAdmin ?? false)
               IconButton(
-                onPressed: () {},
+                onPressed: _createPoll,
                 icon: const Icon(Icons.add),
               ),
           ],

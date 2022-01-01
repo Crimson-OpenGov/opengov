@@ -69,6 +69,9 @@ class HttpService {
   static Future<GenericResponse?> vote(VoteRequest request) =>
       _post('poll/vote', request.toJson(), GenericResponse.fromJson);
 
+  static Future<GenericResponse?> createPoll(Poll poll) =>
+      _post('poll/create', poll.toJson(), GenericResponse.fromJson);
+
   static Future<GenericResponse?> login(LoginRequest request) =>
       _post('auth/login', request.toJson(), GenericResponse.fromJson);
 

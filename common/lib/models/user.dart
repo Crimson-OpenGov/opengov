@@ -15,5 +15,7 @@ class User {
 
   factory User.fromJson(Json json) => _$UserFromJson(json);
 
+  bool get isNotAdmin => !isAdmin;
+
   Json toJson() => _$UserToJson(this);
 }
