@@ -47,5 +47,5 @@ void main(List<String> args) async {
 
   print('Serving at http://${server.address.host}:${server.port}');
 
-  Firebase.sendNotification();
+  print(await Firebase.sendNotification());
 }

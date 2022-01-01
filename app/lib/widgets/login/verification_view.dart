@@ -37,9 +37,9 @@ class _VerificationViewState extends State<VerificationView> {
         (_) => false,
       ));
 
-      FirebaseMessaging.instance
-        ..requestPermission()
-        ..subscribeToTopic('general');
+      final firebaseMessaging = FirebaseMessaging.instance;
+      await firebaseMessaging.requestPermission();
+      await firebaseMessaging.subscribeToTopic('general');
     } else {
       showMessageDialog(
         context,
