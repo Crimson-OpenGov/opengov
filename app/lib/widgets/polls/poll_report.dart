@@ -49,11 +49,13 @@ class _PollReportState extends State<PollReport> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      widget.poll.description,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 16),
+                    if (widget.poll.description != null) ...[
+                      Text(
+                        widget.poll.description!,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     const Text(
                       'Responses',
                       style: TextStyle(

@@ -50,11 +50,13 @@ class _PollDetailsState extends State<PollDetails> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      widget.poll.description,
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                    const SizedBox(height: 16),
+                    if (widget.poll.description != null) ...[
+                      Text(
+                        widget.poll.description!,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                     CommentStack(comments: _comments!),
                     const SizedBox(height: 16),
                     AddComment(poll: widget.poll),

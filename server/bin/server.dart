@@ -19,8 +19,7 @@ void main(List<String> args) async {
       version: 1,
       onCreate: (db, _) async {
         await db.execute('CREATE TABLE Poll (id INTEGER PRIMARY KEY, '
-            'topic TEXT NOT NULL, description TEXT NOT NULL, '
-            'end INTEGER NOT NULL)');
+            'topic TEXT NOT NULL, description TEXT, end INTEGER NOT NULL)');
         await db.execute('CREATE TABLE Comment (id INTEGER PRIMARY KEY, '
             'poll_id INTEGER NOT NULL, user_id INTEGER, '
             'comment TEXT NOT NULL)');

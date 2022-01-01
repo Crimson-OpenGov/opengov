@@ -39,10 +39,11 @@ class _CreatePollState extends State<CreatePoll> {
 
   Future<void> _save() async {
     if (_formKey.currentState?.validate() ?? false) {
+      final description = _descriptionController.text;
       final poll = Poll(
         id: -1,
         topic: _topicController.text,
-        description: _descriptionController.text,
+        description: description.isEmpty ? null : description,
         end: _end!,
       );
       final response = await HttpService.createPoll(poll);
@@ -68,8 +69,9 @@ class _CreatePollState extends State<CreatePoll> {
             children: [
               TextFormField(
                 controller: _topicController,
+                maxLines: null,
                 decoration: const InputDecoration(
-                  label: Text('Topic'),
+                  label: Text('Topic *'),
                   border: OutlineInputBorder(),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
@@ -84,13 +86,12 @@ class _CreatePollState extends State<CreatePoll> {
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),
                 maxLines: 10,
-                validator: _isNotEmptyValidator,
               ),
               const SizedBox(height: 16),
               DateTimeField(
                 format: _dateFormat,
                 decoration: const InputDecoration(
-                  label: Text('End'),
+                  label: Text('End *'),
                   border: OutlineInputBorder(),
                   floatingLabelBehavior: FloatingLabelBehavior.always,
                 ),

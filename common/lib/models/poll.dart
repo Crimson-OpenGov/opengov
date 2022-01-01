@@ -8,7 +8,7 @@ part 'poll.g.dart';
 class Poll {
   final int id;
   final String topic;
-  final String description;
+  final String? description;
 
   @JsonKey(fromJson: fromMillisecondsSinceEpoch, toJson: dateTimeToJson)
   final DateTime end;

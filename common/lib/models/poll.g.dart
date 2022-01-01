@@ -9,7 +9,7 @@ part of 'poll.dart';
 Poll _$PollFromJson(Map<String, dynamic> json) => Poll(
       id: json['id'] as int,
       topic: json['topic'] as String,
-      description: json['description'] as String,
+      description: json['description'] as String?,
       end: fromMillisecondsSinceEpoch(json['end'] as int),
     );
 
