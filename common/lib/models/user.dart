@@ -8,7 +8,7 @@ class User {
   final int id;
   final String username;
 
-  @JsonKey(name: 'is_admin', fromJson: boolFromJson)
+  @JsonKey(name: 'is_admin', fromJson: boolFromJson, toJson: boolToJson)
   final bool isAdmin;
 
   const User({required this.id, required this.username, this.isAdmin = false});

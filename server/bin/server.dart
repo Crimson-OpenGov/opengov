@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:opengov_server/auth_service.dart';
+import 'package:opengov_server/user_service.dart';
 import 'package:opengov_server/util/curse_words.dart';
 import 'package:opengov_server/util/firebase.dart';
 import 'package:opengov_server/poll_service.dart';
@@ -40,8 +41,9 @@ void main(List<String> args) async {
 
   final handler =
       const Pipeline().addMiddleware(logRequests()).addHandler(Router()
+        ..mount('/api/auth', AuthService(database).router)
         ..mount('/api/poll', PollService(database).router)
-        ..mount('/api/auth', AuthService(database).router));
+        ..mount('/api/user', UserService(database).router));
 
   final server = await serve(handler, '192.168.2.198', 8017);
 

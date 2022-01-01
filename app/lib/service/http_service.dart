@@ -12,6 +12,7 @@ import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/report.dart';
 import 'package:opengov_common/models/token.dart';
+import 'package:opengov_common/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HttpService {
@@ -73,4 +74,6 @@ class HttpService {
 
   static Future<VerificationResponse?> verify(VerificationRequest request) =>
       _post('auth/verify', request.toJson(), VerificationResponse.fromJson);
+
+  static Future<User?> getMe() => _get('user/me', User.fromJson);
 }

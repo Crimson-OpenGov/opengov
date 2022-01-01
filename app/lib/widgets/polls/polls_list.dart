@@ -6,7 +6,9 @@ import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/login/login_view.dart';
 import 'package:opengov_app/widgets/polls/poll_details.dart';
 import 'package:opengov_app/widgets/polls/poll_report.dart';
+import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/models/poll.dart';
+import 'package:opengov_common/models/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PollsList extends StatefulWidget {
@@ -19,21 +21,27 @@ class PollsList extends StatefulWidget {
 class _PollsListState extends State<PollsList> {
   Iterable<Poll>? _activePolls;
   Iterable<Poll>? _inactivePolls;
+  User? _me;
 
   @override
   void initState() {
     super.initState();
-    _fetchPolls();
+    _fetchData();
   }
 
-  Future<void> _fetchPolls() async {
+  Future<void> _fetchData() async {
     try {
-      final response = await HttpService.listPolls();
+      final responses =
+          await Future.wait([HttpService.getMe(), HttpService.listPolls()]);
 
-      if (response != null) {
+      if (responses.every((response) => response != null)) {
+        final meResponse = responses[0] as User;
+        final pollsResponse = responses[1] as ListPollsResponse;
+
         setState(() {
-          _activePolls = response.polls.where((poll) => poll.isActive);
-          _inactivePolls = response.polls.where((poll) => !poll.isActive);
+          _me = meResponse;
+          _activePolls = pollsResponse.polls.where((poll) => poll.isActive);
+          _inactivePolls = pollsResponse.polls.where((poll) => !poll.isActive);
         });
       }
     } on AuthenticationException {
@@ -82,11 +90,18 @@ class _PollsListState extends State<PollsList> {
         appBar: AppBar(
           title: const Text('Polls'),
           elevation: 0,
+          actions: [
+            if (_me?.isAdmin ?? false)
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.add),
+              ),
+          ],
         ),
         body: _activePolls == null || _inactivePolls == null
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
-                onRefresh: _fetchPolls,
+                onRefresh: _fetchData,
                 child: ListView(
                   children: [
                     if (_activePolls!.isNotEmpty) ...[
