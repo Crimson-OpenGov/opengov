@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:opengov_common/actions/login.dart';
 import 'package:opengov_common/models/token.dart';
 import 'package:opengov_server/common.dart';
+import 'package:opengov_server/util/email_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
 import 'package:sqflite_common/sqlite_api.dart';
@@ -20,15 +21,18 @@ class AuthService {
   @Route.post('/login')
   Future<Response> login(Request request) async {
     final loginRequest = await request.readAsObject(LoginRequest.fromJson);
+    final username = loginRequest.username;
 
     // Delete any current pending logins.
-    await _database.delete('PendingLogin',
-        where: 'username = ?', whereArgs: [loginRequest.username]);
+    await _database
+        .delete('PendingLogin', where: 'username = ?', whereArgs: [username]);
 
-    final success = await _database.insert('PendingLogin',
-        {'username': loginRequest.username, 'code': _generateCode()});
+    final code = _generateCode();
+    final success = await _database
+        .insert('PendingLogin', {'username': username, 'code': code});
+    final emailSuccess = await EmailService.sendVerificationEmail(username, code);
 
-    return genericResponse(success: success > 0);
+    return genericResponse(success: success > 0 && emailSuccess);
   }
 
   @Route.post('/verify')
