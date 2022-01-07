@@ -18,8 +18,20 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HttpService {
   static final _client = Client();
 
-  static Uri _uri(String path) =>
-      Uri(scheme: 'http', host: '192.168.2.198', port: 8017, path: 'api/$path');
+  static Uri _uri(String path) {
+    var scheme = 'https';
+    var host = 'app.crimsonopengov.us';
+    int? port;
+
+    assert(() {
+      scheme = 'http';
+      host = '192.168.2.198';
+      port = 8017;
+      return true;
+    }());
+
+    return Uri(scheme: scheme, host: host, port: port, path: 'api/$path');
+  }
 
   static Future<Map<String, String>> get _headers async {
     final sharedPreferences = await SharedPreferences.getInstance();

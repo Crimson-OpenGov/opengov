@@ -1,11 +1,11 @@
 {
-    "name": "app",
-    "short_name": "app",
+    "name": "Crimson OpenGov",
+    "short_name": "OpenGov",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "A platform for direct democracy.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [

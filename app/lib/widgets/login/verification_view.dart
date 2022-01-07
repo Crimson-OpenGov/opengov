@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
@@ -39,7 +40,9 @@ class _VerificationViewState extends State<VerificationView> {
 
       final firebaseMessaging = FirebaseMessaging.instance;
       await firebaseMessaging.requestPermission();
-      await firebaseMessaging.subscribeToTopic('general');
+      if (!kIsWeb) {
+        await firebaseMessaging.subscribeToTopic('general');
+      }
     } else {
       showMessageDialog(
         context,

@@ -38,15 +38,35 @@ void main(List<String> args) async {
   await CurseWords.setup();
   await Firebase.setup();
 
-  final handler =
-      const Pipeline().addMiddleware(logRequests()).addHandler(Router()
+  final handler = const Pipeline()
+      .addMiddleware(logRequests())
+      .addMiddleware(_corsMiddleware)
+      .addHandler(Router()
         ..mount('/api/auth', AuthService(database).router)
         ..mount('/api/poll', PollService(database).router)
         ..mount('/api/user', UserService(database).router));
 
-  final server = await serve(handler, '192.168.2.198', 8017);
+  var host = '127.0.0.1';
+
+  assert(() {
+    host = '192.168.2.198';
+    return true;
+  }());
+
+  final server = await serve(handler, host, 8017);
 
   print('Serving at http://${server.address.host}:${server.port}');
 
   print(await Firebase.sendNotification());
 }
+
+const _corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Authorization',
+};
+final Middleware _corsMiddleware = createMiddleware(
+    requestHandler: (request) => request.method == 'OPTIONS'
+        ? Response.ok(null, headers: _corsHeaders)
+        : null,
+    responseHandler: (response) =>
+        response.change(headers: {...response.headers, ..._corsHeaders}));

@@ -22,3 +22,6 @@ curse_words.txt
 
 # Environment
 lib/env.dart
+
+# Deployment
+deployment/
