@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/polls/neapolitan.dart';
+import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/report.dart';
 
@@ -30,6 +31,23 @@ class _PollReportState extends State<PollReport> {
         _report = response;
       });
     }
+  }
+
+  List<int> pieces(ReportComment comment) {
+    var pieces = [comment.agreeCount, comment.passCount, comment.disagreeCount];
+
+    assert(() {
+      if (comment.comment.startsWith('Limit')) {
+        pieces = [600, 290, 1000];
+      } else if (comment.comment.startsWith('Through')) {
+        pieces = [800, 550, 725];
+      } else if (comment.comment.startsWith('Launch')) {
+        pieces = [2100, 160, 50];
+      }
+      return true;
+    }());
+
+    return pieces;
   }
 
   @override
@@ -78,11 +96,7 @@ class _PollReportState extends State<PollReport> {
                           Flexible(
                             flex: 0,
                             child: Neapolitan(
-                              pieces: [
-                                comment.agreeCount,
-                                comment.passCount,
-                                comment.disagreeCount,
-                              ],
+                              pieces: pieces(comment),
                               colors: const [
                                 Colors.green,
                                 Colors.white,

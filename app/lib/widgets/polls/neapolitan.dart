@@ -9,14 +9,8 @@ class Neapolitan extends StatelessWidget {
   final List<int> pieces;
   final List<Color> colors;
 
-  Neapolitan({required this.pieces, required this.colors})
-      : assert(pieces.length == colors.length),
-        assert(() {
-          // Fake the numbers when testing.
-          final random = Random();
-          pieces.replaceMapped((i) => (3 - i) * (3 - i) * random.nextInt(250));
-          return true;
-        }());
+  const Neapolitan({required this.pieces, required this.colors})
+      : assert(pieces.length == colors.length);
 
   int get total => pieces.reduce((a, b) => a + b);
 
