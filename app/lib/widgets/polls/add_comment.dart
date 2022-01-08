@@ -55,7 +55,7 @@ class _AddCommentState extends State<AddComment> {
           TextField(
             controller: _textController,
             decoration: const InputDecoration(
-              hintText: 'Share your perspective...',
+              hintText: 'Share your perspective anonymously...',
               border: OutlineInputBorder(),
             ),
             keyboardType: TextInputType.multiline,

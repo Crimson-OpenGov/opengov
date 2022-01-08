@@ -30,7 +30,8 @@ void main(List<String> args) async {
             'is_admin BOOLEAN NOT NULL DEFAULT FALSE)');
         await db.execute(
             'CREATE TABLE Vote (id INTEGER PRIMARY KEY, user_id INTEGER, '
-            'comment_id INTEGER NOT NULL, score INTEGER NOT NULL)');
+            'comment_id INTEGER NOT NULL, score INTEGER NOT NULL, '
+            'reason TEXT DEFAULT NULL)');
       },
     ),
   );

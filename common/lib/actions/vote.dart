@@ -7,8 +7,10 @@ part 'vote.g.dart';
 class VoteRequest {
   final int commentId;
   final int score;
+  final String? reason;
 
-  const VoteRequest({required this.commentId, required this.score});
+  const VoteRequest(
+      {required this.commentId, required this.score, this.reason});
 
   factory VoteRequest.fromJson(Json json) => _$VoteRequestFromJson(json);
 

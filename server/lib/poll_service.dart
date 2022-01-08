@@ -144,7 +144,8 @@ class PollService {
     final dbResponse = await _database.insert('Vote', {
       'user_id': user.id,
       'comment_id': voteRequest.commentId,
-      'score': voteRequest.score
+      'score': voteRequest.score,
+      if (voteRequest.reason != null) 'reason': voteRequest.reason,
     });
 
     return genericResponse(success: dbResponse != 0);

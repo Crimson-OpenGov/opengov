@@ -18,9 +18,9 @@ class _CommentStackState extends State<CommentStack> {
 
   Comment get _comment => widget.comments[_index];
 
-  Future<void> _onActionPressed(CommentAction action) async {
-    final response = await HttpService.vote(
-        VoteRequest(commentId: _comment.id, score: action.score));
+  Future<void> _onActionPressed(CommentAction action, String? reason) async {
+    final response = await HttpService.vote(VoteRequest(
+        commentId: _comment.id, score: action.score, reason: reason));
 
     if (response?.success ?? false) {
       setState(() {
