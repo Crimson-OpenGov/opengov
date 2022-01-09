@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:opengov_server/auth_service.dart';
-import 'package:opengov_server/user_service.dart';
+import 'package:opengov_server/services/auth_service.dart';
+import 'package:opengov_server/services/poll_service.dart';
+import 'package:opengov_server/services/user_service.dart';
 import 'package:opengov_server/util/curse_words.dart';
 import 'package:opengov_server/util/firebase.dart';
-import 'package:opengov_server/poll_service.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
