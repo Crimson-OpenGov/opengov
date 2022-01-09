@@ -5,6 +5,7 @@ import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/login/login_view.dart';
 import 'package:opengov_app/widgets/polls/create_poll.dart';
+import 'package:opengov_app/widgets/polls/poll_admin.dart';
 import 'package:opengov_app/widgets/polls/poll_details.dart';
 import 'package:opengov_app/widgets/polls/poll_report.dart';
 import 'package:opengov_common/actions/list_polls.dart';
@@ -81,6 +82,7 @@ class _PollsListState extends State<PollsList> {
     final isActive = poll.isActive;
     final subtitleLeading = isActive ? 'Ends in' : 'Ended';
     final subtitleTrailing = isActive ? '' : ' ago';
+    final isAdmin = _me!.isAdmin;
 
     return ListTile(
       leading: const Icon(Icons.poll),
@@ -88,11 +90,15 @@ class _PollsListState extends State<PollsList> {
       subtitle: Text('$subtitleLeading ${poll.endFormatted}$subtitleTrailing.'),
       onTap: () {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (_) => poll.isActive
-                    ? PollDetails(poll: poll)
-                    : PollReport(poll: poll)));
+          context,
+          MaterialPageRoute(
+            builder: (_) => poll.isActive
+                ? isAdmin
+                    ? PollAdmin(poll: poll)
+                    : PollDetails(poll: poll)
+                : PollReport(poll: poll),
+          ),
+        );
       },
     );
   }

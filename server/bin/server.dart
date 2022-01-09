@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:opengov_server/services/admin_service.dart';
 import 'package:opengov_server/services/auth_service.dart';
 import 'package:opengov_server/services/poll_service.dart';
 import 'package:opengov_server/services/user_service.dart';
@@ -43,6 +44,7 @@ void main(List<String> args) async {
       .addMiddleware(logRequests())
       .addMiddleware(_corsMiddleware)
       .addHandler(Router()
+        ..mount('/api/admin', AdminService(database).router)
         ..mount('/api/auth', AuthService(database).router)
         ..mount('/api/poll', PollService(database).router)
         ..mount('/api/user', UserService(database).router));

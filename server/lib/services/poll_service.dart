@@ -165,20 +165,5 @@ class PollService {
     return genericResponse(success: dbResponse != 0);
   }
 
-  @Route.post('/create')
-  Future<Response> create(Request request) async {
-    final user = await request.decodeAuth(_database);
-
-    if (user?.isNotAdmin ?? true) {
-      return Response.forbidden(null);
-    }
-
-    final poll = await request.readAsObject(Poll.fromJson);
-    final json = poll.toJson()..remove('id');
-    final dbResponse = await _database.insert('Poll', json);
-
-    return genericResponse(success: dbResponse != 0);
-  }
-
   Router get router => _$PollServiceRouter(this);
 }

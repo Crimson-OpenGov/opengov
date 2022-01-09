@@ -6,6 +6,7 @@ import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/login.dart';
 import 'package:opengov_common/actions/poll_details.dart';
+import 'package:opengov_common/actions/update_comment.dart';
 import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/generic_response.dart';
@@ -82,7 +83,13 @@ class HttpService {
       _post('poll/vote', request.toJson(), GenericResponse.fromJson);
 
   static Future<GenericResponse?> createPoll(Poll poll) =>
-      _post('poll/create', poll.toJson(), GenericResponse.fromJson);
+      _post('admin/create-poll', poll.toJson(), GenericResponse.fromJson);
+
+  static Future<PollDetailsResponse?> getPollDetailsAdmin(Poll poll) =>
+      _get('admin/poll-details/${poll.id}', PollDetailsResponse.fromJson);
+
+  static Future<GenericResponse?> updateComment(UpdateCommentRequest request) =>
+      _post('admin/update-comment', request.toJson(), GenericResponse.fromJson);
 
   static Future<GenericResponse?> login(LoginRequest request) =>
       _post('auth/login', request.toJson(), GenericResponse.fromJson);
