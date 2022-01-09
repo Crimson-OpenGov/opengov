@@ -17,3 +17,20 @@ Map<String, dynamic> _$AddCommentRequestToJson(AddCommentRequest instance) =>
       'pollId': instance.pollId,
       'comment': instance.comment,
     };
+
+AddCommentResponse _$AddCommentResponseFromJson(Map<String, dynamic> json) =>
+    AddCommentResponse(
+      reason: $enumDecode(_$AddCommentResponseReasonEnumMap, json['reason']),
+    );
+
+Map<String, dynamic> _$AddCommentResponseToJson(AddCommentResponse instance) =>
+    <String, dynamic>{
+      'reason': _$AddCommentResponseReasonEnumMap[instance.reason],
+    };
+
+const _$AddCommentResponseReasonEnumMap = {
+  AddCommentResponseReason.curseWords: 'curseWords',
+  AddCommentResponseReason.error: 'error',
+  AddCommentResponseReason.needsApproval: 'needsApproval',
+  AddCommentResponseReason.approved: 'approved',
+};

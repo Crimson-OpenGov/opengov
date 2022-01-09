@@ -8,7 +8,14 @@ import 'package:opengov_common/models/user.dart';
 import 'package:shelf/shelf.dart';
 import 'package:sqflite_common/sqlite_api.dart';
 
-final secretKey = Platform.environment['secretKey']!;
+final secretKey = Platform.environment['SECRET_KEY']!;
+
+/// Whether moderation is enforced.
+///
+/// If true, comments won't be visible until they are approved by a moderator.
+/// If false, comments will be visible immediately and can be deleted later.
+final enforceModeration =
+    Platform.environment['ENFORCE_MODERATION']!.toLowerCase() == 'true';
 
 Response genericResponse({required bool success}) =>
     Response.ok(json.encode(GenericResponse(success: success)));

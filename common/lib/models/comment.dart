@@ -14,11 +14,16 @@ class Comment {
   final int? userId;
   final String comment;
 
-  const Comment(
-      {required this.id,
-      required this.pollId,
-      required this.userId,
-      required this.comment});
+  @JsonKey(name: 'is_approved', fromJson: boolFromJson, toJson: boolToJson)
+  final bool isApproved;
+
+  const Comment({
+    required this.id,
+    required this.pollId,
+    required this.userId,
+    required this.comment,
+    this.isApproved = false,
+  });
 
   factory Comment.fromJson(Json json) => _$CommentFromJson(json);
 

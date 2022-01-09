@@ -56,6 +56,7 @@ class PollService {
             .query('Comment', where: 'poll_id = ?', whereArgs: [pollId]))
         .map(Comment.fromJson)
         .where((comment) => !votedCommentIds.contains(comment.id))
+        .where((comment) => user.isAdmin || comment.isApproved)
         .toList(growable: false);
 
     return Response.ok(
@@ -74,7 +75,8 @@ class PollService {
 
     final commentsResponse = (await _database
             .query('Comment', where: 'poll_id = ?', whereArgs: [pollId]))
-        .map(Comment.fromJson);
+        .map(Comment.fromJson)
+        .where((comment) => user.isAdmin || comment.isApproved);
 
     final comments = <ReportComment>[];
     for (final comment in commentsResponse) {
@@ -105,7 +107,8 @@ class PollService {
         await request.readAsObject(AddCommentRequest.fromJson);
 
     if (CurseWords.isBadString(addCommentRequest.comment)) {
-      return genericResponse(success: false);
+      return Response.ok(json.encode(const AddCommentResponse(
+          reason: AddCommentResponseReason.curseWords)));
     }
 
     final pollsResponse = (await _database.query('Poll',
@@ -113,22 +116,33 @@ class PollService {
         .map(Poll.fromJson);
 
     if (pollsResponse.isEmpty) {
-      return genericResponse(success: false);
+      return Response.ok(json.encode(
+          const AddCommentResponse(reason: AddCommentResponseReason.error)));
     }
 
     final poll = pollsResponse.first;
 
     if (!poll.isActive) {
-      return genericResponse(success: false);
+      return Response.ok(json.encode(
+          const AddCommentResponse(reason: AddCommentResponseReason.error)));
     }
 
     final dbResponse = await _database.insert('Comment', {
       'poll_id': poll.id,
       'user_id': user.id,
       'comment': addCommentRequest.comment,
+      if (!enforceModeration) 'is_approved': 1,
     });
 
-    return genericResponse(success: dbResponse != 0);
+    if (dbResponse == 0) {
+      return Response.ok(json.encode(
+          const AddCommentResponse(reason: AddCommentResponseReason.error)));
+    }
+
+    return Response.ok(json.encode(AddCommentResponse(
+        reason: enforceModeration
+            ? AddCommentResponseReason.needsApproval
+            : AddCommentResponseReason.approved)));
   }
 
   @Route.post('/vote')

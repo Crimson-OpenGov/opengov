@@ -15,7 +15,7 @@ class AddComment extends StatefulWidget {
 
 class _AddCommentState extends State<AddComment> {
   final _textController = TextEditingController();
-  var _addedComment = false;
+  String? _responseMessage;
 
   @override
   void initState() {
@@ -34,18 +34,36 @@ class _AddCommentState extends State<AddComment> {
       comment: _textController.text,
     ));
 
-    if (response?.success ?? false) {
-      setState(() {
-        _textController.clear();
-        _addedComment = true;
-      });
-    } else {
-      showMessageDialog(
-        context,
-        body:
-            'An error occurred while posting your comment. Please ensure that '
-            "your comment doesn't contain any swear words.",
-      );
+    switch (response?.reason) {
+      case null:
+      case AddCommentResponseReason.error:
+        setState(() {
+          _responseMessage =
+              'A server error occurred while posting your comment.';
+        });
+        break;
+      case AddCommentResponseReason.curseWords:
+        setState(() {
+          _responseMessage =
+              "Please ensure that your comment doesn't contain any swear "
+              "words.";
+        });
+        break;
+      case AddCommentResponseReason.needsApproval:
+        setState(() {
+          _responseMessage =
+              'Comment sent! Your comment will be displayed to other users '
+              'once it is approved by an admin.';
+          _textController.clear();
+        });
+        break;
+      case AddCommentResponseReason.approved:
+        setState(() {
+          _responseMessage =
+              'Comment sent! Your comment is now visible to other users.';
+          _textController.clear();
+        });
+        break;
     }
   }
 
@@ -80,10 +98,7 @@ class _AddCommentState extends State<AddComment> {
               ),
             ],
           ),
-          if (_addedComment)
-            const Text(
-                'Comment sent! Other participants will see your comment and '
-                'can agree or disagree with it.'),
+          if (_responseMessage != null) Text(_responseMessage!),
         ],
       );
 

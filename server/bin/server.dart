@@ -21,8 +21,8 @@ void main(List<String> args) async {
         await db.execute('CREATE TABLE Poll (id INTEGER PRIMARY KEY, '
             'topic TEXT NOT NULL, description TEXT, end INTEGER NOT NULL)');
         await db.execute('CREATE TABLE Comment (id INTEGER PRIMARY KEY, '
-            'poll_id INTEGER NOT NULL, user_id INTEGER, '
-            'comment TEXT NOT NULL)');
+            'poll_id INTEGER NOT NULL, user_id INTEGER, comment TEXT NOT NULL, '
+            'is_approved BOOLEAN NOT NULL DEFAULT FALSE)');
         await db.execute('CREATE TABLE PendingLogin (id INTEGER PRIMARY KEY, '
             'username STRING NOT NULL, code STRING NOT NULL)');
         await db.execute('CREATE TABLE User (id INTEGER PRIMARY KEY, '

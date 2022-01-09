@@ -11,6 +11,9 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       pollId: json['poll_id'] as int,
       userId: json['user_id'] as int?,
       comment: json['comment'] as String,
+      isApproved: json['is_approved'] == null
+          ? false
+          : boolFromJson(json['is_approved'] as int),
     );
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
@@ -18,4 +21,5 @@ Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'poll_id': instance.pollId,
       'user_id': instance.userId,
       'comment': instance.comment,
+      'is_approved': boolToJson(instance.isApproved),
     };

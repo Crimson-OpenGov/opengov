@@ -15,3 +15,17 @@ class AddCommentRequest {
 
   Json toJson() => _$AddCommentRequestToJson(this);
 }
+
+enum AddCommentResponseReason { curseWords, error, needsApproval, approved }
+
+@JsonSerializable()
+class AddCommentResponse {
+  final AddCommentResponseReason reason;
+
+  const AddCommentResponse({required this.reason});
+
+  factory AddCommentResponse.fromJson(Json json) =>
+      _$AddCommentResponseFromJson(json);
+
+  Json toJson() => _$AddCommentResponseToJson(this);
+}
