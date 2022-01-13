@@ -6,10 +6,15 @@ class ListHeader extends StatelessWidget {
   const ListHeader(this.title);
 
   @override
-  Widget build(BuildContext context) => ListTile(
-        title: Text(title),
-        visualDensity: VisualDensity.compact,
-        textColor: Theme.of(context).primaryColor,
-        tileColor: Colors.grey.shade300,
-      );
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListTile(
+      title: Text(title),
+      visualDensity: VisualDensity.compact,
+      textColor: theme.brightness == Brightness.light
+          ? theme.primaryColor
+          : Colors.white,
+      tileColor: theme.dividerColor,
+    );
+  }
 }

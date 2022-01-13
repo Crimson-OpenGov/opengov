@@ -12,6 +12,8 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
+  static const _crimson = Color(0xFFA51C30);
+
   const MyApp();
 
   @override
@@ -19,8 +21,26 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Crimson OpenGov',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: ThemeData.from(
+        colorScheme: const ColorScheme.light(
+          primary: _crimson,
+          secondary: _crimson,
+          surface: _crimson,
+        ),
+      ).copyWith(
+        timePickerTheme:
+            const TimePickerThemeData(backgroundColor: Colors.white),
+      ),
+      darkTheme: ThemeData.from(
+        colorScheme: const ColorScheme.dark(
+          primary: Colors.white,
+          secondary: _crimson,
+          surface: _crimson,
+        ),
+      ).copyWith(
+        timePickerTheme: const TimePickerThemeData(
+          backgroundColor: Color(0xff121212),
+        ),
       ),
       home: const _HomeView(),
     );
