@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/widgets/base/list_header.dart';
 import 'package:opengov_app/widgets/login/login_view.dart';
 import 'package:opengov_app/widgets/polls/create_poll.dart';
 import 'package:opengov_app/widgets/polls/poll_admin.dart';
@@ -71,13 +72,6 @@ class _PollsListState extends State<PollsList> {
     }
   }
 
-  Widget _listHeader(String title) => ListTile(
-        title: Text(title),
-        visualDensity: VisualDensity.compact,
-        textColor: Theme.of(context).primaryColor,
-        tileColor: Colors.grey.shade300,
-      );
-
   Widget _pollListTile(Poll poll) {
     final isActive = poll.isActive;
     final subtitleLeading = isActive ? 'Ends in' : 'Ended';
@@ -123,11 +117,11 @@ class _PollsListState extends State<PollsList> {
                 child: ListView(
                   children: [
                     if (_activePolls!.isNotEmpty) ...[
-                      _listHeader('Active'),
+                      const ListHeader('Active'),
                       for (final poll in _activePolls!) _pollListTile(poll),
                     ],
                     if (_inactivePolls!.isNotEmpty) ...[
-                      _listHeader('Inactive'),
+                      const ListHeader('Inactive'),
                       for (final poll in _inactivePolls!) _pollListTile(poll),
                     ],
                   ],
