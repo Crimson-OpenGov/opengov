@@ -5,6 +5,7 @@ import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/base/list_header.dart';
 import 'package:opengov_app/widgets/login/login_view.dart';
+import 'package:opengov_app/widgets/polls/about_page.dart';
 import 'package:opengov_app/widgets/polls/create_poll.dart';
 import 'package:opengov_app/widgets/polls/poll_admin.dart';
 import 'package:opengov_app/widgets/polls/poll_details.dart';
@@ -35,7 +36,7 @@ class _PollsListState extends State<PollsList> {
   Future<void> _fetchData() async {
     try {
       final responses =
-          await Future.wait([HttpService.getMe(), HttpService.listPolls()]);
+      await Future.wait([HttpService.getMe(), HttpService.listPolls()]);
 
       if (responses.every((response) => response != null)) {
         final meResponse = responses[0] as User;
@@ -53,12 +54,17 @@ class _PollsListState extends State<PollsList> {
       unawaited(Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const LoginView()),
-        (_) => false,
+            (_) => false,
       ));
 
       showMessageDialog(context,
           body: 'Your session has expired. Please log in again.');
     }
+  }
+
+  void _openAbout() {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => const AboutPage()));
   }
 
   Future<void> _createPoll() async {
@@ -86,10 +92,11 @@ class _PollsListState extends State<PollsList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => poll.isActive
+            builder: (_) =>
+            poll.isActive
                 ? isAdmin
-                    ? PollAdmin(poll: poll)
-                    : PollDetails(poll: poll)
+                ? PollAdmin(poll: poll)
+                : PollDetails(poll: poll)
                 : PollReport(poll: poll),
           ),
         );
@@ -98,11 +105,16 @@ class _PollsListState extends State<PollsList> {
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
+  Widget build(BuildContext context) =>
+      Scaffold(
         appBar: AppBar(
           title: const Text('Polls'),
           elevation: 0,
           actions: [
+            IconButton(
+              onPressed: _openAbout,
+              icon: const Icon(Icons.info),
+            ),
             if (_me?.isAdmin ?? false)
               IconButton(
                 onPressed: _createPoll,
@@ -113,19 +125,19 @@ class _PollsListState extends State<PollsList> {
         body: _activePolls == null || _inactivePolls == null
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
-                onRefresh: _fetchData,
-                child: ListView(
-                  children: [
-                    if (_activePolls!.isNotEmpty) ...[
-                      const ListHeader('Active'),
-                      for (final poll in _activePolls!) _pollListTile(poll),
-                    ],
-                    if (_inactivePolls!.isNotEmpty) ...[
-                      const ListHeader('Inactive'),
-                      for (final poll in _inactivePolls!) _pollListTile(poll),
-                    ],
-                  ],
-                ),
-              ),
+          onRefresh: _fetchData,
+          child: ListView(
+            children: [
+              if (_activePolls!.isNotEmpty) ...[
+                const ListHeader('Active'),
+                for (final poll in _activePolls!) _pollListTile(poll),
+              ],
+              if (_inactivePolls!.isNotEmpty) ...[
+                const ListHeader('Inactive'),
+                for (final poll in _inactivePolls!) _pollListTile(poll),
+              ],
+            ],
+          ),
+        ),
       );
 }

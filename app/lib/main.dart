@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       ).copyWith(
         timePickerTheme:
             const TimePickerThemeData(backgroundColor: Colors.white),
+        cardColor: Colors.white,
       ),
       darkTheme: ThemeData.from(
         colorScheme: const ColorScheme.dark(
@@ -41,6 +42,7 @@ class MyApp extends StatelessWidget {
         timePickerTheme: const TimePickerThemeData(
           backgroundColor: Color(0xff121212),
         ),
+        cardColor: const Color(0xff121212),
       ),
       home: const _HomeView(),
     );
