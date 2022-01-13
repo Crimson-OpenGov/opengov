@@ -23,7 +23,7 @@ class Explainer extends StatelessWidget {
       middle: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(5),
-          color: Colors.red.withAlpha(230),
+          color: const Color(0xFFA51C30).withAlpha(230),
         ),
         padding: const EdgeInsets.all(16),
         child: const Text(

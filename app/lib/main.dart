@@ -26,6 +26,7 @@ class MyApp extends StatelessWidget {
           primary: _crimson,
           secondary: _crimson,
           surface: _crimson,
+          onBackground: Colors.white,
         ),
       ).copyWith(
         timePickerTheme:
@@ -37,6 +38,7 @@ class MyApp extends StatelessWidget {
           primary: Colors.white,
           secondary: _crimson,
           surface: _crimson,
+          onBackground: _crimson,
         ),
       ).copyWith(
         timePickerTheme: const TimePickerThemeData(
