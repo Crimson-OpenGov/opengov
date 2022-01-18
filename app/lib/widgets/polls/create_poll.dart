@@ -64,66 +64,68 @@ class _CreatePollState extends State<CreatePoll> {
         title: const Text('Create Poll'),
         content: Form(
           key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _topicController,
-                maxLines: null,
-                decoration: const InputDecoration(
-                  label: Text('Topic *'),
-                  border: OutlineInputBorder(),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextFormField(
+                  controller: _topicController,
+                  maxLines: null,
+                  decoration: const InputDecoration(
+                    label: Text('Topic *'),
+                    border: OutlineInputBorder(),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                  validator: _isNotEmptyValidator,
                 ),
-                validator: _isNotEmptyValidator,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  label: Text('Description'),
-                  border: OutlineInputBorder(),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    label: Text('Description'),
+                    border: OutlineInputBorder(),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                  maxLines: 10,
                 ),
-                maxLines: 10,
-              ),
-              const SizedBox(height: 16),
-              DateTimeField(
-                format: _dateFormat,
-                decoration: const InputDecoration(
-                  label: Text('End *'),
-                  border: OutlineInputBorder(),
-                  floatingLabelBehavior: FloatingLabelBehavior.always,
-                ),
-                validator: _isNotEmptyValidator,
-                onShowPicker: (context, currentValue) async {
-                  final date = await showDatePicker(
-                    context: context,
-                    firstDate: DateTime.now(),
-                    initialDate: currentValue ??
-                        DateTime.now().add(const Duration(days: 7)),
-                    lastDate: DateTime.now().add(const Duration(days: 365)),
-                  );
-
-                  if (date != null) {
-                    final time = await showTimePicker(
+                const SizedBox(height: 16),
+                DateTimeField(
+                  format: _dateFormat,
+                  decoration: const InputDecoration(
+                    label: Text('End *'),
+                    border: OutlineInputBorder(),
+                    floatingLabelBehavior: FloatingLabelBehavior.always,
+                  ),
+                  validator: _isNotEmptyValidator,
+                  onShowPicker: (context, currentValue) async {
+                    final date = await showDatePicker(
                       context: context,
-                      initialTime: TimeOfDay.fromDateTime(
-                          currentValue ?? DateTime.now()),
+                      firstDate: DateTime.now(),
+                      initialDate: currentValue ??
+                          DateTime.now().add(const Duration(days: 7)),
+                      lastDate: DateTime.now().add(const Duration(days: 365)),
                     );
 
-                    return DateTimeField.combine(date, time);
-                  } else {
-                    return currentValue;
-                  }
-                },
-                onChanged: (value) {
-                  setState(() {
-                    _end = value;
-                  });
-                },
-              ),
-            ],
+                    if (date != null) {
+                      final time = await showTimePicker(
+                        context: context,
+                        initialTime: TimeOfDay.fromDateTime(
+                            currentValue ?? DateTime.now()),
+                      );
+
+                      return DateTimeField.combine(date, time);
+                    } else {
+                      return currentValue;
+                    }
+                  },
+                  onChanged: (value) {
+                    setState(() {
+                      _end = value;
+                    });
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         actions: [
