@@ -45,7 +45,8 @@ class Firebase {
     return json.decode(response.body)['access_token']!;
   }
 
-  static Future<bool> sendNotification() async {
+  static Future<bool> sendNotification(
+      {required String title, required String body}) async {
     final token = await _fetchToken();
 
     final response = await _client.post(
@@ -64,8 +65,8 @@ class Firebase {
           'topic': 'general',
           'data': {},
           'notification': {
-            'title': 'FCM Message',
-            'body': 'This is an FCM notification message!',
+            'title': title,
+            'body': body,
           }
         }
       }),

@@ -59,8 +59,6 @@ void main(List<String> args) async {
   final server = await serve(handler, host, 8017);
 
   print('Serving at http://${server.address.host}:${server.port}');
-
-  print(await Firebase.sendNotification());
 }
 
 const _corsHeaders = {
