@@ -21,11 +21,19 @@ dependencies:
   url_launcher: ^6.0.18
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.9.2
+  flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
-  flutter_lints: ^1.0.4
 
 flutter:
   uses-material-design: true
   assets:
     - assets/images/
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/icon.png"
+  adaptive_icon_background: "#A51C30"
+  adaptive_icon_foreground: "assets/images/gavel.png"
