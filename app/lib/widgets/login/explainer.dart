@@ -83,67 +83,72 @@ class Explainer extends StatelessWidget {
                       )
                     : null,
                 child: SafeArea(
-                  minimum: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Spacer(),
-                      if (_pages[i].title != null) ...[
-                        Text(
-                          _pages[i].title!,
-                          style: const TextStyle(fontSize: 28),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 24),
-                      ],
-                      _pages[i].middle,
-                      if (_pages[i].body != null) ...[
-                        const SizedBox(height: 24),
-                        Text(
-                          _pages[i].body!,
-                          style: const TextStyle(fontSize: 18),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                      const Spacer(),
-                      if (i < _pages.length - 1)
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
+                  minimum: const EdgeInsets.all(16),
+                  child: Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 500),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Spacer(),
+                          if (_pages[i].title != null) ...[
                             Text(
-                              'Swipe to continue',
-                              style: TextStyle(
-                                fontSize: 18,
-                                color: _pages[i].background != null
-                                    ? Colors.white
-                                    : null,
-                              ),
+                              _pages[i].title!,
+                              style: const TextStyle(fontSize: 28),
+                              textAlign: TextAlign.center,
                             ),
-                            Icon(
-                              Icons.chevron_right,
-                              size: 30,
-                              color: _pages[i].background != null
-                                  ? Colors.white
-                                  : null,
+                            const SizedBox(height: 24),
+                          ],
+                          _pages[i].middle,
+                          if (_pages[i].body != null) ...[
+                            const SizedBox(height: 24),
+                            Text(
+                              _pages[i].body!,
+                              style: const TextStyle(fontSize: 18),
+                              textAlign: TextAlign.center,
                             ),
                           ],
-                        )
-                      else
-                        OutlinedButton(
-                          onPressed: () {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (_) => const LoginView()),
-                              (_) => false,
-                            );
-                          },
-                          child: const Text('Tap to continue'),
-                        ),
-                    ],
+                          const Spacer(),
+                          if (i < _pages.length - 1)
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  'Swipe to continue',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: _pages[i].background != null
+                                        ? Colors.white
+                                        : null,
+                                  ),
+                                ),
+                                Icon(
+                                  Icons.chevron_right,
+                                  size: 30,
+                                  color: _pages[i].background != null
+                                      ? Colors.white
+                                      : null,
+                                ),
+                              ],
+                            )
+                          else
+                            OutlinedButton(
+                              onPressed: () {
+                                Navigator.pushAndRemoveUntil(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (_) => const LoginView()),
+                                  (_) => false,
+                                );
+                              },
+                              child: const Text('Tap to continue'),
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              )
+              ),
           ],
         ),
       );

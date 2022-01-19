@@ -38,47 +38,50 @@ class _LoginViewState extends State<LoginView> {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(5),
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const Text(
-                    'Crimson OpenGov',
-                    style: TextStyle(fontSize: 32),
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'A platform for direct democracy.',
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _textController,
-                    autocorrect: false,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      suffixText: '@college.harvard.edu',
-                      hintText: 'Username',
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(5),
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const Text(
+                      'Crimson OpenGov',
+                      style: TextStyle(fontSize: 32),
                     ),
-                    autofocus: true,
-                  ),
-                  const SizedBox(height: 8),
-                  OutlinedButton(
-                    onPressed: _textController.text.isNotEmpty
-                        ? _onButtonPressed
-                        : null,
-                    child: const Text('Log In'),
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    const Text(
+                      'A platform for direct democracy.',
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _textController,
+                      autocorrect: false,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        suffixText: '@college.harvard.edu',
+                        hintText: 'Username',
+                      ),
+                      autofocus: true,
+                    ),
+                    const SizedBox(height: 8),
+                    OutlinedButton(
+                      onPressed: _textController.text.isNotEmpty
+                          ? _onButtonPressed
+                          : null,
+                      child: const Text('Log In'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

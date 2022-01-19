@@ -56,45 +56,48 @@ class _VerificationViewState extends State<VerificationView> {
   Widget build(BuildContext context) => Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8),
-            child: Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(5),
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Enter the code sent to your email address.',
-                    style: TextStyle(fontSize: 18),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  const Text(
-                    'You may have to check your spam folder.',
-                    style: TextStyle(fontSize: 14),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: _textController,
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Padding(
+              padding: const EdgeInsets.all(8),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(5),
+                  color: Theme.of(context).colorScheme.onBackground,
+                ),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Enter the code sent to your email address.',
+                      style: TextStyle(fontSize: 18),
+                      textAlign: TextAlign.center,
                     ),
-                    keyboardType: TextInputType.number,
-                    autofocus: true,
-                  ),
-                  const SizedBox(height: 8),
-                  OutlinedButton(
-                    onPressed: _onButtonPressed,
-                    child: const Text('Verify'),
-                  ),
-                ],
+                    const SizedBox(height: 8),
+                    const Text(
+                      'You may have to check your spam folder.',
+                      style: TextStyle(fontSize: 14),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 8),
+                    TextField(
+                      controller: _textController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                      ),
+                      keyboardType: TextInputType.number,
+                      autofocus: true,
+                    ),
+                    const SizedBox(height: 8),
+                    OutlinedButton(
+                      onPressed: _onButtonPressed,
+                      child: const Text('Verify'),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
