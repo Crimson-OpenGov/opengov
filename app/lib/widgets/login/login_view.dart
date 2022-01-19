@@ -23,7 +23,7 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Future<void> _onButtonPressed() async {
-    final username = _textController.text;
+    final username = _textController.text.split('@')[0];
     final response = await HttpService.login(LoginRequest(username: username));
 
     if (response?.success ?? false) {
@@ -63,9 +63,11 @@ class _LoginViewState extends State<LoginView> {
                   const SizedBox(height: 8),
                   TextField(
                     controller: _textController,
+                    autocorrect: false,
                     decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       suffixText: '@college.harvard.edu',
+                      hintText: 'Username',
                     ),
                     autofocus: true,
                   ),
