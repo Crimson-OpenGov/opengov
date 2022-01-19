@@ -79,6 +79,7 @@ class _AddCommentState extends State<AddComment> {
             ),
             keyboardType: TextInputType.multiline,
             maxLines: null,
+            textInputAction: TextInputAction.done,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
