@@ -13,11 +13,15 @@ class Poll {
   @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
   final DateTime end;
 
+  @JsonKey(name: 'is_permanent', fromJson: boolFromJson, toJson: boolToJson)
+  final bool isPermanent;
+
   const Poll({
     required this.id,
     required this.topic,
     required this.description,
     required this.end,
+    this.isPermanent = false,
   });
 
   factory Poll.fromJson(Json json) => _$PollFromJson(json);

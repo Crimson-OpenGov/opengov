@@ -17,6 +17,7 @@ class _CreatePollState extends State<CreatePoll> {
   final _topicController = TextEditingController();
   final _descriptionController = TextEditingController();
   DateTime? _end;
+  var _isPermanent = false;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -45,6 +46,7 @@ class _CreatePollState extends State<CreatePoll> {
         topic: _topicController.text,
         description: description.isEmpty ? null : description,
         end: _end!,
+        isPermanent: _isPermanent,
       );
       final response = await HttpService.createPoll(poll);
 
@@ -122,6 +124,20 @@ class _CreatePollState extends State<CreatePoll> {
                     setState(() {
                       _end = value;
                     });
+                  },
+                ),
+                const SizedBox(height: 16),
+                CheckboxListTile(
+                  title: const Text('Permanent'),
+                  controlAffinity: ListTileControlAffinity.leading,
+                  contentPadding: EdgeInsets.zero,
+                  value: _isPermanent,
+                  onChanged: (value) {
+                    if (value != null) {
+                      setState(() {
+                        _isPermanent = value;
+                      });
+                    }
                   },
                 ),
               ],

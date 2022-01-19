@@ -23,8 +23,9 @@ class PollsList extends StatefulWidget {
 }
 
 class _PollsListState extends State<PollsList> {
-  Iterable<Poll>? _activePolls;
-  Iterable<Poll>? _inactivePolls;
+  Iterable<Poll>? _timelyPolls;
+  Iterable<Poll>? _permanentPolls;
+  Iterable<Poll>? _finishedPolls;
   User? _me;
 
   @override
@@ -36,7 +37,7 @@ class _PollsListState extends State<PollsList> {
   Future<void> _fetchData() async {
     try {
       final responses =
-      await Future.wait([HttpService.getMe(), HttpService.listPolls()]);
+          await Future.wait([HttpService.getMe(), HttpService.listPolls()]);
 
       if (responses.every((response) => response != null)) {
         final meResponse = responses[0] as User;
@@ -44,8 +45,11 @@ class _PollsListState extends State<PollsList> {
 
         setState(() {
           _me = meResponse;
-          _activePolls = pollsResponse.polls.where((poll) => poll.isActive);
-          _inactivePolls = pollsResponse.polls.where((poll) => !poll.isActive);
+          _timelyPolls = pollsResponse.polls
+              .where((poll) => poll.isActive && !poll.isPermanent);
+          _permanentPolls = pollsResponse.polls
+              .where((poll) => poll.isActive && poll.isPermanent);
+          _finishedPolls = pollsResponse.polls.where((poll) => !poll.isActive);
         });
       }
     } on AuthenticationException {
@@ -54,7 +58,7 @@ class _PollsListState extends State<PollsList> {
       unawaited(Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (_) => const LoginView()),
-            (_) => false,
+        (_) => false,
       ));
 
       showMessageDialog(context,
@@ -92,11 +96,10 @@ class _PollsListState extends State<PollsList> {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) =>
-            poll.isActive
+            builder: (_) => poll.isActive
                 ? isAdmin
-                ? PollAdmin(poll: poll)
-                : PollDetails(poll: poll)
+                    ? PollAdmin(poll: poll)
+                    : PollDetails(poll: poll)
                 : PollReport(poll: poll),
           ),
         );
@@ -105,8 +108,7 @@ class _PollsListState extends State<PollsList> {
   }
 
   @override
-  Widget build(BuildContext context) =>
-      Scaffold(
+  Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: const Text('Polls'),
           elevation: 0,
@@ -122,22 +124,28 @@ class _PollsListState extends State<PollsList> {
               ),
           ],
         ),
-        body: _activePolls == null || _inactivePolls == null
+        body: _timelyPolls == null ||
+                _permanentPolls == null ||
+                _finishedPolls == null
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
-          onRefresh: _fetchData,
-          child: ListView(
-            children: [
-              if (_activePolls!.isNotEmpty) ...[
-                const ListHeader('Active'),
-                for (final poll in _activePolls!) _pollListTile(poll),
-              ],
-              if (_inactivePolls!.isNotEmpty) ...[
-                const ListHeader('Inactive'),
-                for (final poll in _inactivePolls!) _pollListTile(poll),
-              ],
-            ],
-          ),
-        ),
+                onRefresh: _fetchData,
+                child: ListView(
+                  children: [
+                    if (_timelyPolls!.isNotEmpty) ...[
+                      const ListHeader('Timely'),
+                      for (final poll in _timelyPolls!) _pollListTile(poll),
+                    ],
+                    if (_permanentPolls!.isNotEmpty) ...[
+                      const ListHeader('Permanent'),
+                      for (final poll in _permanentPolls!) _pollListTile(poll),
+                    ],
+                    if (_finishedPolls!.isNotEmpty) ...[
+                      const ListHeader('Finished'),
+                      for (final poll in _finishedPolls!) _pollListTile(poll),
+                    ],
+                  ],
+                ),
+              ),
       );
 }
