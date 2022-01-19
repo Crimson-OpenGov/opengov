@@ -14,16 +14,33 @@ class AboutPage extends StatelessWidget {
         slivers: [
           const SliverToBoxAdapter(child: SizedBox(height: 20)),
           SliverToBoxAdapter(
-            child: Column(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Crimson OpenGov', style: TextStyle(fontSize: 24)),
-                FutureBuilder<PackageInfo>(
-                  future: PackageInfo.fromPlatform(),
-                  builder: (_, snapshot) => snapshot.hasData
-                      ? Text('Version ${snapshot.data!.version}+'
-                          '${snapshot.data!.buildNumber}')
-                      : const SizedBox(),
-                )
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(84 * .22),
+                  child: Image.asset('assets/images/icon.png', width: 84),
+                ),
+                const SizedBox(width: 8),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Crimson OpenGov',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    FutureBuilder<PackageInfo>(
+                      future: PackageInfo.fromPlatform(),
+                      builder: (_, snapshot) => snapshot.hasData
+                          ? Text(
+                              'Version ${snapshot.data!.version}+'
+                              '${snapshot.data!.buildNumber}',
+                              style: const TextStyle(fontSize: 16),
+                            )
+                          : const SizedBox(),
+                    )
+                  ],
+                ),
               ],
             ),
           ),
