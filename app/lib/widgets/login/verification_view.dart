@@ -75,6 +75,12 @@ class _VerificationViewState extends State<VerificationView> {
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(height: 8),
+                  const Text(
+                    'You may have to check your spam folder.',
+                    style: TextStyle(fontSize: 14),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 8),
                   TextField(
                     controller: _textController,
                     decoration: const InputDecoration(
