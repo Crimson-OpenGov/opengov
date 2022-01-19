@@ -23,6 +23,7 @@ void main(List<String> args) async {
             'topic TEXT NOT NULL, description TEXT, end INTEGER NOT NULL)');
         await db.execute('CREATE TABLE Comment (id INTEGER PRIMARY KEY, '
             'poll_id INTEGER NOT NULL, user_id INTEGER, comment TEXT NOT NULL, '
+            'timestamp INTEGER NOT NULL, '
             'is_approved BOOLEAN NOT NULL DEFAULT FALSE)');
         await db.execute('CREATE TABLE PendingLogin (id INTEGER PRIMARY KEY, '
             'username STRING NOT NULL, code STRING NOT NULL)');
@@ -32,7 +33,7 @@ void main(List<String> args) async {
         await db.execute(
             'CREATE TABLE Vote (id INTEGER PRIMARY KEY, user_id INTEGER, '
             'comment_id INTEGER NOT NULL, score INTEGER NOT NULL, '
-            'reason TEXT DEFAULT NULL)');
+            'reason TEXT DEFAULT NULL, timestamp INTEGER NOT NULL)');
       },
     ),
   );

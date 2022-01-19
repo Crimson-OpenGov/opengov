@@ -10,7 +10,7 @@ class Poll {
   final String topic;
   final String? description;
 
-  @JsonKey(fromJson: fromMillisecondsSinceEpoch, toJson: dateTimeToJson)
+  @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
   final DateTime end;
 
   const Poll({

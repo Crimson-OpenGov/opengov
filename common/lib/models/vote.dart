@@ -13,8 +13,15 @@ class Vote {
 
   final int score;
 
-  const Vote(
-      {required this.userId, required this.commentId, required this.score});
+  @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
+  final DateTime timestamp;
+
+  const Vote({
+    required this.userId,
+    required this.commentId,
+    required this.score,
+    required this.timestamp,
+  });
 
   factory Vote.fromJson(Json json) => _$VoteFromJson(json);
 

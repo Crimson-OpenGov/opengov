@@ -10,7 +10,7 @@ Poll _$PollFromJson(Map<String, dynamic> json) => Poll(
       id: json['id'] as int,
       topic: json['topic'] as String,
       description: json['description'] as String?,
-      end: fromMillisecondsSinceEpoch(json['end'] as int),
+      end: dateTimeFromJson(json['end'] as int),
     );
 
 Map<String, dynamic> _$PollToJson(Poll instance) => <String, dynamic>{

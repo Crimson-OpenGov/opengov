@@ -131,6 +131,7 @@ class PollService {
       'poll_id': poll.id,
       'user_id': user.id,
       'comment': addCommentRequest.comment,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
       if (!enforceModeration) 'is_approved': 1,
     });
 
@@ -160,6 +161,7 @@ class PollService {
       'comment_id': voteRequest.commentId,
       'score': voteRequest.score,
       if (voteRequest.reason != null) 'reason': voteRequest.reason,
+      'timestamp': DateTime.now().millisecondsSinceEpoch,
     });
 
     return genericResponse(success: dbResponse != 0);

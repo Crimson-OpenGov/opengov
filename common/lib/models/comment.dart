@@ -14,6 +14,9 @@ class Comment {
   final int? userId;
   final String comment;
 
+  @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
+  final DateTime timestamp;
+
   @JsonKey(name: 'is_approved', fromJson: boolFromJson, toJson: boolToJson)
   final bool isApproved;
 
@@ -22,6 +25,7 @@ class Comment {
     required this.pollId,
     required this.userId,
     required this.comment,
+    required this.timestamp,
     this.isApproved = false,
   });
 
