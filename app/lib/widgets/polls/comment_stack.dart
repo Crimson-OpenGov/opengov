@@ -46,6 +46,7 @@ class _CommentStackState extends State<CommentStack> {
                       comment: _comment,
                       onActionPressed: _onActionPressed,
                     ),
+                    const SizedBox(height: 8),
                     Text('Comment ${_index + 1}/${widget.comments.length}'),
                   ],
                 ),
