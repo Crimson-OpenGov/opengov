@@ -39,9 +39,15 @@ class _CommentStackState extends State<CommentStack> {
           padding: const EdgeInsets.all(8),
           child: _index >= widget.comments.length
               ? const Text('No more comments.')
-              : CommentCard(
-                  comment: _comment,
-                  onActionPressed: _onActionPressed,
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    CommentCard(
+                      comment: _comment,
+                      onActionPressed: _onActionPressed,
+                    ),
+                    Text('Comment ${_index + 1}/${widget.comments.length}'),
+                  ],
                 ),
         ),
       );
