@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/models/poll.dart';
@@ -14,6 +13,8 @@ class AddComment extends StatefulWidget {
 }
 
 class _AddCommentState extends State<AddComment> {
+  static const _limit = 250;
+
   final _textController = TextEditingController();
   String? _responseMessage;
 
@@ -26,7 +27,7 @@ class _AddCommentState extends State<AddComment> {
     });
   }
 
-  int get _remainingCharacters => 140 - _textController.text.length;
+  int get _remainingCharacters => _limit - _textController.text.length;
 
   Future<void> _addComment() async {
     final response = await HttpService.addComment(AddCommentRequest(
@@ -91,7 +92,7 @@ class _AddCommentState extends State<AddComment> {
               const SizedBox(width: 8),
               ElevatedButton(
                 onPressed:
-                    _remainingCharacters < 140 && _remainingCharacters >= 0
+                    _remainingCharacters < _limit && _remainingCharacters >= 0
                         ? _addComment
                         : null,
                 child: const Text('Submit'),
