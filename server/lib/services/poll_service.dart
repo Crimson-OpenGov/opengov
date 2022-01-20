@@ -85,10 +85,12 @@ class PollService {
           .map(Vote.fromJson);
 
       comments.add(ReportComment(
+        commentId: comment.id,
         comment: comment.comment,
         agreeCount: votesResponse.where((vote) => vote.score == 1).length,
         disagreeCount: votesResponse.where((vote) => vote.score == -1).length,
         passCount: votesResponse.where((vote) => vote.score == 0).length,
+        isApproved: comment.isApproved,
       ));
     }
 

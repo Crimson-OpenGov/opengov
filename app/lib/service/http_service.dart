@@ -85,9 +85,6 @@ class HttpService {
   static Future<GenericResponse?> createPoll(Poll poll) =>
       _post('admin/create-poll', poll.toJson(), GenericResponse.fromJson);
 
-  static Future<PollDetailsResponse?> getPollDetailsAdmin(Poll poll) =>
-      _get('admin/poll-details/${poll.id}', PollDetailsResponse.fromJson);
-
   static Future<GenericResponse?> updateComment(UpdateCommentRequest request) =>
       _post('admin/update-comment', request.toJson(), GenericResponse.fromJson);
 

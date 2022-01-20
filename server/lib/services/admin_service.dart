@@ -1,8 +1,4 @@
-import 'dart:convert';
-
-import 'package:opengov_common/actions/poll_details.dart';
 import 'package:opengov_common/actions/update_comment.dart';
-import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_server/common.dart';
 import 'package:opengov_server/util/firebase.dart';
@@ -35,24 +31,6 @@ class AdminService {
     }
 
     return genericResponse(success: success);
-  }
-
-  @Route.get('/poll-details/<pollId>')
-  Future<Response> getPollDetails(Request request) async {
-    final user = await request.decodeAuth(_database);
-
-    if (user?.isNotAdmin ?? true) {
-      return Response.forbidden(null);
-    }
-
-    final pollId = int.parse(request.params['pollId']!);
-    final commentsResponse = (await _database
-            .query('Comment', where: 'poll_id = ?', whereArgs: [pollId]))
-        .map(Comment.fromJson)
-        .toList(growable: false);
-
-    return Response.ok(
-        json.encode(PollDetailsResponse(comments: commentsResponse)));
   }
 
   @Route.post('/update-comment')

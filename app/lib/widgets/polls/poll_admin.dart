@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/base/list_header.dart';
+import 'package:opengov_app/widgets/polls/neapolitan.dart';
 import 'package:opengov_common/actions/update_comment.dart';
-import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
+import 'package:opengov_common/models/report.dart';
 
 class PollAdmin extends StatefulWidget {
   final Poll poll;
@@ -15,8 +16,8 @@ class PollAdmin extends StatefulWidget {
 }
 
 class _PollAdminState extends State<PollAdmin> {
-  Iterable<Comment>? _moderationQueue;
-  Iterable<Comment>? _approvedComments;
+  Iterable<ReportComment>? _moderationQueue;
+  Iterable<ReportComment>? _approvedComments;
 
   @override
   void initState() {
@@ -25,7 +26,7 @@ class _PollAdminState extends State<PollAdmin> {
   }
 
   Future<void> _fetchComments() async {
-    final response = await HttpService.getPollDetailsAdmin(widget.poll);
+    final response = await HttpService.getReport(widget.poll);
 
     if (response != null) {
       setState(() {
@@ -38,20 +39,34 @@ class _PollAdminState extends State<PollAdmin> {
   }
 
   Future<void> _updateComment(
-      Comment comment, UpdateCommentAction action) async {
+      ReportComment comment, UpdateCommentAction action) async {
     final response = await HttpService.updateComment(
-        UpdateCommentRequest(commentId: comment.id, action: action));
+        UpdateCommentRequest(commentId: comment.commentId, action: action));
 
     if (response?.success ?? false) {
       await _fetchComments();
     }
   }
 
-  Widget _commentListTile(Comment comment) => ListTile(
-        title: Text(comment.comment),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
+  Widget _commentListTile(ReportComment comment) => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
           children: [
+            Expanded(child: Text(comment.comment)),
+            const SizedBox(width: 16),
+            Neapolitan(
+              pieces: [
+                comment.agreeCount,
+                comment.passCount,
+                comment.disagreeCount
+              ],
+              colors: const [
+                Colors.green,
+                Colors.white,
+                Colors.red,
+              ],
+            ),
+            const SizedBox(width: 16),
             IconButton(
               onPressed: () {
                 _updateComment(comment, UpdateCommentAction.delete);
