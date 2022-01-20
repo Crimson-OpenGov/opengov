@@ -14,9 +14,15 @@ class Firebase {
 
   static final _client = Client();
   static late Json _json;
+  static var _isDev = false;
 
   static Future<void> setup() async {
     _json = json.decode(await File('sa.json').readAsString());
+
+    assert(() {
+      _isDev = true;
+      return true;
+    }());
   }
 
   static String _jwt() {
@@ -47,6 +53,10 @@ class Firebase {
 
   static Future<bool> sendNotification(
       {required String title, required String body}) async {
+    if (_isDev) {
+      return true;
+    }
+
     final token = await _fetchToken();
 
     final response = await _client.post(
