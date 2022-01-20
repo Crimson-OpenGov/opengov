@@ -89,7 +89,10 @@ class _PollsListState extends State<PollsList> {
     final isAdmin = _me!.isAdmin;
 
     return ListTile(
-      leading: const Icon(Icons.poll),
+      leading: Text(
+        poll.emoji,
+        style: const TextStyle(fontSize: 24),
+      ),
       title: Text(poll.topic),
       subtitle: Text('$subtitleLeading ${poll.endFormatted}$subtitleTrailing.'),
       onTap: () {

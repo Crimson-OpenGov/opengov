@@ -21,6 +21,7 @@ void main(List<String> args) async {
       onCreate: (db, _) async {
         await db.execute('CREATE TABLE Poll (id INTEGER PRIMARY KEY, '
             'topic TEXT NOT NULL, description TEXT, end INTEGER NOT NULL, '
+            'emoji TEXT NOT NULL, '
             'is_permanent BOOLEAN NOT NULL DEFAULT FALSE)');
         await db.execute('CREATE TABLE Comment (id INTEGER PRIMARY KEY, '
             'poll_id INTEGER NOT NULL, user_id INTEGER, comment TEXT NOT NULL, '

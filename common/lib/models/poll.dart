@@ -13,6 +13,8 @@ class Poll {
   @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
   final DateTime end;
 
+  final String emoji;
+
   @JsonKey(name: 'is_permanent', fromJson: boolFromJson, toJson: boolToJson)
   final bool isPermanent;
 
@@ -21,6 +23,7 @@ class Poll {
     required this.topic,
     required this.description,
     required this.end,
+    required this.emoji,
     this.isPermanent = false,
   });
 

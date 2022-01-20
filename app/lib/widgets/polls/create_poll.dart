@@ -17,6 +17,8 @@ class _CreatePollState extends State<CreatePoll> {
   final _topicController = TextEditingController();
   final _descriptionController = TextEditingController();
   DateTime? _end;
+  final _emojiController =
+      TextEditingController(text: String.fromCharCode(0x1F4AC));
   var _isPermanent = false;
 
   final _formKey = GlobalKey<FormState>();
@@ -46,6 +48,7 @@ class _CreatePollState extends State<CreatePoll> {
         topic: _topicController.text,
         description: description.isEmpty ? null : description,
         end: _end!,
+        emoji: _emojiController.text,
         isPermanent: _isPermanent,
       );
       final response = await HttpService.createPoll(poll);
@@ -127,6 +130,19 @@ class _CreatePollState extends State<CreatePoll> {
                   },
                 ),
                 const SizedBox(height: 16),
+                ListTile(
+                  leading: SizedBox(
+                    width: 20,
+                    child: TextFormField(
+                      controller: _emojiController,
+                      maxLength: 1,
+                      decoration: const InputDecoration(counter: SizedBox()),
+                      validator: _isNotEmptyValidator,
+                    ),
+                  ),
+                  title: const Text('Emoji'),
+                ),
+                const SizedBox(height: 16),
                 CheckboxListTile(
                   title: const Text('Permanent'),
                   controlAffinity: ListTileControlAffinity.leading,
@@ -160,6 +176,7 @@ class _CreatePollState extends State<CreatePoll> {
   void dispose() {
     _topicController.dispose();
     _descriptionController.dispose();
+    _emojiController.dispose();
     super.dispose();
   }
 }
