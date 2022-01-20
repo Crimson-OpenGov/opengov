@@ -27,7 +27,8 @@ void main(List<String> args) async {
             'timestamp INTEGER NOT NULL, '
             'is_approved BOOLEAN NOT NULL DEFAULT FALSE)');
         await db.execute('CREATE TABLE PendingLogin (id INTEGER PRIMARY KEY, '
-            'username STRING NOT NULL, code STRING NOT NULL)');
+            'username STRING NOT NULL, code STRING NOT NULL, '
+            'expiration INTEGER NOT NULL)');
         await db.execute('CREATE TABLE User (id INTEGER PRIMARY KEY, '
             'username STRING NOT NULL, '
             'is_admin BOOLEAN NOT NULL DEFAULT FALSE)');

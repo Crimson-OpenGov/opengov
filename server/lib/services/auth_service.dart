@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:opengov_common/actions/login.dart';
+import 'package:opengov_common/models/pending_login.dart';
 import 'package:opengov_common/models/token.dart';
 import 'package:opengov_server/common.dart';
 import 'package:opengov_server/util/email_service.dart';
@@ -32,8 +33,12 @@ class AuthService {
         .delete('PendingLogin', where: 'username = ?', whereArgs: [username]);
 
     final code = _generateCode();
-    final success = await _database
-        .insert('PendingLogin', {'username': username, 'code': code});
+    final success = await _database.insert('PendingLogin', {
+      'username': username,
+      'code': code,
+      'expiration':
+          DateTime.now().add(Duration(minutes: 10)).millisecondsSinceEpoch,
+    });
     final emailSuccess =
         await EmailService.sendVerificationEmail(username, code);
 
@@ -48,12 +53,22 @@ class AuthService {
     final code = verificationRequest.code;
 
     if (username != 'appleTest' || code != '1234') {
-      final numRowsDeleted = await _database.delete('PendingLogin',
-          where: 'username = ? AND code = ?', whereArgs: [username, code]);
+      final pendingLogins = (await _database.query('PendingLogin',
+              where: 'username = ?', whereArgs: [username]))
+          .map(PendingLogin.fromJson)
+          .toList(growable: false);
 
-      if (numRowsDeleted == 0) {
+      if (pendingLogins.every((pendingLogin) =>
+          pendingLogin.code != code || !pendingLogin.isActive)) {
         return Response.ok(json.encode(VerificationResponse(token: null)));
       }
+
+      await _database.transaction((txn) async {
+        for (final pendingLogin in pendingLogins) {
+          await txn.delete('PendingLogin',
+              where: 'id = ?', whereArgs: [pendingLogin.id]);
+        }
+      });
 
       final existingUser = await _database
           .query('User', where: 'username = ?', whereArgs: [username]);

@@ -11,7 +11,9 @@ Poll _$PollFromJson(Map<String, dynamic> json) => Poll(
       topic: json['topic'] as String,
       description: json['description'] as String?,
       end: dateTimeFromJson(json['end'] as int),
-      isPermanent: boolFromJson(json['is_permanent'] as int),
+      isPermanent: json['is_permanent'] == null
+          ? false
+          : boolFromJson(json['is_permanent'] as int),
     );
 
 Map<String, dynamic> _$PollToJson(Poll instance) => <String, dynamic>{

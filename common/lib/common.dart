@@ -11,3 +11,9 @@ DateTime dateTimeFromJson(int value) =>
     DateTime.fromMillisecondsSinceEpoch(value);
 
 int dateTimeToJson(DateTime value) => value.millisecondsSinceEpoch;
+
+// Needed because sqflite returns the code as an int even though we want to
+// treat it as a String.
+String codeFromJson(int value) => value.toString();
+
+int codeToJson(String value) => int.parse(value);
