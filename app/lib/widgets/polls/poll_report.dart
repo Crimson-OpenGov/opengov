@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/polls/neapolitan.dart';
@@ -36,13 +38,12 @@ class _PollReportState extends State<PollReport> {
     var pieces = [comment.agreeCount, comment.passCount, comment.disagreeCount];
 
     assert(() {
-      if (comment.comment.startsWith('Limit')) {
-        pieces = [600, 290, 1000];
-      } else if (comment.comment.startsWith('Through')) {
-        pieces = [800, 550, 725];
-      } else if (comment.comment.startsWith('Launch')) {
-        pieces = [2100, 160, 50];
-      }
+      final random = Random();
+      pieces = [
+        random.nextInt(2000) + 500,
+        random.nextInt(1000),
+        random.nextInt(2000) + 500,
+      ];
       return true;
     }());
 
@@ -86,6 +87,7 @@ class _PollReportState extends State<PollReport> {
                         children: [
                           Flexible(
                             flex: 3,
+                            fit: FlexFit.tight,
                             child: Text(
                               comment.comment,
                               style: const TextStyle(fontSize: 16),
