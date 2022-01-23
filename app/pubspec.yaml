@@ -8,8 +8,8 @@ environment:
 
 dependencies:
   datetime_picker_formfield: ^2.0.0
-  firebase_core: ^1.10.6
-  firebase_messaging: ^11.2.4
+  firebase_core: ^1.11.0
+  firebase_messaging: ^11.2.5
   flutter:
     sdk: flutter
   http: ^0.13.4
@@ -18,7 +18,7 @@ dependencies:
   opengov_common:
     path: ../common
   package_info_plus: ^1.3.0
-  shared_preferences: ^2.0.11
+  shared_preferences: ^2.0.12
   url_launcher: ^6.0.18
 
 dev_dependencies:
