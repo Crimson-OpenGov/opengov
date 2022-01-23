@@ -13,7 +13,7 @@ class AddComment extends StatefulWidget {
 }
 
 class _AddCommentState extends State<AddComment> {
-  static const _limit = 250;
+  static const _limit = 420;
 
   final _textController = TextEditingController();
   String? _responseMessage;
