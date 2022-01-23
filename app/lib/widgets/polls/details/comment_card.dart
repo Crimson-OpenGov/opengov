@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:opengov_app/common.dart';
+import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
 
 enum CommentAction { agree, disagree, pass }
@@ -14,11 +16,9 @@ extension CommentActionScore on CommentAction {
   int get score => _scoreMap[this]!;
 }
 
-typedef ActionPressed = void Function(CommentAction action, String? reason);
-
 class CommentCard extends StatefulWidget {
   final Comment comment;
-  final ActionPressed onActionPressed;
+  final VoidCallback onActionPressed;
 
   const CommentCard({required this.comment, required this.onActionPressed});
 
@@ -44,9 +44,14 @@ class _CommentCardState extends State<CommentCard> {
     );
   }
 
-  void _onVotePressed(CommentAction action) {
+  Future<void> _onVotePressed(CommentAction action) async {
     final reason = _reasonController.text;
-    widget.onActionPressed(action, reason.isEmpty ? null : reason);
+    final response = await HttpService.vote(VoteRequest(
+        commentId: widget.comment.id, score: action.score, reason: reason));
+
+    if (response?.success ?? false) {
+      widget.onActionPressed();
+    }
   }
 
   @override
@@ -132,7 +137,7 @@ class _CommentCardState extends State<CommentCard> {
                       Icon(Icons.redo, color: Colors.white),
                       SizedBox(width: 8),
                       Text(
-                        'Pass / Unsure',
+                        'Unsure/Neutral',
                         style: TextStyle(color: Colors.white),
                       ),
                     ],
