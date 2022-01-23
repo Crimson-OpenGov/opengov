@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:in_app_review/in_app_review.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/models/poll.dart';
@@ -51,19 +52,18 @@ class _AddCommentState extends State<AddComment> {
         });
         break;
       case AddCommentResponseReason.needsApproval:
-        setState(() {
-          _responseMessage =
-              'Comment sent! Your comment will be displayed to other users '
-              'once it is approved by an admin.';
-          _textController.clear();
-        });
-        break;
       case AddCommentResponseReason.approved:
         setState(() {
-          _responseMessage =
-              'Comment sent! Your comment is now visible to other users.';
+          _responseMessage = response!.reason ==
+                  AddCommentResponseReason.needsApproval
+              ? 'Comment sent! Your comment will be displayed to other users '
+                  'once it is approved by an admin.'
+              : 'Comment sent! Your comment is now visible to other users.';
           _textController.clear();
         });
+        if (await InAppReview.instance.isAvailable()) {
+          InAppReview.instance.requestReview();
+        }
         break;
     }
   }

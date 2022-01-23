@@ -13,6 +13,7 @@ dependencies:
   flutter:
     sdk: flutter
   http: ^0.13.4
+  in_app_review: ^2.0.4
   intl: ^0.17.0
   opengov_common:
     path: ../common
