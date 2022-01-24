@@ -57,6 +57,16 @@ class AboutPage extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: ListTile(
+              title: const Text('Frequently asked questions'),
+              leading: const Icon(Icons.help),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                launch('https://crimsonopengov.us/faqs');
+              },
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: ListTile(
               title: const Text('Source code'),
               leading: const Icon(Icons.code),
               trailing: const Icon(Icons.chevron_right),
