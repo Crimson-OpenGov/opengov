@@ -62,9 +62,10 @@ class Explainer extends StatelessWidget {
       middle: Icon(Icons.cancel, size: 128, color: Colors.red),
       body:
           "Crimson OpenGov is anonymous. We don't collect names or PII. While "
-          "we collect your Harvard email to ensure that poll respondents are "
-          "Harvard students, we will never use this to identify the authors of "
-          "specific comments or votes.",
+          'we collect your Harvard email to ensure that poll respondents are '
+          'Harvard students, we will never use this to identify the authors of '
+          'specific comments or votes.\n\nCrimson OpenGov only removes '
+          'comments for hate speech or offensive content.',
     ),
   ];
 
