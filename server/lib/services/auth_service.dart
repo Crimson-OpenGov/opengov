@@ -87,7 +87,8 @@ class AuthService {
         json.encode(VerificationResponse(token: token.toString())));
   }
 
-  String _generateCode() => List.generate(4, (_) => _random.nextInt(10)).join();
+  String _generateCode() =>
+      List.generate(4, (_) => _random.nextInt(9) + 1).join();
 
   Router get router => _$AuthServiceRouter(this);
 }
