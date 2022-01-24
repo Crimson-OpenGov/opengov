@@ -4,42 +4,28 @@ import 'package:opengov_common/models/comment.dart';
 
 class CommentList extends StatefulWidget {
   final List<Comment> comments;
+  final VoidCallback onActionPressed;
 
-  const CommentList({required this.comments});
+  const CommentList({required this.comments, required this.onActionPressed});
 
   @override
   State<StatefulWidget> createState() => _CommentListState();
 }
 
 class _CommentListState extends State<CommentList> {
-  late List<Comment> _comments;
-
   @override
   void initState() {
     super.initState();
-    _comments = widget.comments;
   }
 
   @override
-  void didUpdateWidget(covariant CommentList oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    _comments = widget.comments;
-  }
-
-  void _onActionPressed(int i) {
-    setState(() {
-      _comments.removeAt(i);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) => _comments.isEmpty
+  Widget build(BuildContext context) => widget.comments.isEmpty
       ? const Text('No more comments.')
       : Column(
           children: [
-            for (var i = 0; i < _comments.length; i++)
+            for (var i = 0; i < widget.comments.length; i++)
               Padding(
-                  padding: i < _comments.length - 1
+                padding: i < widget.comments.length - 1
                     ? const EdgeInsets.only(bottom: 8)
                     : EdgeInsets.zero,
                 child: Container(
@@ -49,10 +35,8 @@ class _CommentListState extends State<CommentList> {
                   ),
                   padding: const EdgeInsets.all(8),
                   child: CommentCard(
-                    comment: _comments[i],
-                    onActionPressed: () {
-                      _onActionPressed(i);
-                    },
+                    comment: widget.comments[i],
+                    onActionPressed: widget.onActionPressed,
                   ),
                 ),
               ),

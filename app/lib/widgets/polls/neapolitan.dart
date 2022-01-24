@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -59,20 +57,8 @@ class Neapolitan extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 4),
-            Text('${_numberFormat.format(total)} votes'),
+            Text('${_numberFormat.format(total)} vote${total == 1 ? '' : 's'}'),
           ],
         ),
       );
-}
-
-extension _ListExtension<T> on List<T> {
-  void replaceMapped(T Function(int index) function) {
-    final newValue = <T>[];
-
-    for (var i = 0; i < length; i++) {
-      newValue.add(function(i));
-    }
-
-    setAll(0, newValue);
-  }
 }

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/polls/neapolitan.dart';
+import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/report.dart';
 
@@ -34,8 +35,8 @@ class _PollReportState extends State<PollReport> {
     }
   }
 
-  List<int> pieces(ReportComment comment) {
-    var pieces = [comment.agreeCount, comment.passCount, comment.disagreeCount];
+  List<int> pieces(CommentStats stats) {
+    var pieces = [stats.agreeCount, stats.passCount, stats.disagreeCount];
 
     assert(() {
       final random = Random();
@@ -97,7 +98,7 @@ class _PollReportState extends State<PollReport> {
                           Flexible(
                             flex: 0,
                             child: Neapolitan(
-                              pieces: pieces(comment),
+                              pieces: pieces(comment.stats!),
                               colors: const [
                                 Colors.green,
                                 Colors.white,

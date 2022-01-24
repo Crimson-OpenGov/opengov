@@ -59,7 +59,10 @@ class _PollDetailsState extends State<PollDetails> {
                     ],
                     AddComment(poll: widget.poll),
                     const SizedBox(height: 16),
-                    CommentList(comments: _comments!),
+                    CommentList(
+                      comments: _comments!,
+                      onActionPressed: _fetchComments,
+                    ),
                   ],
                 ),
               ),

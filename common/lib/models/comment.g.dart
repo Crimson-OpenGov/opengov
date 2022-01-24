@@ -15,6 +15,9 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       isApproved: json['is_approved'] == null
           ? false
           : boolFromJson(json['is_approved'] as int),
+      stats: json['stats'] == null
+          ? null
+          : CommentStats.fromJson(json['stats'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
@@ -24,4 +27,18 @@ Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'comment': instance.comment,
       'timestamp': dateTimeToJson(instance.timestamp),
       'is_approved': boolToJson(instance.isApproved),
+      'stats': instance.stats,
+    };
+
+CommentStats _$CommentStatsFromJson(Map<String, dynamic> json) => CommentStats(
+      agreeCount: json['agreeCount'] as int,
+      disagreeCount: json['disagreeCount'] as int,
+      passCount: json['passCount'] as int,
+    );
+
+Map<String, dynamic> _$CommentStatsToJson(CommentStats instance) =>
+    <String, dynamic>{
+      'agreeCount': instance.agreeCount,
+      'disagreeCount': instance.disagreeCount,
+      'passCount': instance.passCount,
     };

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/widgets/polls/neapolitan.dart';
 import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
 
@@ -78,74 +79,89 @@ class _CommentCardState extends State<CommentCard> {
             ),
           ],
           const SizedBox(height: 8),
-          SizedBox(
-            width: double.infinity,
-            child: Wrap(
-              alignment: WrapAlignment.spaceAround,
-              children: [
-                TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.green),
-                    side: MaterialStateProperty.all(BorderSide.none),
-                  ),
-                  onPressed: () {
-                    _onVotePressed(CommentAction.agree);
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.check_circle_outline, color: Colors.white),
-                      SizedBox(width: 8),
-                      Text(
-                        'Agree',
-                        style: TextStyle(color: Colors.white),
+          widget.comment.stats == null
+              ? SizedBox(
+                  width: double.infinity,
+                  child: Wrap(
+                    alignment: WrapAlignment.spaceAround,
+                    children: [
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.green),
+                          side: MaterialStateProperty.all(BorderSide.none),
+                        ),
+                        onPressed: () {
+                          _onVotePressed(CommentAction.agree);
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(Icons.check_circle_outline,
+                                color: Colors.white),
+                            SizedBox(width: 8),
+                            Text(
+                              'Agree',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.red),
+                          side: MaterialStateProperty.all(BorderSide.none),
+                        ),
+                        onPressed: () {
+                          _onVotePressed(CommentAction.disagree);
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(Icons.block, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text(
+                              'Disagree',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        style: ButtonStyle(
+                          backgroundColor:
+                              MaterialStateProperty.all(Colors.grey),
+                          side: MaterialStateProperty.all(BorderSide.none),
+                        ),
+                        onPressed: () {
+                          _onVotePressed(CommentAction.pass);
+                        },
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: const [
+                            Icon(Icons.redo, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text(
+                              'Unsure/Neutral',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-                TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.red),
-                    side: MaterialStateProperty.all(BorderSide.none),
-                  ),
-                  onPressed: () {
-                    _onVotePressed(CommentAction.disagree);
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.block, color: Colors.white),
-                      SizedBox(width: 8),
-                      Text(
-                        'Disagree',
-                        style: TextStyle(color: Colors.white),
-                      ),
+                )
+              : Center(
+                  child: Neapolitan(
+                    pieces: [
+                      widget.comment.stats!.agreeCount,
+                      widget.comment.stats!.passCount,
+                      widget.comment.stats!.disagreeCount
                     ],
+                    colors: const [Colors.green, Colors.white, Colors.red],
                   ),
                 ),
-                TextButton(
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(Colors.grey),
-                    side: MaterialStateProperty.all(BorderSide.none),
-                  ),
-                  onPressed: () {
-                    _onVotePressed(CommentAction.pass);
-                  },
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: const [
-                      Icon(Icons.redo, color: Colors.white),
-                      SizedBox(width: 8),
-                      Text(
-                        'Unsure/Neutral',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
         ],
       );
 

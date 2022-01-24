@@ -3,8 +3,8 @@ import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/base/list_header.dart';
 import 'package:opengov_app/widgets/polls/neapolitan.dart';
 import 'package:opengov_common/actions/update_comment.dart';
+import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
-import 'package:opengov_common/models/report.dart';
 
 class PollAdmin extends StatefulWidget {
   final Poll poll;
@@ -16,8 +16,8 @@ class PollAdmin extends StatefulWidget {
 }
 
 class _PollAdminState extends State<PollAdmin> {
-  Iterable<ReportComment>? _moderationQueue;
-  Iterable<ReportComment>? _approvedComments;
+  Iterable<Comment>? _moderationQueue;
+  Iterable<Comment>? _approvedComments;
 
   @override
   void initState() {
@@ -39,16 +39,16 @@ class _PollAdminState extends State<PollAdmin> {
   }
 
   Future<void> _updateComment(
-      ReportComment comment, UpdateCommentAction action) async {
+      Comment comment, UpdateCommentAction action) async {
     final response = await HttpService.updateComment(
-        UpdateCommentRequest(commentId: comment.commentId, action: action));
+        UpdateCommentRequest(commentId: comment.id, action: action));
 
     if (response?.success ?? false) {
       await _fetchComments();
     }
   }
 
-  Widget _commentListTile(ReportComment comment) => Padding(
+  Widget _commentListTile(Comment comment) => Padding(
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
@@ -56,9 +56,9 @@ class _PollAdminState extends State<PollAdmin> {
             const SizedBox(width: 16),
             Neapolitan(
               pieces: [
-                comment.agreeCount,
-                comment.passCount,
-                comment.disagreeCount
+                comment.stats!.agreeCount,
+                comment.stats!.passCount,
+                comment.stats!.disagreeCount,
               ],
               colors: const [
                 Colors.green,

@@ -44,23 +44,26 @@ class PollService {
 
     final pollId = int.parse(request.params['pollId']!);
 
-    // Fetch all of the comments that the user voted on.
+    // Fetch all of the IDs of comments that the user voted on.
     final votedCommentIds = (await _database
             .query('Vote', where: 'user_id = ?', whereArgs: [user.id]))
         .map(Vote.fromJson)
         .map((vote) => vote.commentId)
         .toSet();
 
-    // Fetch all comments that the user hasn't voted on yet.
+    // Fetch all comments.
     final commentsResponse = (await _database
             .query('Comment', where: 'poll_id = ?', whereArgs: [pollId]))
         .map(Comment.fromJson)
-        .where((comment) => !votedCommentIds.contains(comment.id))
-        .where((comment) => user.isAdmin || comment.isApproved)
-        .toList(growable: false);
+        .where((comment) => user.isAdmin || comment.isApproved);
 
-    return Response.ok(
-        json.encode(PollDetailsResponse(comments: commentsResponse)));
+    // For all comments the user has voted on, fetch the report details.
+    final comments = await Future.wait(commentsResponse.map((comment) async =>
+        votedCommentIds.contains(comment.id)
+            ? await _addStats(comment)
+            : comment));
+
+    return Response.ok(json.encode(PollDetailsResponse(comments: comments)));
   }
 
   @Route.get('/report/<pollId>')
@@ -78,21 +81,7 @@ class PollService {
         .map(Comment.fromJson)
         .where((comment) => user.isAdmin || comment.isApproved);
 
-    final comments = <ReportComment>[];
-    for (final comment in commentsResponse) {
-      final votesResponse = (await _database
-              .query('Vote', where: 'comment_id = ?', whereArgs: [comment.id]))
-          .map(Vote.fromJson);
-
-      comments.add(ReportComment(
-        commentId: comment.id,
-        comment: comment.comment,
-        agreeCount: votesResponse.where((vote) => vote.score == 1).length,
-        disagreeCount: votesResponse.where((vote) => vote.score == -1).length,
-        passCount: votesResponse.where((vote) => vote.score == 0).length,
-        isApproved: comment.isApproved,
-      ));
-    }
+    final comments = await Future.wait(commentsResponse.map(_addStats));
 
     return Response.ok(json.encode(Report(comments: comments)));
   }
@@ -167,6 +156,20 @@ class PollService {
     });
 
     return genericResponse(success: dbResponse != 0);
+  }
+
+  Future<Comment> _addStats(Comment comment) async {
+    final votesResponse = (await _database
+            .query('Vote', where: 'comment_id = ?', whereArgs: [comment.id]))
+        .map(Vote.fromJson);
+
+    return comment.copyWith(
+      stats: CommentStats(
+        agreeCount: votesResponse.where((vote) => vote.score == 1).length,
+        disagreeCount: votesResponse.where((vote) => vote.score == -1).length,
+        passCount: votesResponse.where((vote) => vote.score == 0).length,
+      ),
+    );
   }
 
   Router get router => _$PollServiceRouter(this);
