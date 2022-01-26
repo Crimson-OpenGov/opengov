@@ -4,21 +4,22 @@ import 'package:intl/intl.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_common/models/poll.dart';
 
-class CreatePoll extends StatefulWidget {
-  const CreatePoll();
+class EditPoll extends StatefulWidget {
+  final Poll? poll;
+
+  const EditPoll({this.poll});
 
   @override
-  _CreatePollState createState() => _CreatePollState();
+  _EditPollState createState() => _EditPollState();
 }
 
-class _CreatePollState extends State<CreatePoll> {
+class _EditPollState extends State<EditPoll> {
   static final _dateFormat = DateFormat('MMM dd, yyyy h:mm aa');
 
-  final _topicController = TextEditingController();
-  final _descriptionController = TextEditingController();
+  late final TextEditingController _topicController;
+  late final TextEditingController _descriptionController;
   DateTime? _end;
-  final _emojiController =
-      TextEditingController(text: String.fromCharCode(0x1F4AC));
+  late final TextEditingController _emojiController;
   var _isPermanent = false;
 
   final _formKey = GlobalKey<FormState>();
@@ -26,6 +27,14 @@ class _CreatePollState extends State<CreatePoll> {
   @override
   void initState() {
     super.initState();
+
+    _topicController = TextEditingController(text: widget.poll?.topic);
+    _descriptionController =
+        TextEditingController(text: widget.poll?.description);
+    _end = widget.poll?.end;
+    _emojiController = TextEditingController(
+        text: widget.poll?.emoji ?? String.fromCharCode(0x1F4AC));
+    _isPermanent = widget.poll?.isPermanent ?? false;
 
     _topicController.addListener(() {
       setState(() {});
@@ -37,24 +46,24 @@ class _CreatePollState extends State<CreatePoll> {
   }
 
   void _cancel() {
-    Navigator.pop(context, false);
+    Navigator.pop(context);
   }
 
   Future<void> _save() async {
     if (_formKey.currentState?.validate() ?? false) {
       final description = _descriptionController.text;
       final poll = Poll(
-        id: -1,
+        id: widget.poll?.id ?? Poll.noId,
         topic: _topicController.text,
         description: description.isEmpty ? null : description,
         end: _end!,
         emoji: _emojiController.text,
         isPermanent: _isPermanent,
       );
-      final response = await HttpService.createPoll(poll);
+      final response = await HttpService.createOrUpdatePoll(poll);
 
-      if (response?.success ?? false) {
-        Navigator.pop(context, true);
+      if (response?.pollId != null) {
+        Navigator.pop(context, poll.copyWith(id: response!.pollId!));
       }
     }
   }
@@ -66,7 +75,7 @@ class _CreatePollState extends State<CreatePoll> {
 
   @override
   Widget build(BuildContext context) => AlertDialog(
-        title: const Text('Create Poll'),
+        title: Text(widget.poll == null ? 'Create Poll' : 'Edit Poll'),
         content: Form(
           key: _formKey,
           child: SingleChildScrollView(
@@ -101,6 +110,7 @@ class _CreatePollState extends State<CreatePoll> {
                     border: OutlineInputBorder(),
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
+                  initialValue: _end,
                   validator: _isNotEmptyValidator,
                   onShowPicker: (context, currentValue) async {
                     final date = await showDatePicker(

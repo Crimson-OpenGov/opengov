@@ -6,6 +6,8 @@ part 'poll.g.dart';
 
 @JsonSerializable()
 class Poll {
+  static const noId = -1;
+
   final int id;
   final String topic;
   final String? description;
@@ -40,4 +42,26 @@ class Poll {
         conjunction: ', and ',
         abbreviated: true,
       );
+
+  Poll copyWith({int? id}) => Poll(
+      id: id ?? this.id,
+      topic: topic,
+      description: description,
+      end: end,
+      emoji: emoji,
+      isPermanent: isPermanent);
+
+  @override
+  bool operator ==(Object other) =>
+      other is Poll &&
+      other.id == id &&
+      other.topic == topic &&
+      other.description == description &&
+      other.end == end &&
+      other.emoji == emoji &&
+      other.isPermanent == isPermanent;
+
+  @override
+  int get hashCode =>
+      Object.hash(id, topic, description, end, emoji, isPermanent);
 }

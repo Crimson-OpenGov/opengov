@@ -1,3 +1,7 @@
+import 'dart:convert';
+
+import 'package:opengov_common/actions/create_update_poll.dart';
+import 'package:opengov_common/actions/delete_poll.dart';
 import 'package:opengov_common/actions/update_comment.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_server/common.dart';
@@ -13,8 +17,8 @@ class AdminService {
 
   const AdminService(this._database);
 
-  @Route.post('/create-poll')
-  Future<Response> createPoll(Request request) async {
+  @Route.post('/create-or-update-poll')
+  Future<Response> createOrUpdatePoll(Request request) async {
     final user = await request.decodeAuth(_database);
 
     if (user?.isNotAdmin ?? true) {
@@ -22,15 +26,43 @@ class AdminService {
     }
 
     final poll = await request.readAsObject(Poll.fromJson);
-    final json = poll.toJson()..remove('id');
-    final dbResponse = await _database.insert('Poll', json);
-    final success = dbResponse > 0;
+    int? pollId;
 
-    if (success) {
-      Firebase.sendNotification(title: 'New Poll', body: poll.topic).ignore();
+    if (poll.id == Poll.noId) {
+      final json = poll.toJson()..remove('id');
+      final dbResponse = await _database.insert('Poll', json);
+
+      if (dbResponse > 0) {
+        pollId = dbResponse;
+        Firebase.sendNotification(title: 'New Poll', body: poll.topic).ignore();
+      }
+    } else {
+      final dbResponse = await _database
+          .update('Poll', poll.toJson(), where: 'id = ?', whereArgs: [poll.id]);
+
+      if (dbResponse > 0) {
+        pollId = poll.id;
+      }
     }
 
-    return genericResponse(success: success);
+    return Response.ok(json.encode(CreateOrUpdatePollResponse(pollId: pollId)));
+  }
+
+  @Route.post('/delete-poll')
+  Future<Response> deletePoll(Request request) async {
+    final user = await request.decodeAuth(_database);
+
+    if (user?.isNotAdmin ?? true) {
+      return Response.forbidden(null);
+    }
+
+    final deletePollRequest =
+        await request.readAsObject(DeletePollRequest.fromJson);
+
+    final dbResponse = await _database
+        .delete('Poll', where: 'id = ?', whereArgs: [deletePollRequest.pollId]);
+
+    return genericResponse(success: dbResponse != 0);
   }
 
   @Route.post('/update-comment')

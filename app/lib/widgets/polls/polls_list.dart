@@ -6,7 +6,7 @@ import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/base/list_header.dart';
 import 'package:opengov_app/widgets/login/login_view.dart';
 import 'package:opengov_app/widgets/polls/about_page.dart';
-import 'package:opengov_app/widgets/polls/create_poll.dart';
+import 'package:opengov_app/widgets/polls/edit_poll.dart';
 import 'package:opengov_app/widgets/polls/details/poll_details.dart';
 import 'package:opengov_app/widgets/polls/poll_admin.dart';
 import 'package:opengov_app/widgets/polls/poll_report.dart';
@@ -72,12 +72,12 @@ class _PollsListState extends State<PollsList> {
   }
 
   Future<void> _createPoll() async {
-    final saved = await showDialog<bool>(
+    final poll = await showDialog<Poll?>(
       context: context,
-      builder: (_) => const CreatePoll(),
+      builder: (_) => const EditPoll(),
     );
 
-    if (saved ?? false) {
+    if (poll != null) {
       _fetchData();
     }
   }
@@ -95,8 +95,8 @@ class _PollsListState extends State<PollsList> {
       ),
       title: Text(poll.topic),
       subtitle: Text('$subtitleLeading ${poll.endFormatted}$subtitleTrailing.'),
-      onTap: () {
-        Navigator.push(
+      onTap: () async {
+        await Navigator.push(
           context,
           MaterialPageRoute(
             builder: (_) => poll.isActive
@@ -106,6 +106,10 @@ class _PollsListState extends State<PollsList> {
                 : PollReport(poll: poll),
           ),
         );
+
+        if (isAdmin) {
+          _fetchData();
+        }
       },
     );
   }
