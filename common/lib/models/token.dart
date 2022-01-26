@@ -11,14 +11,14 @@ class Token {
   const Token({required this.value});
 
   factory Token.generate(String username, String secretKey) => Token(
-      value: sha256.convert(ascii.encode(username + secretKey)).toString());
+      value:
+          ':' + sha256.convert(ascii.encode(username + secretKey)).toString());
 
   @override
   String toString() => value;
 
   @override
-  bool operator ==(Object other) =>
-      other is Token && other.value == value;
+  bool operator ==(Object other) => other is Token && other.value == value;
 
   @override
   int get hashCode => value.hashCode;

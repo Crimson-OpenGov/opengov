@@ -8,14 +8,19 @@ class User {
   final int id;
 
   @Deprecated('Use token instead')
-  final String username = '';
+  final String username;
 
   final String token;
 
   @JsonKey(name: 'is_admin', fromJson: boolFromJson, toJson: boolToJson)
   final bool isAdmin;
 
-  const User({required this.id, required this.token, this.isAdmin = false});
+  const User({
+    required this.id,
+    this.username = '',
+    required this.token,
+    this.isAdmin = false,
+  });
 
   factory User.fromJson(Json json) => _$UserFromJson(json);
 
