@@ -6,12 +6,16 @@ part 'user.g.dart';
 @JsonSerializable()
 class User {
   final int id;
-  final String username;
+
+  @Deprecated('Use token instead')
+  final String username = '';
+
+  final String token;
 
   @JsonKey(name: 'is_admin', fromJson: boolFromJson, toJson: boolToJson)
   final bool isAdmin;
 
-  const User({required this.id, required this.username, this.isAdmin = false});
+  const User({required this.id, required this.token, this.isAdmin = false});
 
   factory User.fromJson(Json json) => _$UserFromJson(json);
 

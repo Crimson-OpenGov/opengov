@@ -28,13 +28,15 @@ class AuthService {
       return genericResponse(success: true);
     }
 
+    final value = Token.generate(username, secretKey).value;
+
     // Delete any current pending logins.
     await _database
-        .delete('PendingLogin', where: 'username = ?', whereArgs: [username]);
+        .delete('PendingLogin', where: 'token = ?', whereArgs: [value]);
 
     final code = _generateCode();
     final success = await _database.insert('PendingLogin', {
-      'username': username,
+      'token': value,
       'code': code,
       'expiration':
           DateTime.now().add(Duration(minutes: 10)).millisecondsSinceEpoch,
@@ -51,10 +53,11 @@ class AuthService {
         await request.readAsObject(VerificationRequest.fromJson);
     final username = verificationRequest.username;
     final code = verificationRequest.code;
+    final token = Token.generate(username, secretKey);
 
     if (username != 'appleTest' || code != '1234') {
       final pendingLogins = (await _database.query('PendingLogin',
-              where: 'username = ?', whereArgs: [username]))
+              where: 'token = ?', whereArgs: [token.value]))
           .map(PendingLogin.fromJson)
           .toList(growable: false);
 
@@ -71,10 +74,10 @@ class AuthService {
       });
 
       final existingUser = await _database
-          .query('User', where: 'username = ?', whereArgs: [username]);
+          .query('User', where: 'token = ?', whereArgs: [token.value]);
 
       if (existingUser.isEmpty) {
-        final userId = await _database.insert('User', {'username': username});
+        final userId = await _database.insert('User', {'token': token.value});
 
         if (userId <= 0) {
           return Response.internalServerError();
@@ -82,9 +85,7 @@ class AuthService {
       }
     }
 
-    final token = Token.generate(username, secretKey);
-    return Response.ok(
-        json.encode(VerificationResponse(token: token.toString())));
+    return Response.ok(json.encode(VerificationResponse(token: token.value)));
   }
 
   String _generateCode() =>

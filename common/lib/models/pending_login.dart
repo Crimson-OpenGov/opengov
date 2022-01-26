@@ -6,7 +6,7 @@ part 'pending_login.g.dart';
 @JsonSerializable()
 class PendingLogin {
   final int id;
-  final String username;
+  final String token;
 
   @JsonKey(fromJson: codeFromJson, toJson: codeToJson)
   final String code;
@@ -16,7 +16,7 @@ class PendingLogin {
 
   const PendingLogin({
     required this.id,
-    required this.username,
+    required this.token,
     required this.code,
     required this.expiration,
   });

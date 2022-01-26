@@ -28,11 +28,10 @@ void main(List<String> args) async {
             'timestamp INTEGER NOT NULL, '
             'is_approved BOOLEAN NOT NULL DEFAULT FALSE)');
         await db.execute('CREATE TABLE PendingLogin (id INTEGER PRIMARY KEY, '
-            'username STRING NOT NULL, code STRING NOT NULL, '
+            'token STRING NOT NULL, code STRING NOT NULL, '
             'expiration INTEGER NOT NULL)');
         await db.execute('CREATE TABLE User (id INTEGER PRIMARY KEY, '
-            'username STRING NOT NULL, '
-            'is_admin BOOLEAN NOT NULL DEFAULT FALSE)');
+            'token STRING NOT NULL, is_admin BOOLEAN NOT NULL DEFAULT FALSE)');
         await db.execute(
             'CREATE TABLE Vote (id INTEGER PRIMARY KEY, user_id INTEGER, '
             'comment_id INTEGER NOT NULL, score INTEGER NOT NULL, '

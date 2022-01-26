@@ -29,17 +29,24 @@ extension RequestExtension on Request {
     final authHeader = headers['Authorization'];
 
     if (authHeader != null) {
-      final token = Token.fromString(authHeader.split(' ')[1]);
-      final correctToken = Token.generate(token.username, secretKey);
+      final token = Token(value: authHeader.split(' ')[1]);
+      var value = token.value;
 
-      if (token == correctToken) {
-        final user = User.fromJson((await database.query('User',
-                where: 'username = ?', whereArgs: [token.username]))
-            .first);
+      if (value.contains(':')) {
+        // Old-style token in the format username:value.
+        value = value.split(':')[1];
+      }
 
-        if (!requireAdmin || user.isAdmin) {
-          return user;
-        }
+      final response = await database
+          .query('User', where: 'token = ?', whereArgs: [token.value]);
+
+      if (response.isEmpty) {
+        return null;
+      }
+
+      final user = User.fromJson(response.first);
+      if (!requireAdmin || user.isAdmin) {
+        return user;
       }
     }
   }

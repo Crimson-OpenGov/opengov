@@ -32,7 +32,7 @@ class PollService {
     final pollsResponse = (await _database.query('Poll'))
         .map(Poll.fromJson)
         .where((poll) =>
-            user.username != 'appleTest' ||
+            user.token != 'appleTest' ||
             !poll.topic.toLowerCase().contains('covid'))
         .toList(growable: false);
 

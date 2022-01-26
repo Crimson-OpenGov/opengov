@@ -41,7 +41,7 @@ class HttpService {
     final token = sharedPreferences.getString('token');
 
     return {
-      if (token != null) 'Authorization': 'Basic ${Token.fromString(token)}',
+      if (token != null) 'Authorization': 'Basic ${Token(value: token)}',
     };
   }
 
