@@ -57,8 +57,8 @@ class PollService {
         .toSet();
 
     // Fetch all comments.
-    final commentsResponse = (await _database
-            .query('Comment', where: 'poll_id = ?', whereArgs: [pollId]))
+    final commentsResponse = (await _database.query('Comment',
+            where: 'poll_id = ?', whereArgs: [pollId], orderBy: 'id desc'))
         .map(Comment.fromJson)
         .where((comment) => user.isAdmin || comment.isApproved);
 
