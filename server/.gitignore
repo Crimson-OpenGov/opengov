@@ -20,8 +20,9 @@ sa.json
 # Curse words
 curse_words.txt
 
-# Environment
-lib/env.dart
-
 # Deployment
 deployment/
+
+# Local database
+database/
+postgres.sh

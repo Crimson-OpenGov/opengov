@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart';
-import 'package:opengov_server/env.dart';
+import 'package:opengov_server/environment.dart';
 
 class EmailService {
   static final _uri = Uri(
@@ -18,7 +18,7 @@ class EmailService {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Api-Key': Environment.sendInBlueApiKey,
+        'Api-Key': sendInBlueApiKey,
       },
       body: json.encode({
         'to': [

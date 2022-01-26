@@ -7,8 +7,6 @@ part 'pending_login.g.dart';
 class PendingLogin {
   final int id;
   final String token;
-
-  @JsonKey(fromJson: codeFromJson, toJson: codeToJson)
   final String code;
 
   @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)

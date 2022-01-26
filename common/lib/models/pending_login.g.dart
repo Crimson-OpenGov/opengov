@@ -9,7 +9,7 @@ part of 'pending_login.dart';
 PendingLogin _$PendingLoginFromJson(Map<String, dynamic> json) => PendingLogin(
       id: json['id'] as int,
       token: json['token'] as String,
-      code: codeFromJson(json['code'] as int),
+      code: json['code'] as String,
       expiration: dateTimeFromJson(json['expiration'] as int),
     );
 
@@ -17,6 +17,6 @@ Map<String, dynamic> _$PendingLoginToJson(PendingLogin instance) =>
     <String, dynamic>{
       'id': instance.id,
       'token': instance.token,
-      'code': codeToJson(instance.code),
+      'code': instance.code,
       'expiration': dateTimeToJson(instance.expiration),
     };

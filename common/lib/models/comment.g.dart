@@ -12,9 +12,7 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       userId: json['user_id'] as int?,
       comment: json['comment'] as String,
       timestamp: dateTimeFromJson(json['timestamp'] as int),
-      isApproved: json['is_approved'] == null
-          ? false
-          : boolFromJson(json['is_approved'] as int),
+      isApproved: json['is_approved'] as bool? ?? false,
       stats: json['stats'] == null
           ? null
           : CommentStats.fromJson(json['stats'] as Map<String, dynamic>),
@@ -26,7 +24,7 @@ Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'user_id': instance.userId,
       'comment': instance.comment,
       'timestamp': dateTimeToJson(instance.timestamp),
-      'is_approved': boolToJson(instance.isApproved),
+      'is_approved': instance.isApproved,
       'stats': instance.stats,
     };
 

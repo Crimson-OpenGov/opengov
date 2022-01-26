@@ -5,19 +5,20 @@ import 'package:opengov_common/actions/login.dart';
 import 'package:opengov_common/models/pending_login.dart';
 import 'package:opengov_common/models/token.dart';
 import 'package:opengov_server/common.dart';
+import 'package:opengov_server/environment.dart';
 import 'package:opengov_server/util/email_service.dart';
+import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 
 part 'auth_service.g.dart';
 
 class AuthService {
   static final _random = Random.secure();
 
-  final Database _database;
+  final PostgreSQLConnection _connection;
 
-  const AuthService(this._database);
+  const AuthService(this._connection);
 
   @Route.post('/login')
   Future<Response> login(Request request) async {
@@ -31,11 +32,11 @@ class AuthService {
     final value = Token.generate(username, secretKey).value;
 
     // Delete any current pending logins.
-    await _database
-        .delete('PendingLogin', where: 'token = ?', whereArgs: [value]);
+    await _connection
+        .delete('Pending_Login', where: 'token = ?', whereArgs: [value]);
 
     final code = _generateCode();
-    final success = await _database.insert('PendingLogin', {
+    final success = await _connection.insert('Pending_Login', {
       'token': value,
       'code': code,
       'expiration':
@@ -56,7 +57,7 @@ class AuthService {
     final token = Token.generate(username, secretKey);
 
     if (username != 'appleTest' || code != '1234') {
-      final pendingLogins = (await _database.query('PendingLogin',
+      final pendingLogins = (await _connection.select('Pending_Login',
               where: 'token = ?', whereArgs: [token.value]))
           .map(PendingLogin.fromJson)
           .toList(growable: false);
@@ -66,18 +67,18 @@ class AuthService {
         return Response.ok(json.encode(VerificationResponse(token: null)));
       }
 
-      await _database.transaction((txn) async {
+      await _connection.transaction((txn) async {
         for (final pendingLogin in pendingLogins) {
-          await txn.delete('PendingLogin',
+          await txn.delete('Pending_Login',
               where: 'id = ?', whereArgs: [pendingLogin.id]);
         }
       });
 
-      final existingUser = await _database
-          .query('User', where: 'token = ?', whereArgs: [token.value]);
+      final existingUser = await _connection
+          .select('User', where: 'token = ?', whereArgs: [token.value]);
 
       if (existingUser.isEmpty) {
-        final userId = await _database.insert('User', {'token': token.value});
+        final userId = await _connection.insert('User', {'token': token.value});
 
         if (userId <= 0) {
           return Response.internalServerError();

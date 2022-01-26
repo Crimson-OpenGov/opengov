@@ -17,7 +17,7 @@ class Comment {
   @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
   final DateTime timestamp;
 
-  @JsonKey(name: 'is_approved', fromJson: boolFromJson, toJson: boolToJson)
+  @JsonKey(name: 'is_approved')
   final bool isApproved;
 
   final CommentStats? stats;

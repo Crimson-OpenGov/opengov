@@ -6,20 +6,20 @@ import 'package:opengov_common/actions/update_comment.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_server/common.dart';
 import 'package:opengov_server/util/firebase.dart';
+import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf_router/shelf_router.dart';
-import 'package:sqflite_common/sqlite_api.dart';
 
 part 'admin_service.g.dart';
 
 class AdminService {
-  final Database _database;
+  final PostgreSQLConnection _connection;
 
-  const AdminService(this._database);
+  const AdminService(this._connection);
 
   @Route.post('/create-or-update-poll')
   Future<Response> createOrUpdatePoll(Request request) async {
-    final user = await request.decodeAuth(_database);
+    final user = await request.decodeAuth(_connection);
 
     if (user?.isNotAdmin ?? true) {
       return Response.forbidden(null);
@@ -30,14 +30,14 @@ class AdminService {
 
     if (poll.id == Poll.noId) {
       final json = poll.toJson()..remove('id');
-      final dbResponse = await _database.insert('Poll', json);
+      final dbResponse = await _connection.insert('Poll', json);
 
       if (dbResponse > 0) {
         pollId = dbResponse;
         Firebase.sendNotification(title: 'New Poll', body: poll.topic).ignore();
       }
     } else {
-      final dbResponse = await _database
+      final dbResponse = await _connection
           .update('Poll', poll.toJson(), where: 'id = ?', whereArgs: [poll.id]);
 
       if (dbResponse > 0) {
@@ -50,7 +50,7 @@ class AdminService {
 
   @Route.post('/delete-poll')
   Future<Response> deletePoll(Request request) async {
-    final user = await request.decodeAuth(_database);
+    final user = await request.decodeAuth(_connection);
 
     if (user?.isNotAdmin ?? true) {
       return Response.forbidden(null);
@@ -59,7 +59,7 @@ class AdminService {
     final deletePollRequest =
         await request.readAsObject(DeletePollRequest.fromJson);
 
-    final dbResponse = await _database
+    final dbResponse = await _connection
         .delete('Poll', where: 'id = ?', whereArgs: [deletePollRequest.pollId]);
 
     return genericResponse(success: dbResponse != 0);
@@ -67,7 +67,7 @@ class AdminService {
 
   @Route.post('/update-comment')
   Future<Response> updateComment(Request request) async {
-    final user = await request.decodeAuth(_database);
+    final user = await request.decodeAuth(_connection);
 
     if (user?.isNotAdmin ?? true) {
       return Response.forbidden(null);
@@ -79,10 +79,10 @@ class AdminService {
     int dbResponse;
 
     if (updateCommentRequest.action == UpdateCommentAction.delete) {
-      dbResponse = await _database.delete('Comment',
+      dbResponse = await _connection.delete('Comment',
           where: 'id = ?', whereArgs: [updateCommentRequest.commentId]);
     } else {
-      dbResponse = await _database.update('Comment', {'is_approved': 1},
+      dbResponse = await _connection.update('Comment', {'is_approved': 1},
           where: 'id = ?', whereArgs: [updateCommentRequest.commentId]);
     }
 
