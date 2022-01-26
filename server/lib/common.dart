@@ -47,8 +47,8 @@ extension PostgresExtension on PostgreSQLExecutionContext {
   Future<int> insert(String table, Map<String, dynamic> values) async {
     final insertQuery = 'INSERT INTO '
         '"${table.toLowerCase()}" ${values.keys.map((e) => '"$e"')} '
-        'VALUES ${values.values.map((value) => _value(value))}';
-    return (await query(insertQuery)).affectedRowCount;
+        'VALUES ${values.values.map((value) => _value(value))} RETURNING id';
+    return ((await query(insertQuery)).lastOrNull?.firstOrNull as int?) ?? 0;
   }
 
   Future<int> update(String table, Map<String, dynamic> values,
