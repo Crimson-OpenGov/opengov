@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/login/verification_view.dart';
 import 'package:opengov_common/actions/login.dart';
+import 'package:opengov_common/common.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView();
@@ -72,6 +74,9 @@ class _LoginViewState extends State<LoginView> {
                         hintText: 'Username',
                       ),
                       autofocus: true,
+                      inputFormatters: [
+                        FilteringTextInputFormatter.deny(badUsernameCharacters),
+                      ],
                     ),
                     const SizedBox(height: 8),
                     OutlinedButton(

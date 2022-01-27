@@ -7,3 +7,5 @@ DateTime dateTimeFromJson(int value) =>
     DateTime.fromMillisecondsSinceEpoch(value);
 
 int dateTimeToJson(DateTime value) => value.millisecondsSinceEpoch;
+
+final badUsernameCharacters = RegExp(r'[+.]');

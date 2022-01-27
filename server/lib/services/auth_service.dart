@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:opengov_common/actions/login.dart';
+import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/pending_login.dart';
 import 'package:opengov_common/models/token.dart';
 import 'package:opengov_server/common.dart';
@@ -23,7 +24,8 @@ class AuthService {
   @Route.post('/login')
   Future<Response> login(Request request) async {
     final loginRequest = await request.readAsObject(LoginRequest.fromJson);
-    final username = loginRequest.username;
+    final username =
+        loginRequest.username.replaceAll(badUsernameCharacters, '');
 
     if (username == 'appleTest') {
       return genericResponse(success: true);
