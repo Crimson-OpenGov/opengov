@@ -23,13 +23,6 @@ extension RequestExtension on Request {
 
     if (authHeader != null) {
       final token = Token(value: authHeader.split(' ')[1]);
-      var value = token.value;
-
-      if (value.contains(':')) {
-        // Old-style token in the format username:value.
-        value = value.split(':')[1];
-      }
-
       final response =
           await connection.select('user', where: {'token': token.value});
 

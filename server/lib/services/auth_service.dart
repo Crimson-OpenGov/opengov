@@ -28,7 +28,7 @@ class AuthService {
         .toLowerCase()
         .replaceAll(badUsernameCharacters, '');
 
-    if (username == 'appleTest') {
+    if (username == 'appletest') {
       return genericResponse(success: true);
     }
 
@@ -60,7 +60,7 @@ class AuthService {
     final code = verificationRequest.code;
     final token = Token.generate(username, secretKey);
 
-    if (username != 'appleTest' || code != '1234') {
+    if (username != 'appletest' || code != '1234') {
       final pendingLogins = (await _connection
               .select('pending_login', where: {'token': token.value}))
           .map(PendingLogin.fromJson)
