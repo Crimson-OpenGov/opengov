@@ -124,7 +124,7 @@ class PollService {
           const AddCommentResponse(reason: AddCommentResponseReason.error)));
     }
 
-    final dbResponse = await _connection.insert('Comment', {
+    final dbResponse = await _connection.insert('comment', {
       'poll_id': poll.id,
       'user_id': user.id,
       'comment': addCommentRequest.comment,
@@ -153,7 +153,7 @@ class PollService {
 
     final voteRequest = await request.readAsObject(VoteRequest.fromJson);
 
-    final dbResponse = await _connection.insert('Vote', {
+    final dbResponse = await _connection.insert('vote', {
       'user_id': user.id,
       'comment_id': voteRequest.commentId,
       'score': voteRequest.score,

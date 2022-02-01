@@ -34,10 +34,10 @@ class AuthService {
     final value = Token.generate(username, secretKey).value;
 
     // Delete any current pending logins.
-    await _connection.delete('Pending_Login', where: {'token': value});
+    await _connection.delete('pending_login', where: {'token': value});
 
     final code = _generateCode();
-    final success = await _connection.insert('pending_lkogin', {
+    final success = await _connection.insert('pending_login', {
       'token': value,
       'code': code,
       'expiration':
@@ -70,7 +70,7 @@ class AuthService {
 
       await _connection.transaction((txn) async {
         for (final pendingLogin in pendingLogins) {
-          await txn.delete('Pending_Login', where: {'id': pendingLogin.id});
+          await txn.delete('pending_login', where: {'id': pendingLogin.id});
         }
       });
 
@@ -78,7 +78,7 @@ class AuthService {
           await _connection.select('user', where: {'token': token.value});
 
       if (existingUser.isEmpty) {
-        final userId = await _connection.insert('User', {'token': token.value});
+        final userId = await _connection.insert('user', {'token': token.value});
 
         if (userId <= 0) {
           return Response.internalServerError();

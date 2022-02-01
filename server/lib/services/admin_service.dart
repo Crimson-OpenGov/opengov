@@ -38,7 +38,7 @@ class AdminService {
       }
     } else {
       final dbResponse = await _connection
-          .update('Poll', poll.toJson(), where: {'id': poll.id});
+          .update('poll', poll.toJson(), where: {'id': poll.id});
 
       if (dbResponse > 0) {
         pollId = poll.id;
@@ -60,7 +60,7 @@ class AdminService {
         await request.readAsObject(DeletePollRequest.fromJson);
 
     final dbResponse = await _connection
-        .delete('Poll', where: {'id': deletePollRequest.pollId});
+        .delete('poll', where: {'id': deletePollRequest.pollId});
 
     return genericResponse(success: dbResponse != 0);
   }
@@ -80,9 +80,9 @@ class AdminService {
 
     if (updateCommentRequest.action == UpdateCommentAction.delete) {
       dbResponse = await _connection
-          .delete('Comment', where: {'id': updateCommentRequest.commentId});
+          .delete('comment', where: {'id': updateCommentRequest.commentId});
     } else {
-      dbResponse = await _connection.update('Comment', {'is_approved': 1},
+      dbResponse = await _connection.update('comment', {'is_approved': 1},
           where: {'id': updateCommentRequest.commentId});
     }
 

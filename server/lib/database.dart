@@ -2,16 +2,17 @@ import 'package:collection/collection.dart';
 import 'package:postgres/postgres.dart';
 
 extension PostgresExtension on PostgreSQLExecutionContext {
-  String _value(dynamic value) {
-    if (value is String) {
-      return "'$value'";
-    } else {
-      return '$value';
-    }
-  }
+  Map<String, dynamic> _mergeMaps(
+          {Map<String, dynamic>? where, Map<String, dynamic>? values}) =>
+      {
+        if (where != null)
+          ...where.map((key, value) => MapEntry('${key}Where', value)),
+        if (values != null)
+          ...values.map((key, value) => MapEntry('${key}Value', value)),
+      };
 
-  String _where(Map<String, dynamic> where) =>
-      'WHERE ${where.keys.map((e) => '$e = @$e').join(', ')}';
+  String _listMap(Map<String, dynamic> map, String suffix) =>
+      map.keys.map((e) => '"$e" = @$e$suffix').join(', ');
 
   Future<List<Map<String, dynamic>>> select(String table,
       {Map<String, dynamic>? where, String? orderBy}) async {
@@ -19,12 +20,12 @@ extension PostgresExtension on PostgreSQLExecutionContext {
 
     var query = [
       'SELECT * FROM "$table"',
-      if (where != null) _where(where),
+      if (where != null) ...['WHERE', _listMap(where, 'Where')],
       if (orderBy != null) 'ORDER BY $orderBy',
     ];
 
     return (await mappedResultsQuery(query.join(' '),
-            substitutionValues: where))
+            substitutionValues: _mergeMaps(where: where)))
         .map((e) => e[table.toLowerCase()])
         .whereNotNull()
         .toList(growable: false);
@@ -36,11 +37,13 @@ extension PostgresExtension on PostgreSQLExecutionContext {
     final insertQuery = [
       'INSERT INTO "$table"',
       '(${values.keys.map((e) => '"$e"').join(', ')})',
-      'VALUES (${values.values.map((value) => _value(value)).join(', ')})',
+      'VALUES (${values.keys.map((e) => '@${e}Value').join(', ')})',
       'RETURNING id',
     ];
-    return ((await query(insertQuery.join(' '))).lastOrNull?.firstOrNull
-            as int?) ??
+    return ((await query(insertQuery.join(' '),
+                substitutionValues: _mergeMaps(values: values)))
+            .lastOrNull
+            ?.firstOrNull as int?) ??
         0;
   }
 
@@ -50,10 +53,12 @@ extension PostgresExtension on PostgreSQLExecutionContext {
 
     final updateQuery = [
       'UPDATE "$table" SET',
-      values.entries.map((e) => '"${e.key}" = ${_value(e.value)}').join(', '),
-      _where(where),
+      _listMap(values, 'Value'),
+      'WHERE',
+      _listMap(where, 'Where'),
     ];
-    return (await query(updateQuery.join(' '), substitutionValues: where))
+    return (await query(updateQuery.join(' '),
+            substitutionValues: _mergeMaps(where: where, values: values)))
         .affectedRowCount;
   }
 
@@ -61,8 +66,12 @@ extension PostgresExtension on PostgreSQLExecutionContext {
       {required Map<String, dynamic> where}) async {
     assert(table.toLowerCase() == table);
 
-    final deleteQuery = ['DELETE FROM "$table"', _where(where)];
-    return (await query(deleteQuery.join(' '), substitutionValues: where))
+    final deleteQuery = [
+      'DELETE FROM "$table" WHERE',
+      _listMap(where, 'Where'),
+    ];
+    return (await query(deleteQuery.join(' '),
+            substitutionValues: _mergeMaps(where: where)))
         .affectedRowCount;
   }
 }
