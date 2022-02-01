@@ -24,8 +24,9 @@ class AuthService {
   @Route.post('/login')
   Future<Response> login(Request request) async {
     final loginRequest = await request.readAsObject(LoginRequest.fromJson);
-    final username =
-        loginRequest.username.replaceAll(badUsernameCharacters, '');
+    final username = loginRequest.username
+        .toLowerCase()
+        .replaceAll(badUsernameCharacters, '');
 
     if (username == 'appleTest') {
       return genericResponse(success: true);
@@ -53,7 +54,9 @@ class AuthService {
   Future<Response> verify(Request request) async {
     final verificationRequest =
         await request.readAsObject(VerificationRequest.fromJson);
-    final username = verificationRequest.username;
+    final username = verificationRequest.username
+        .toLowerCase()
+        .replaceAll(badUsernameCharacters, '');
     final code = verificationRequest.code;
     final token = Token.generate(username, secretKey);
 
