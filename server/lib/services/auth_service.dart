@@ -34,8 +34,7 @@ class AuthService {
     final value = Token.generate(username, secretKey).value;
 
     // Delete any current pending logins.
-    await _connection
-        .delete('Pending_Login', where: 'token = ?', whereArgs: [value]);
+    await _connection.delete('Pending_Login', where: {'token': value});
 
     final code = _generateCode();
     final success = await _connection.insert('Pending_Login', {
@@ -59,8 +58,8 @@ class AuthService {
     final token = Token.generate(username, secretKey);
 
     if (username != 'appleTest' || code != '1234') {
-      final pendingLogins = (await _connection.select('Pending_Login',
-              where: 'token = ?', whereArgs: [token.value]))
+      final pendingLogins = (await _connection
+              .select('Pending_Login', where: {'token': token.value}))
           .map(PendingLogin.fromJson)
           .toList(growable: false);
 
@@ -71,13 +70,12 @@ class AuthService {
 
       await _connection.transaction((txn) async {
         for (final pendingLogin in pendingLogins) {
-          await txn.delete('Pending_Login',
-              where: 'id = ?', whereArgs: [pendingLogin.id]);
+          await txn.delete('Pending_Login', where: {'id': pendingLogin.id});
         }
       });
 
-      final existingUser = await _connection
-          .select('User', where: 'token = ?', whereArgs: [token.value]);
+      final existingUser =
+          await _connection.select('User', where: {'token': token.value});
 
       if (existingUser.isEmpty) {
         final userId = await _connection.insert('User', {'token': token.value});
