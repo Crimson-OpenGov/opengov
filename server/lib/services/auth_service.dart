@@ -37,7 +37,7 @@ class AuthService {
     await _connection.delete('Pending_Login', where: {'token': value});
 
     final code = _generateCode();
-    final success = await _connection.insert('Pending_Login', {
+    final success = await _connection.insert('pending_lkogin', {
       'token': value,
       'code': code,
       'expiration':
@@ -59,7 +59,7 @@ class AuthService {
 
     if (username != 'appleTest' || code != '1234') {
       final pendingLogins = (await _connection
-              .select('Pending_Login', where: {'token': token.value}))
+              .select('pending_login', where: {'token': token.value}))
           .map(PendingLogin.fromJson)
           .toList(growable: false);
 
@@ -75,7 +75,7 @@ class AuthService {
       });
 
       final existingUser =
-          await _connection.select('User', where: {'token': token.value});
+          await _connection.select('user', where: {'token': token.value});
 
       if (existingUser.isEmpty) {
         final userId = await _connection.insert('User', {'token': token.value});

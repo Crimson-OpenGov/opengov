@@ -31,7 +31,7 @@ extension RequestExtension on Request {
       }
 
       final response =
-          await connection.select('User', where: {'token': token.value});
+          await connection.select('user', where: {'token': token.value});
 
       if (response.isEmpty) {
         return null;

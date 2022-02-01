@@ -30,7 +30,7 @@ class PollService {
       return Response.forbidden(null);
     }
 
-    final pollsResponse = (await _connection.select('Poll'))
+    final pollsResponse = (await _connection.select('poll'))
         .map(Poll.fromJson)
         .where((poll) =>
             user.token != 'appleTest' ||
@@ -52,13 +52,13 @@ class PollService {
 
     // Fetch all of the IDs of comments that the user voted on.
     final votedCommentIds =
-        (await _connection.select('Vote', where: {'user_id': user.id}))
+        (await _connection.select('vote', where: {'user_id': user.id}))
             .map(Vote.fromJson)
             .map((vote) => vote.commentId)
             .toSet();
 
     // Fetch all comments.
-    final commentsResponse = (await _connection.select('Comment',
+    final commentsResponse = (await _connection.select('comment',
             where: {'poll_id': pollId}, orderBy: 'id desc'))
         .map(Comment.fromJson)
         .where((comment) => user.isAdmin || comment.isApproved);
@@ -83,7 +83,7 @@ class PollService {
     final pollId = int.parse(request.params['pollId']!);
 
     final commentsResponse =
-        (await _connection.select('Comment', where: {'poll_id': pollId}))
+        (await _connection.select('comment', where: {'poll_id': pollId}))
             .map(Comment.fromJson)
             .where((comment) => user.isAdmin || comment.isApproved);
 
@@ -109,7 +109,7 @@ class PollService {
     }
 
     final pollsResponse = (await _connection
-            .select('Poll', where: {'id': addCommentRequest.pollId}))
+            .select('poll', where: {'id': addCommentRequest.pollId}))
         .map(Poll.fromJson);
 
     if (pollsResponse.isEmpty) {
@@ -166,7 +166,7 @@ class PollService {
 
   Future<Comment> _addStats(Comment comment) async {
     final votesResponse =
-        (await _connection.select('Vote', where: {'comment_id': comment.id}))
+        (await _connection.select('vote', where: {'comment_id': comment.id}))
             .map(Vote.fromJson);
 
     return comment.copyWith(

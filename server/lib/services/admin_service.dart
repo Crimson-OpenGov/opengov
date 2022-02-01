@@ -30,7 +30,7 @@ class AdminService {
 
     if (poll.id == Poll.noId) {
       final json = poll.toJson()..remove('id');
-      final dbResponse = await _connection.insert('Poll', json);
+      final dbResponse = await _connection.insert('poll', json);
 
       if (dbResponse > 0) {
         pollId = dbResponse;
