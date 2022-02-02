@@ -23,8 +23,11 @@ extension RequestExtension on Request {
 
     if (authHeader != null) {
       final token = Token(value: authHeader.split(' ')[1]);
+      // For new tokens, tokenValue will be the whole thing, but for old tokens,
+      // we want to strip out the plaintext username.
+      final tokenValue = token.value.substring(token.value.indexOf(':'));
       final response =
-          await connection.select('user', where: {'token': token.value});
+          await connection.select('user', where: {'token': tokenValue});
 
       if (response.isEmpty) {
         return null;

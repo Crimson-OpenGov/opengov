@@ -12,7 +12,7 @@ class User {
 
   final String token;
 
-  @JsonKey(name: 'is_admin')
+  @JsonKey(name: 'is_admin', fromJson: boolFromJson, toJson: boolToJson)
   final bool isAdmin;
 
   const User({

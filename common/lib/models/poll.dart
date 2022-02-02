@@ -17,7 +17,7 @@ class Poll {
 
   final String emoji;
 
-  @JsonKey(name: 'is_permanent')
+  @JsonKey(name: 'is_permanent', fromJson: boolFromJson, toJson: boolToJson)
   final bool isPermanent;
 
   const Poll({
