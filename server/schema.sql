@@ -42,3 +42,13 @@ CREATE TABLE vote
     reason     TEXT DEFAULT NULL,
     timestamp  BIGINT  NOT NULL
 );
+
+CREATE TABLE announcement
+(
+    id          SERIAL,
+    poll_id     INT  DEFAULT NULL,
+    title       TEXT   NOT NULL,
+    description TEXT   NOT NULL,
+    posted_time BIGINT NOT NULL,
+    emoji       TEXT DEFAULT NULL
+);

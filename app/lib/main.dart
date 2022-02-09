@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:opengov_app/firebase_options.dart';
 import 'package:opengov_app/widgets/login/explainer.dart';
-import 'package:opengov_app/widgets/polls/polls_list.dart';
+import 'package:opengov_app/widgets/main_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
@@ -80,6 +80,6 @@ class _HomeViewState extends State<_HomeView> {
   Widget build(BuildContext context) => _loggedIn == null
       ? const Scaffold()
       : _loggedIn!
-          ? const PollsList()
+          ? const MainView()
           : const Explainer();
 }

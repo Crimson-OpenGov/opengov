@@ -5,6 +5,7 @@ import 'package:opengov_app/common.dart';
 import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/actions/create_update_poll.dart';
 import 'package:opengov_common/actions/delete_poll.dart';
+import 'package:opengov_common/actions/list_announcements.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/login.dart';
 import 'package:opengov_common/actions/poll_details.dart';
@@ -99,6 +100,9 @@ class HttpService {
 
   static Future<VerificationResponse?> verify(VerificationRequest request) =>
       _post('auth/verify', request.toJson(), VerificationResponse.fromJson);
+
+  static Future<ListAnnouncementsResponse?> listAnnouncements() =>
+      _get('announcement/list', ListAnnouncementsResponse.fromJson);
 
   static Future<User?> getMe() => _get('user/me', User.fromJson);
 }
