@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_common/actions/list_announcements.dart';
-import 'package:opengov_common/models/announcement.dart';
 import 'package:opengov_common/models/user.dart';
 
 class AnnouncementsList extends StatefulWidget {
@@ -14,7 +13,7 @@ class AnnouncementsList extends StatefulWidget {
 }
 
 class _AnnouncementsListState extends State<AnnouncementsList> {
-  List<Announcement>? _announcements;
+  List<ListedAnnouncement>? _announcements;
   User? _me;
 
   @override

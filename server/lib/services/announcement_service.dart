@@ -1,8 +1,6 @@
 import 'dart:convert';
 
 import 'package:opengov_common/actions/list_announcements.dart';
-import 'package:opengov_common/models/announcement.dart';
-import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_server/common.dart';
 import 'package:postgres/postgres.dart';
 import 'package:shelf/shelf.dart';
@@ -15,6 +13,10 @@ class AnnouncementService {
 
   const AnnouncementService(this._connection);
 
+  static const listAnnouncementsQuery =
+      'select a.*, p.emoji as poll_emoji from announcement a '
+      'join poll p on p.id = a.poll_id';
+
   @Route.get('/list')
   Future<Response> listAnnouncement(Request request) async {
     final user = await request.decodeAuth(_connection);
@@ -23,23 +25,13 @@ class AnnouncementService {
       return Response.forbidden(null);
     }
 
-    final announcementResponse = (await _connection.select('announcement'))
-        .map(Announcement.fromJson)
-        .toList(growable: false);
+    final announcementResponse =
+        (await _connection.query(listAnnouncementsQuery))
+            .map((row) => ListedAnnouncement.fromJson(row.toColumnMap()))
+            .toList(growable: false);
 
-    final announcementToPoll = <int, Poll>{};
-    for (final announcement in announcementResponse) {
-      if (announcement.pollId != null) {
-        final poll = Poll.fromJson((await _connection
-                .select('poll', where: {'id': announcement.pollId}))
-            .single);
-        announcementToPoll[announcement.id] = poll;
-      }
-    }
-
-    return Response.ok(json.encode(ListAnnouncementsResponse(
-        announcements: announcementResponse,
-        announcementToPoll: announcementToPoll)));
+    return Response.ok(json.encode(
+        ListAnnouncementsResponse(announcements: announcementResponse)));
   }
 
   Router get router => _$AnnouncementServiceRouter(this);
