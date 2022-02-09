@@ -8,10 +8,12 @@ import 'package:opengov_common/actions/delete_poll.dart';
 import 'package:opengov_common/actions/list_announcements.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/login.dart';
+import 'package:opengov_common/actions/announcement_details.dart';
 import 'package:opengov_common/actions/poll_details.dart';
 import 'package:opengov_common/actions/update_comment.dart';
 import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/common.dart';
+import 'package:opengov_common/models/announcement.dart';
 import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/report.dart';
@@ -103,6 +105,11 @@ class HttpService {
 
   static Future<ListAnnouncementsResponse?> listAnnouncements() =>
       _get('announcement/list', ListAnnouncementsResponse.fromJson);
+
+  static Future<AnnouncementDetailsResponse?> getAnnouncementDetails(
+          Announcement announcement) =>
+      _get('announcement/details/${announcement.id}',
+          AnnouncementDetailsResponse.fromJson);
 
   static Future<User?> getMe() => _get('user/me', User.fromJson);
 }

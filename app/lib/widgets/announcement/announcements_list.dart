@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/widgets/announcement/announcement_details.dart';
 import 'package:opengov_common/actions/list_announcements.dart';
 import 'package:opengov_common/models/user.dart';
 
@@ -71,7 +72,16 @@ class _AnnouncementsListState extends State<AnnouncementsList> {
                         ),
                         trailing:
                             Text('${announcement.postedTimeFormatted} ago'),
-                      )
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AnnouncementDetails(
+                                  announcement: announcement),
+                            ),
+                          );
+                        },
+                      ),
                   ],
                 ),
               ),
