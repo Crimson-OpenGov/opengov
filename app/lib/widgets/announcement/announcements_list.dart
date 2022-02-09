@@ -59,13 +59,19 @@ class _AnnouncementsListState extends State<AnnouncementsList> {
                   children: [
                     for (final announcement in _announcements!)
                       ListTile(
+                        isThreeLine: true,
                         leading: Text(
                           announcement.emoji ?? 'X',
                           style: const TextStyle(fontSize: 24),
                         ),
                         title: Text(announcement.title),
                         subtitle: Text(
-                            'Posted ${announcement.postedTimeFormatted} ago'),
+                          announcement.description,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        trailing:
+                            Text('${announcement.postedTimeFormatted} ago'),
                       )
                   ],
                 ),
