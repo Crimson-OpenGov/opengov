@@ -75,3 +75,8 @@ extension PostgresExtension on PostgreSQLExecutionContext {
         .affectedRowCount;
   }
 }
+
+extension PostgresResultExtension on PostgreSQLResult {
+  Iterable<T> mapRows<T>(T Function(Map<String, dynamic> e) toElement) =>
+      map((e) => toElement(e.toColumnMap()));
+}

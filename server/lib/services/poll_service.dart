@@ -22,6 +22,11 @@ class PollService {
 
   const PollService(this._connection);
 
+  static const _pollCommentsQuery = 'select *, '
+      '(100 * pow(.8, div(@today - c.timestamp, 86400000)) + '
+      '(select count(*) as vote_count from vote v where v.comment_id = c.id)) '
+      'as score from comment c where c.poll_id = @poll_id order by score desc';
+
   @Route.get('/list')
   Future<Response> listPolls(Request request) async {
     final user = await request.decodeAuth(_connection);
@@ -58,9 +63,14 @@ class PollService {
             .toSet();
 
     // Fetch all comments.
-    final commentsResponse = (await _connection.select('comment',
-            where: {'poll_id': pollId}, orderBy: 'id desc'))
-        .map(Comment.fromJson)
+    final commentsResponse = (await _connection.query(
+      _pollCommentsQuery,
+      substitutionValues: {
+        'today': DateTime.now().millisecondsSinceEpoch,
+        'poll_id': pollId
+      },
+    ))
+        .mapRows(Comment.fromJson)
         .where((comment) => user.isAdmin || comment.isApproved);
 
     // For all comments the user has voted on, fetch the report details.

@@ -16,7 +16,7 @@ class AnnouncementService {
 
   const AnnouncementService(this._connection);
 
-  static const listAnnouncementsQuery =
+  static const _listAnnouncementsQuery =
       'select a.*, p.emoji as poll_emoji from announcement a '
       'join poll p on p.id = a.poll_id';
 
@@ -29,8 +29,8 @@ class AnnouncementService {
     }
 
     final announcementResponse =
-        (await _connection.query(listAnnouncementsQuery))
-            .map((row) => ListedAnnouncement.fromJson(row.toColumnMap()))
+        (await _connection.query(_listAnnouncementsQuery))
+            .mapRows(ListedAnnouncement.fromJson)
             .toList(growable: false);
 
     return Response.ok(json.encode(

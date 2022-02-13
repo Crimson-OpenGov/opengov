@@ -13,8 +13,7 @@ class FeedService {
 
   const FeedService(this._connection);
 
-  static const _randomFeedQuery =
-      'select c.id, p.id as poll_id, c.comment '
+  static const _randomFeedQuery = 'select c.id, p.id as poll_id, c.comment '
       'from comment c tablesample SYSTEM_ROWS(10) '
       'join poll p on c.poll_id = p.id '
       'where (select count(1) from vote v '
@@ -30,7 +29,7 @@ class FeedService {
 
     final commentsResponse = (await _connection
             .query(_randomFeedQuery, substitutionValues: {'user_id': user.id}))
-        .map((row) => FeedComment.fromJson(row.toColumnMap()))
+        .mapRows(FeedComment.fromJson)
         .toList(growable: false);
 
     return Response.ok(json.encode(FeedResponse(comments: commentsResponse)));
