@@ -18,7 +18,7 @@ extension CommentActionScore on CommentAction {
 }
 
 class CommentCard extends StatefulWidget {
-  final Comment comment;
+  final CommentBase comment;
   final VoidCallback onActionPressed;
 
   const CommentCard({required this.comment, required this.onActionPressed});

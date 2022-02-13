@@ -3,8 +3,19 @@ import 'package:opengov_common/common.dart';
 
 part 'comment.g.dart';
 
+abstract class CommentBase {
+  const CommentBase();
+
+  int get id;
+
+  String get comment;
+
+  CommentStats? get stats => null;
+}
+
 @JsonSerializable()
-class Comment {
+class Comment extends CommentBase {
+  @override
   final int id;
 
   @JsonKey(name: 'poll_id')
@@ -12,6 +23,8 @@ class Comment {
 
   @JsonKey(name: 'user_id')
   final int? userId;
+
+  @override
   final String comment;
 
   @JsonKey(fromJson: dateTimeFromJson, toJson: dateTimeToJson)
@@ -20,6 +33,7 @@ class Comment {
   @JsonKey(name: 'is_approved', fromJson: boolFromJson, toJson: boolToJson)
   final bool isApproved;
 
+  @override
   final CommentStats? stats;
 
   const Comment({

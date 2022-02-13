@@ -5,6 +5,7 @@ import 'package:opengov_app/common.dart';
 import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/actions/create_update_poll.dart';
 import 'package:opengov_common/actions/delete_poll.dart';
+import 'package:opengov_common/actions/feed.dart';
 import 'package:opengov_common/actions/list_announcements.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/login.dart';
@@ -110,6 +111,9 @@ class HttpService {
           Announcement announcement) =>
       _get('announcement/details/${announcement.id}',
           AnnouncementDetailsResponse.fromJson);
+
+  static Future<FeedResponse?> getRandomFeed() =>
+      _get('feed/random', FeedResponse.fromJson);
 
   static Future<User?> getMe() => _get('user/me', User.fromJson);
 }

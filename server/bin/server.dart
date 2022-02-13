@@ -2,6 +2,7 @@ import 'package:opengov_server/environment.dart';
 import 'package:opengov_server/services/admin_service.dart';
 import 'package:opengov_server/services/announcement_service.dart';
 import 'package:opengov_server/services/auth_service.dart';
+import 'package:opengov_server/services/feed_service.dart';
 import 'package:opengov_server/services/poll_service.dart';
 import 'package:opengov_server/services/user_service.dart';
 import 'package:opengov_server/util/curse_words.dart';
@@ -26,6 +27,7 @@ void main(List<String> args) async {
         ..mount('/api/admin', AdminService(connection).router)
         ..mount('/api/announcement', AnnouncementService(connection).router)
         ..mount('/api/auth', AuthService(connection).router)
+        ..mount('/api/feed', FeedService(connection).router)
         ..mount('/api/poll', PollService(connection).router)
         ..mount('/api/user', UserService(connection).router));
 
