@@ -29,8 +29,10 @@ class _FeedViewState extends State<FeedView> {
         _comments = response.comments;
       });
 
-      _scrollController.animateTo(0,
-          duration: const Duration(milliseconds: 200), curve: Curves.linear);
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(0,
+            duration: const Duration(milliseconds: 200), curve: Curves.linear);
+      }
     }
   }
 
