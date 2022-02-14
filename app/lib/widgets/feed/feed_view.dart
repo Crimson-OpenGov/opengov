@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
-import 'package:opengov_app/widgets/polls/details/comment_card.dart';
+import 'package:opengov_app/widgets/polls/details/comment_list.dart';
 import 'package:opengov_common/actions/feed.dart';
 
 class FeedView extends StatefulWidget {
@@ -29,6 +29,16 @@ class _FeedViewState extends State<FeedView> {
     }
   }
 
+  Future<void> _fetchComment(int i) async {
+    final response = await HttpService.getCommentDetails(_comments![i]);
+
+    if (response != null) {
+      setState(() {
+        _comments![i] = _comments![i].copyWith(stats: response.stats);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -39,24 +49,12 @@ class _FeedViewState extends State<FeedView> {
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
                 onRefresh: _fetchData,
-                child: ListView(
-                  children: [
-                    for (final comment in _comments!)
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        padding: const EdgeInsets.all(8),
-                        margin: const EdgeInsets.all(8),
-                        child: CommentCard(
-                          comment: comment,
-                          onActionPressed: () {
-                            print('Action pressed');
-                          },
-                        ),
-                      ),
-                  ],
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(8),
+                  child: CommentList(
+                    comments: _comments!,
+                    onActionPressed: _fetchComment,
+                  ),
                 ),
               ),
       );

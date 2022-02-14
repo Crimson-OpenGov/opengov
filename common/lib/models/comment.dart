@@ -10,7 +10,7 @@ abstract class CommentBase {
 
   String get comment;
 
-  CommentStats? get stats => null;
+  CommentStats? get stats;
 }
 
 @JsonSerializable()

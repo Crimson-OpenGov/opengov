@@ -15,10 +15,20 @@ class FeedComment extends CommentBase {
   @override
   final String comment;
 
-  const FeedComment(
-      {required this.id, required this.pollId, required this.comment});
+  @override
+  final CommentStats? stats;
+
+  const FeedComment({
+    required this.id,
+    required this.pollId,
+    required this.comment,
+    this.stats,
+  });
 
   factory FeedComment.fromJson(Json json) => _$FeedCommentFromJson(json);
+
+  FeedComment copyWith({CommentStats? stats}) =>
+      FeedComment(id: id, pollId: pollId, comment: comment, stats: stats);
 
   Json toJson() => _$FeedCommentToJson(this);
 }
