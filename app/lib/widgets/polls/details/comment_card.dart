@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/polls/neapolitan.dart';
+import 'package:opengov_common/actions/feed.dart';
 import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
 
@@ -59,6 +60,16 @@ class _CommentCardState extends State<CommentCard> {
   Widget build(BuildContext context) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          if (widget.comment is FeedComment) ...[
+            ListTile(
+              leading: Text(
+                (widget.comment as FeedComment).pollEmoji,
+                style: const TextStyle(fontSize: 24),
+              ),
+              title: Text((widget.comment as FeedComment).pollTopic),
+            ),
+            const Divider(),
+          ],
           Text(
             widget.comment.comment,
             style: const TextStyle(fontSize: 16),

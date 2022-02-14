@@ -15,6 +15,12 @@ class FeedComment extends CommentBase {
   @override
   final String comment;
 
+  @JsonKey(name: 'poll_topic')
+  final String pollTopic;
+
+  @JsonKey(name: 'poll_emoji')
+  final String pollEmoji;
+
   @override
   final CommentStats? stats;
 
@@ -22,13 +28,20 @@ class FeedComment extends CommentBase {
     required this.id,
     required this.pollId,
     required this.comment,
+    required this.pollTopic,
+    required this.pollEmoji,
     this.stats,
   });
 
   factory FeedComment.fromJson(Json json) => _$FeedCommentFromJson(json);
 
-  FeedComment copyWith({CommentStats? stats}) =>
-      FeedComment(id: id, pollId: pollId, comment: comment, stats: stats);
+  FeedComment copyWith({CommentStats? stats}) => FeedComment(
+      id: id,
+      pollId: pollId,
+      comment: comment,
+      pollTopic: pollTopic,
+      pollEmoji: pollEmoji,
+      stats: stats);
 
   Json toJson() => _$FeedCommentToJson(this);
 }

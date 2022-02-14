@@ -13,7 +13,9 @@ class FeedService {
 
   const FeedService(this._connection);
 
-  static const _randomFeedQuery = 'select c.id, p.id as poll_id, c.comment '
+  static const _randomFeedQuery =
+      'select c.id, p.id as poll_id, c.comment, p.topic as poll_topic, '
+      'p.emoji as poll_emoji '
       'from comment c tablesample SYSTEM_ROWS(10) '
       'join poll p on c.poll_id = p.id '
       'where (select count(1) from vote v '

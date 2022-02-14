@@ -10,6 +10,8 @@ FeedComment _$FeedCommentFromJson(Map<String, dynamic> json) => FeedComment(
       id: json['id'] as int,
       pollId: json['poll_id'] as int,
       comment: json['comment'] as String,
+      pollTopic: json['poll_topic'] as String,
+      pollEmoji: json['poll_emoji'] as String,
       stats: json['stats'] == null
           ? null
           : CommentStats.fromJson(json['stats'] as Map<String, dynamic>),
@@ -20,6 +22,8 @@ Map<String, dynamic> _$FeedCommentToJson(FeedComment instance) =>
       'id': instance.id,
       'poll_id': instance.pollId,
       'comment': instance.comment,
+      'poll_topic': instance.pollTopic,
+      'poll_emoji': instance.pollEmoji,
       'stats': instance.stats,
     };
 
