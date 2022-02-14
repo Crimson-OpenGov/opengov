@@ -13,6 +13,8 @@ class FeedView extends StatefulWidget {
 class _FeedViewState extends State<FeedView> {
   List<FeedComment>? _comments;
 
+  final _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +28,9 @@ class _FeedViewState extends State<FeedView> {
       setState(() {
         _comments = response.comments;
       });
+
+      _scrollController.animateTo(0,
+          duration: const Duration(milliseconds: 200), curve: Curves.linear);
     }
   }
 
@@ -49,13 +54,26 @@ class _FeedViewState extends State<FeedView> {
             ? const Center(child: CircularProgressIndicator())
             : RefreshIndicator(
                 onRefresh: _fetchData,
-                child: SingleChildScrollView(
+                child: ListView(
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(8),
-                  child: CommentList(
-                    comments: _comments!,
-                    onActionPressed: _fetchComment,
-                  ),
+                  children: [
+                    CommentList(
+                      comments: _comments!,
+                      onActionPressed: _fetchComment,
+                    ),
+                    OutlinedButton(
+                      child: const Text('Load more comments'),
+                      onPressed: _fetchData,
+                    ),
+                  ],
                 ),
               ),
       );
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 }
