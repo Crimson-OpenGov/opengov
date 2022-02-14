@@ -91,6 +91,7 @@ class _EditPollState extends State<EditPoll> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                   validator: _isNotEmptyValidator,
+                  textCapitalization: TextCapitalization.sentences,
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
@@ -101,6 +102,7 @@ class _EditPollState extends State<EditPoll> {
                     floatingLabelBehavior: FloatingLabelBehavior.always,
                   ),
                   maxLines: 10,
+                  textCapitalization: TextCapitalization.sentences,
                 ),
                 const SizedBox(height: 16),
                 DateTimeField(

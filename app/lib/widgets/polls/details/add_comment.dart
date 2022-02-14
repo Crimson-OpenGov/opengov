@@ -78,6 +78,7 @@ class _AddCommentState extends State<AddComment> {
               border: OutlineInputBorder(),
             ),
             keyboardType: TextInputType.multiline,
+            textCapitalization: TextCapitalization.sentences,
             maxLines: null,
             textInputAction: TextInputAction.done,
           ),

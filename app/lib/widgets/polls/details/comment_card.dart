@@ -97,6 +97,7 @@ class _CommentCardState extends State<CommentCard> {
                 ),
               ),
               maxLines: 3,
+              textCapitalization: TextCapitalization.sentences,
             ),
           ],
           const SizedBox(height: 8),
