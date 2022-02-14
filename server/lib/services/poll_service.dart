@@ -82,6 +82,22 @@ class PollService {
     return Response.ok(json.encode(PollDetailsResponse(comments: comments)));
   }
 
+  @Route.get('/comment/<commentId>')
+  Future<Response> getCommentDetails(Request request) async {
+    final user = await request.decodeAuth(_connection);
+
+    if (user == null) {
+      return Response.forbidden(null);
+    }
+
+    final commentId = int.parse(request.params['commentId']!);
+    final commentResponse = Comment.fromJson(
+        (await _connection.select('comment', where: {'id': commentId})).single);
+    final comment = await _addStats(commentResponse);
+
+    return Response.ok(json.encode(comment));
+  }
+
   @Route.get('/report/<pollId>')
   Future<Response> getReport(Request request) async {
     final user = await request.decodeAuth(_connection);

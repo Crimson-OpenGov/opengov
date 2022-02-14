@@ -3,8 +3,8 @@ import 'package:opengov_app/widgets/polls/details/comment_card.dart';
 import 'package:opengov_common/models/comment.dart';
 
 class CommentList extends StatefulWidget {
-  final List<Comment> comments;
-  final VoidCallback onActionPressed;
+  final List<CommentBase> comments;
+  final void Function(int i) onActionPressed;
 
   const CommentList({required this.comments, required this.onActionPressed});
 
@@ -36,7 +36,9 @@ class _CommentListState extends State<CommentList> {
                   padding: const EdgeInsets.all(8),
                   child: CommentCard(
                     comment: widget.comments[i],
-                    onActionPressed: widget.onActionPressed,
+                    onActionPressed: () {
+                      widget.onActionPressed(i);
+                    },
                   ),
                 ),
               ),

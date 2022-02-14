@@ -15,6 +15,7 @@ import 'package:opengov_common/actions/update_comment.dart';
 import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/announcement.dart';
+import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/generic_response.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/report.dart';
@@ -78,6 +79,9 @@ class HttpService {
 
   static Future<PollDetailsResponse?> getPollDetails(Poll poll) =>
       _get('poll/details/${poll.id}', PollDetailsResponse.fromJson);
+
+  static Future<Comment?> getCommentDetails(CommentBase comment) =>
+      _get('poll/comment/${comment.id}', Comment.fromJson);
 
   static Future<Report?> getReport(Poll poll) =>
       _get('poll/report/${poll.id}', Report.fromJson);

@@ -33,6 +33,16 @@ class _PollDetailsState extends State<PollDetails> {
     }
   }
 
+  Future<void> _updateComment(int i) async {
+    final response = await HttpService.getCommentDetails(_comments![i]);
+
+    if (response != null) {
+      setState(() {
+        _comments![i] = response;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: const Text('Poll')),
@@ -61,7 +71,7 @@ class _PollDetailsState extends State<PollDetails> {
                     const SizedBox(height: 16),
                     CommentList(
                       comments: _comments!,
-                      onActionPressed: _fetchComments,
+                      onActionPressed: _updateComment,
                     ),
                   ],
                 ),
