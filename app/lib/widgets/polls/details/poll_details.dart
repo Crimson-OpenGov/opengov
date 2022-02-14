@@ -6,15 +6,16 @@ import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
 
 class PollDetails extends StatefulWidget {
-  final Poll poll;
+  final int pollId;
 
-  const PollDetails({required this.poll});
+  const PollDetails({required this.pollId});
 
   @override
   _PollDetailsState createState() => _PollDetailsState();
 }
 
 class _PollDetailsState extends State<PollDetails> {
+  Poll? _poll;
   List<Comment>? _comments;
 
   @override
@@ -24,10 +25,11 @@ class _PollDetailsState extends State<PollDetails> {
   }
 
   Future<void> _fetchComments() async {
-    final response = await HttpService.getPollDetails(widget.poll);
+    final response = await HttpService.getPollDetails(widget.pollId);
 
     if (response != null) {
       setState(() {
+        _poll = response.poll;
         _comments = response.comments;
       });
     }
@@ -46,28 +48,28 @@ class _PollDetailsState extends State<PollDetails> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: const Text('Poll')),
-        body: _comments == null
+        body: _poll == null || _comments == null
             ? const Center(child: CircularProgressIndicator())
             : Padding(
                 padding: const EdgeInsets.all(8),
                 child: ListView(
                   children: [
                     Text(
-                      widget.poll.topic,
+                      _poll!.topic,
                       style: const TextStyle(
                         fontSize: 34,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 16),
-                    if (widget.poll.description != null) ...[
+                    if (_poll!.description != null) ...[
                       Text(
-                        widget.poll.description!,
+                        _poll!.description!,
                         style: const TextStyle(fontSize: 20),
                       ),
                       const SizedBox(height: 16),
                     ],
-                    AddComment(poll: widget.poll),
+                    AddComment(poll: _poll!),
                     const SizedBox(height: 16),
                     CommentList(
                       comments: _comments!,

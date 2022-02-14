@@ -8,6 +8,7 @@ part of 'poll_details.dart';
 
 PollDetailsResponse _$PollDetailsResponseFromJson(Map<String, dynamic> json) =>
     PollDetailsResponse(
+      poll: Poll.fromJson(json['poll'] as Map<String, dynamic>),
       comments: (json['comments'] as List<dynamic>)
           .map((e) => Comment.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -16,5 +17,6 @@ PollDetailsResponse _$PollDetailsResponseFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$PollDetailsResponseToJson(
         PollDetailsResponse instance) =>
     <String, dynamic>{
+      'poll': instance.poll,
       'comments': instance.comments,
     };

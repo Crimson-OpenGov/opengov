@@ -69,7 +69,7 @@ class _AnnouncementDetailsState extends State<AnnouncementDetails> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (_) => PollDetails(poll: _poll!)),
+                                builder: (_) => PollDetails(pollId: _poll!.id)),
                           );
                         },
                       ),

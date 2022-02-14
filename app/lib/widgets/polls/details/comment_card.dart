@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/widgets/polls/details/poll_details.dart';
 import 'package:opengov_app/widgets/polls/neapolitan.dart';
 import 'package:opengov_common/actions/feed.dart';
 import 'package:opengov_common/actions/vote.dart';
@@ -67,6 +68,15 @@ class _CommentCardState extends State<CommentCard> {
                 style: const TextStyle(fontSize: 24),
               ),
               title: Text((widget.comment as FeedComment).pollTopic),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (_) => PollDetails(
+                          pollId: (widget.comment as FeedComment).pollId)),
+                );
+              },
             ),
             const Divider(),
           ],

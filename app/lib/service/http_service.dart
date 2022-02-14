@@ -77,8 +77,8 @@ class HttpService {
   static Future<ListPollsResponse?> listPolls() =>
       _get('poll/list', ListPollsResponse.fromJson);
 
-  static Future<PollDetailsResponse?> getPollDetails(Poll poll) =>
-      _get('poll/details/${poll.id}', PollDetailsResponse.fromJson);
+  static Future<PollDetailsResponse?> getPollDetails(int pollId) =>
+      _get('poll/details/$pollId', PollDetailsResponse.fromJson);
 
   static Future<Comment?> getCommentDetails(CommentBase comment) =>
       _get('poll/comment/${comment.id}', Comment.fromJson);

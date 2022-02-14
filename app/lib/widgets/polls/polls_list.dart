@@ -102,7 +102,7 @@ class _PollsListState extends State<PollsList> {
             builder: (_) => poll.isActive
                 ? isAdmin
                     ? PollAdmin(poll: poll)
-                    : PollDetails(poll: poll)
+                    : PollDetails(pollId: poll.id)
                 : PollReport(poll: poll),
           ),
         );

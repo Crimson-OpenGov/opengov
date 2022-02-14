@@ -55,6 +55,9 @@ class PollService {
 
     final pollId = int.parse(request.params['pollId']!);
 
+    final poll = Poll.fromJson(
+        (await _connection.select('poll', where: {'id': pollId})).single);
+
     // Fetch all of the IDs of comments that the user voted on.
     final votedCommentIds =
         (await _connection.select('vote', where: {'user_id': user.id}))
@@ -79,7 +82,8 @@ class PollService {
             ? await _addStats(comment)
             : comment));
 
-    return Response.ok(json.encode(PollDetailsResponse(comments: comments)));
+    return Response.ok(
+        json.encode(PollDetailsResponse(poll: poll, comments: comments)));
   }
 
   @Route.get('/comment/<commentId>')
