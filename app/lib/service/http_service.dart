@@ -112,8 +112,8 @@ class HttpService {
       _get('announcement/list', ListAnnouncementsResponse.fromJson);
 
   static Future<AnnouncementDetailsResponse?> getAnnouncementDetails(
-          Announcement announcement) =>
-      _get('announcement/details/${announcement.id}',
+          int announcementId) =>
+      _get('announcement/details/$announcementId',
           AnnouncementDetailsResponse.fromJson);
 
   static Future<FeedResponse?> getRandomFeed() =>

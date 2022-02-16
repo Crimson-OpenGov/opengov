@@ -77,7 +77,7 @@ class _AnnouncementsListState extends State<AnnouncementsList> {
                             context,
                             MaterialPageRoute(
                               builder: (_) => AnnouncementDetails(
-                                  announcement: announcement),
+                                  announcementId: announcement.id),
                             ),
                           );
                         },

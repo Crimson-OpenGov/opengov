@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:opengov_app/widgets/announcement/announcement_details.dart';
 import 'package:opengov_app/widgets/polls/details/poll_details.dart';
 
 class NotificationService {
@@ -21,6 +22,13 @@ class NotificationService {
         MaterialPageRoute(
             builder: (_) =>
                 PollDetails(pollId: int.parse(message.data['pollId']))),
+      );
+    } else if (message.data.containsKey('announcementId')) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => AnnouncementDetails(
+                announcementId: int.parse(message.data['announcementId']))),
       );
     }
   }

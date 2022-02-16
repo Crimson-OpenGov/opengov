@@ -5,17 +5,17 @@ import 'package:opengov_common/models/announcement.dart';
 import 'package:opengov_common/models/poll.dart';
 
 class AnnouncementDetails extends StatefulWidget {
-  final Announcement announcement;
+  final int announcementId;
 
-  const AnnouncementDetails({required this.announcement});
+  const AnnouncementDetails({required this.announcementId});
 
   @override
   _AnnouncementDetailsState createState() => _AnnouncementDetailsState();
 }
 
 class _AnnouncementDetailsState extends State<AnnouncementDetails> {
+  Announcement? _announcement;
   Poll? _poll;
-  var loaded = false;
 
   @override
   void initState() {
@@ -25,12 +25,12 @@ class _AnnouncementDetailsState extends State<AnnouncementDetails> {
 
   Future<void> _fetchDetails() async {
     final response =
-        await HttpService.getAnnouncementDetails(widget.announcement);
+        await HttpService.getAnnouncementDetails(widget.announcementId);
 
     if (response != null) {
       setState(() {
+        _announcement = response.announcement;
         _poll = response.poll;
-        loaded = true;
       });
     }
   }
@@ -38,23 +38,23 @@ class _AnnouncementDetailsState extends State<AnnouncementDetails> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: const Text('Announcement')),
-        body: !loaded
+        body: _announcement == null
             ? const Center(child: CircularProgressIndicator())
             : Padding(
                 padding: const EdgeInsets.all(8),
                 child: ListView(
                   children: [
                     Text(
-                      widget.announcement.title,
+                      _announcement!.title,
                       style: const TextStyle(
-                        fontSize: 34,
+                        fontSize: 28,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      widget.announcement.description,
-                      style: const TextStyle(fontSize: 20),
+                      _announcement!.description,
+                      style: const TextStyle(fontSize: 18),
                     ),
                     if (_poll != null) ...[
                       const SizedBox(height: 16),
