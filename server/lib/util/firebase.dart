@@ -52,8 +52,12 @@ class Firebase {
   }
 
   static Future<bool> sendNotification(
-      {required String title, required String body}) async {
-    if (_isDev) {
+      {required String title,
+      required String body,
+      String? fcmToken,
+      Map<String, dynamic>? data,
+      bool forceOnDev = false}) async {
+    if (_isDev && !forceOnDev) {
       return true;
     }
 
@@ -72,8 +76,9 @@ class Firebase {
       },
       body: json.encode({
         'message': {
-          'topic': 'general',
-          'data': {},
+          if (fcmToken != null) 'token': fcmToken else 'topic': 'general',
+          if (data != null)
+            'data': data.map((key, value) => MapEntry(key, value.toString())),
           'notification': {
             'title': title,
             'body': body,
