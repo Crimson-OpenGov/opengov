@@ -34,7 +34,11 @@ class AdminService {
 
       if (dbResponse > 0) {
         pollId = dbResponse;
-        Firebase.sendNotification(title: 'New Poll', body: poll.topic).ignore();
+        Firebase.sendNotification(
+          title: 'New Poll',
+          body: poll.topic,
+          data: {'pollId': pollId},
+        ).ignore();
       }
     } else {
       final dbResponse = await _connection
