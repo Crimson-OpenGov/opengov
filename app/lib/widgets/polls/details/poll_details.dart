@@ -57,7 +57,7 @@ class _PollDetailsState extends State<PollDetails> {
                     Text(
                       _poll!.topic,
                       style: const TextStyle(
-                        fontSize: 34,
+                        fontSize: 26,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -65,7 +65,7 @@ class _PollDetailsState extends State<PollDetails> {
                     if (_poll!.description != null) ...[
                       Text(
                         _poll!.description!,
-                        style: const TextStyle(fontSize: 20),
+                        style: const TextStyle(fontSize: 18),
                       ),
                       const SizedBox(height: 16),
                     ],

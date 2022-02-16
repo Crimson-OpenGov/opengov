@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/widgets/base/list_header.dart';
 import 'package:opengov_app/widgets/polls/neapolitan.dart';
 import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
@@ -56,35 +57,35 @@ class _PollReportState extends State<PollReport> {
         appBar: AppBar(title: const Text('Report')),
         body: _report == null
             ? const Center(child: CircularProgressIndicator())
-            : Padding(
-                padding: const EdgeInsets.all(8),
-                child: ListView(
-                  children: [
-                    Text(
+            : ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Text(
                       widget.poll.topic,
                       style: const TextStyle(
-                        fontSize: 34,
+                        fontSize: 26,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    if (widget.poll.description != null) ...[
-                      Text(
+                  ),
+                  const SizedBox(height: 16),
+                  if (widget.poll.description != null) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
                         widget.poll.description!,
-                        style: const TextStyle(fontSize: 20),
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-                    const Text(
-                      'Responses',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    for (final comment in _report!.comments) ...[
-                      Row(
+                    const SizedBox(height: 16),
+                  ],
+                  const ListHeader('Responses'),
+                  const SizedBox(height: 8),
+                  for (final comment in _report!.comments) ...[
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Row(
                         children: [
                           Flexible(
                             flex: 3,
@@ -108,10 +109,10 @@ class _PollReportState extends State<PollReport> {
                           ),
                         ],
                       ),
-                      const Divider(),
-                    ],
+                    ),
+                    const Divider(),
                   ],
-                ),
+                ],
               ),
       );
 }
