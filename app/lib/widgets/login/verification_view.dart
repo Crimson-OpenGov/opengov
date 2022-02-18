@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/service/user_service.dart';
 import 'package:opengov_app/widgets/polls/polls_list.dart';
 import 'package:opengov_common/actions/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -31,6 +32,9 @@ class _VerificationViewState extends State<VerificationView> {
       final sharedPreferences = await SharedPreferences.getInstance();
       sharedPreferences.setString('username', username);
       sharedPreferences.setString('token', token);
+
+      final result = await UserService.getUser(context);
+      assert(result == GetUserResult.loggedIn);
 
       unawaited(Navigator.pushAndRemoveUntil(
         context,

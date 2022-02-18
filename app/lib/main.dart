@@ -2,9 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:opengov_app/firebase_options.dart';
 import 'package:opengov_app/service/notification_service.dart';
+import 'package:opengov_app/service/user_service.dart';
 import 'package:opengov_app/widgets/login/explainer.dart';
+import 'package:opengov_app/widgets/login/login_view.dart';
 import 'package:opengov_app/widgets/main_view.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -60,7 +61,7 @@ class _HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<_HomeView> {
-  bool? _loggedIn;
+  var _getUserResult = GetUserResult.loading;
 
   @override
   void initState() {
@@ -70,18 +71,24 @@ class _HomeViewState extends State<_HomeView> {
   }
 
   Future<void> _fetchSharedPreferences() async {
-    final sharedPreferences = await SharedPreferences.getInstance();
+    final getUserResult = await UserService.getUser(context);
 
     setState(() {
-      _loggedIn = sharedPreferences.containsKey('username') &&
-          sharedPreferences.containsKey('token');
+      _getUserResult = getUserResult;
     });
   }
 
   @override
-  Widget build(BuildContext context) => _loggedIn == null
-      ? const Scaffold()
-      : _loggedIn!
-          ? const MainView()
-          : const Explainer();
+  Widget build(BuildContext context) {
+    switch (_getUserResult) {
+      case GetUserResult.loggedIn:
+        return const MainView();
+      case GetUserResult.notLoggedIn:
+        return const Explainer();
+      case GetUserResult.expired:
+        return const LoginView();
+      default:
+        return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+  }
 }

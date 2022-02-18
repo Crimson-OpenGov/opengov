@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/service/user_service.dart';
 import 'package:opengov_app/widgets/announcement/announcement_details.dart';
 import 'package:opengov_common/actions/list_announcements.dart';
-import 'package:opengov_common/models/user.dart';
 
 class AnnouncementsList extends StatefulWidget {
   const AnnouncementsList();
@@ -15,7 +15,6 @@ class AnnouncementsList extends StatefulWidget {
 
 class _AnnouncementsListState extends State<AnnouncementsList> {
   List<ListedAnnouncement>? _announcements;
-  User? _me;
 
   @override
   void initState() {
@@ -24,15 +23,10 @@ class _AnnouncementsListState extends State<AnnouncementsList> {
   }
 
   Future<void> _fetchData() async {
-    final responses = await Future.wait(
-        [HttpService.getMe(), HttpService.listAnnouncements()]);
+    final announcementsResponse = await HttpService.listAnnouncements();
 
-    if (responses.every((response) => response != null)) {
-      final meResponse = responses[0] as User;
-      final announcementsResponse = responses[1] as ListAnnouncementsResponse;
-
+    if (announcementsResponse != null) {
       setState(() {
-        _me = meResponse;
         _announcements = announcementsResponse.announcements;
       });
     }
@@ -44,7 +38,7 @@ class _AnnouncementsListState extends State<AnnouncementsList> {
           title: const Text('Announcements'),
           elevation: 0,
           actions: [
-            if (_me?.isAdmin ?? false)
+            if (UserService.user.isAdmin)
               IconButton(
                 onPressed: () {},
                 icon: const Icon(Icons.add),

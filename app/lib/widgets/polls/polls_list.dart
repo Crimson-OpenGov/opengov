@@ -1,19 +1,16 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/service/user_service.dart';
 import 'package:opengov_app/widgets/base/list_header.dart';
-import 'package:opengov_app/widgets/login/login_view.dart';
 import 'package:opengov_app/widgets/polls/about_page.dart';
 import 'package:opengov_app/widgets/polls/edit_poll.dart';
 import 'package:opengov_app/widgets/polls/details/poll_details.dart';
 import 'package:opengov_app/widgets/polls/poll_admin.dart';
 import 'package:opengov_app/widgets/polls/poll_report.dart';
-import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/models/poll.dart';
-import 'package:opengov_common/models/user.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class PollsList extends StatefulWidget {
   const PollsList();
@@ -26,7 +23,6 @@ class _PollsListState extends State<PollsList> {
   Iterable<Poll>? _timelyPolls;
   Iterable<Poll>? _permanentPolls;
   Iterable<Poll>? _finishedPolls;
-  User? _me;
 
   @override
   void initState() {
@@ -35,34 +31,20 @@ class _PollsListState extends State<PollsList> {
   }
 
   Future<void> _fetchData() async {
-    try {
-      final responses =
-          await Future.wait([HttpService.getMe(), HttpService.listPolls()]);
+    final pollsResponse = await HttpService.listPolls();
 
-      if (responses.every((response) => response != null)) {
-        final meResponse = responses[0] as User;
-        final pollsResponse = responses[1] as ListPollsResponse;
+    if (kDebugMode) {
+      await UserService.getUser(context);
+    }
 
-        setState(() {
-          _me = meResponse;
-          _timelyPolls = pollsResponse.polls
-              .where((poll) => poll.isActive && !poll.isPermanent);
-          _permanentPolls = pollsResponse.polls
-              .where((poll) => poll.isActive && poll.isPermanent);
-          _finishedPolls = pollsResponse.polls.where((poll) => !poll.isActive);
-        });
-      }
-    } on AuthenticationException {
-      (await SharedPreferences.getInstance()).clear();
-
-      unawaited(Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const LoginView()),
-        (_) => false,
-      ));
-
-      showMessageDialog(context,
-          body: 'Your session has expired. Please log in again.');
+    if (pollsResponse != null) {
+      setState(() {
+        _timelyPolls = pollsResponse.polls
+            .where((poll) => poll.isActive && !poll.isPermanent);
+        _permanentPolls = pollsResponse.polls
+            .where((poll) => poll.isActive && poll.isPermanent);
+        _finishedPolls = pollsResponse.polls.where((poll) => !poll.isActive);
+      });
     }
   }
 
@@ -86,7 +68,7 @@ class _PollsListState extends State<PollsList> {
     final isActive = poll.isActive;
     final subtitleLeading = isActive ? 'Ends in' : 'Ended';
     final subtitleTrailing = isActive ? '' : ' ago';
-    final isAdmin = _me!.isAdmin;
+    final isAdmin = UserService.user.isAdmin;
 
     return ListTile(
       leading: Text(
@@ -124,7 +106,7 @@ class _PollsListState extends State<PollsList> {
               onPressed: _openAbout,
               icon: const Icon(Icons.info),
             ),
-            if (_me?.isAdmin ?? false)
+            if (UserService.user.isAdmin)
               IconButton(
                 onPressed: _createPoll,
                 icon: const Icon(Icons.add),
