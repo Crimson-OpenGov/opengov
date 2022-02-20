@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/service/user_service.dart';
 import 'package:opengov_app/widgets/announcement/announcement_details.dart';
+import 'package:opengov_app/widgets/announcement/edit_announcement.dart';
 import 'package:opengov_common/actions/list_announcements.dart';
 
 class AnnouncementsList extends StatefulWidget {
@@ -32,6 +33,17 @@ class _AnnouncementsListState extends State<AnnouncementsList> {
     }
   }
 
+  Future<void> _createAnnouncement() async {
+    final result = await showDialog(
+      context: context,
+      builder: (_) => const EditAnnouncement(),
+    );
+
+    if (result != null) {
+      _fetchData();
+    }
+  }
+
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
@@ -40,7 +52,7 @@ class _AnnouncementsListState extends State<AnnouncementsList> {
           actions: [
             if (UserService.user.isAdmin)
               IconButton(
-                onPressed: () {},
+                onPressed: _createAnnouncement,
                 icon: const Icon(Icons.add),
               ),
           ],

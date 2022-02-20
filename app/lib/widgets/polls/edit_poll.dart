@@ -62,8 +62,8 @@ class _EditPollState extends State<EditPoll> {
       );
       final response = await HttpService.createOrUpdatePoll(poll);
 
-      if (response?.pollId != null) {
-        Navigator.pop(context, poll.copyWith(id: response!.pollId!));
+      if (response?.id != null) {
+        Navigator.pop(context, poll.copyWith(id: response!.id!));
       }
     }
   }

@@ -1,8 +1,9 @@
 import 'dart:convert';
 
-import 'package:opengov_common/actions/create_update_poll.dart';
+import 'package:opengov_common/actions/create_update.dart';
 import 'package:opengov_common/actions/delete_poll.dart';
 import 'package:opengov_common/actions/update_comment.dart';
+import 'package:opengov_common/models/announcement.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_server/common.dart';
 import 'package:opengov_server/util/firebase.dart';
@@ -49,7 +50,7 @@ class AdminService {
       }
     }
 
-    return Response.ok(json.encode(CreateOrUpdatePollResponse(pollId: pollId)));
+    return Response.ok(json.encode(CreateOrUpdateResponse(id: pollId)));
   }
 
   @Route.post('/delete-poll')
@@ -91,6 +92,42 @@ class AdminService {
     }
 
     return genericResponse(success: dbResponse != 0);
+  }
+
+  @Route.post('/create-or-update-announcement')
+  Future<Response> createOrUpdateAnnouncement(Request request) async {
+    final user = await request.decodeAuth(_connection);
+
+    if (user?.isNotAdmin ?? true) {
+      return Response.forbidden(null);
+    }
+
+    final announcement = await request.readAsObject(Announcement.fromJson);
+    int? announcementId;
+
+    if (announcement.id == Announcement.noId) {
+      final json = announcement.toJson()..remove('id');
+      final dbResponse = await _connection.insert('announcement', json);
+
+      if (dbResponse > 0) {
+        announcementId = dbResponse;
+        Firebase.sendNotification(
+          title: 'New Announcement',
+          body: announcement.title,
+          data: {'announcementId': announcementId},
+        ).ignore();
+      }
+    } else {
+      final dbResponse = await _connection.update(
+          'announcement', announcement.toJson(),
+          where: {'id': announcement.id});
+
+      if (dbResponse > 0) {
+        announcementId = announcement.id;
+      }
+    }
+
+    return Response.ok(json.encode(CreateOrUpdateResponse(id: announcementId)));
   }
 
   Router get router => _$AdminServiceRouter(this);

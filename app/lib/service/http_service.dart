@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_common/actions/add_comment.dart';
-import 'package:opengov_common/actions/create_update_poll.dart';
+import 'package:opengov_common/actions/create_update.dart';
 import 'package:opengov_common/actions/delete_poll.dart';
 import 'package:opengov_common/actions/feed.dart';
 import 'package:opengov_common/actions/list_announcements.dart';
@@ -92,9 +92,9 @@ class HttpService {
   static Future<GenericResponse?> vote(VoteRequest request) =>
       _post('poll/vote', request.toJson(), GenericResponse.fromJson);
 
-  static Future<CreateOrUpdatePollResponse?> createOrUpdatePoll(Poll poll) =>
+  static Future<CreateOrUpdateResponse?> createOrUpdatePoll(Poll poll) =>
       _post('admin/create-or-update-poll', poll.toJson(),
-          CreateOrUpdatePollResponse.fromJson);
+          CreateOrUpdateResponse.fromJson);
 
   static Future<GenericResponse?> deletePoll(DeletePollRequest request) =>
       _post('admin/delete-poll', request.toJson(), GenericResponse.fromJson);
@@ -115,6 +115,11 @@ class HttpService {
           int announcementId) =>
       _get('announcement/details/$announcementId',
           AnnouncementDetailsResponse.fromJson);
+
+  static Future<CreateOrUpdateResponse?> createOrUpdateAnnouncement(
+          Announcement announcement) =>
+      _post('admin/create-or-update-announcement', announcement.toJson(),
+          CreateOrUpdateResponse.fromJson);
 
   static Future<FeedResponse?> getRandomFeed() =>
       _get('feed/random', FeedResponse.fromJson);
