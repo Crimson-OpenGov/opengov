@@ -83,8 +83,15 @@ class _AddCommentState extends State<AddComment> {
             textInputAction: TextInputAction.done,
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              const Expanded(
+                child: Text(
+                  'Your comment will appear in other people’s feeds to be '
+                  'voted on.',
+                  style: TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+              const SizedBox(width: 8),
               Text(
                 '$_remainingCharacters',
                 style: TextStyle(
