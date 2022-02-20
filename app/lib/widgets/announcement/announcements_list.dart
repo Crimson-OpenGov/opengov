@@ -59,36 +59,51 @@ class _AnnouncementsListState extends State<AnnouncementsList> {
         ),
         body: _announcements == null
             ? const Center(child: CircularProgressIndicator())
-            : RefreshIndicator(
-                onRefresh: _fetchData,
-                child: ListView(
-                  children: [
-                    for (final announcement in _announcements!)
-                      ListTile(
-                        isThreeLine: true,
-                        leading: Text(
-                          announcement.emoji ?? 'X',
-                          style: const TextStyle(fontSize: 24),
+            : _announcements!.isEmpty
+                ? Center(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(Icons.announcement, size: 48),
+                        SizedBox(height: 16),
+                        Text(
+                          'No announcements',
+                          style: TextStyle(fontSize: 24),
                         ),
-                        title: Text(announcement.title),
-                        subtitle: Text(
-                          announcement.description,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        trailing: Text('${announcement.durationFormatted} ago'),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => AnnouncementDetails(
-                                  announcementId: announcement.id),
+                      ],
+                    ),
+                  )
+                : RefreshIndicator(
+                    onRefresh: _fetchData,
+                    child: ListView(
+                      children: [
+                        for (final announcement in _announcements!)
+                          ListTile(
+                            isThreeLine: true,
+                            leading: Text(
+                              announcement.emoji ?? 'X',
+                              style: const TextStyle(fontSize: 24),
                             ),
-                          );
-                        },
-                      ),
-                  ],
-                ),
-              ),
+                            title: Text(announcement.title),
+                            subtitle: Text(
+                              announcement.description,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            trailing:
+                                Text('${announcement.durationFormatted} ago'),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => AnnouncementDetails(
+                                      announcementId: announcement.id),
+                                ),
+                              );
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
       );
 }
