@@ -1,4 +1,4 @@
-import 'package:duration/duration.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:opengov_common/common.dart';
 
@@ -35,11 +35,30 @@ class Announcement {
 
   Json toJson() => _$AnnouncementToJson(this);
 
-  String get postedTimeFormatted => prettyDuration(
-    DateTime.now().difference(postedTime),
-    tersity: DurationTersity.minute,
-    spacer: '',
-    conjunction: ', and ',
-    abbreviated: true,
-  );
+  String get durationFormatted {
+    final duration = DateTime.now().difference(postedTime);
+
+    final weeks = duration.inDays ~/ 7;
+    if (weeks > 0) {
+      return Intl.plural(weeks, one: '$weeks week', other: '$weeks weeks');
+    }
+
+    final days = duration.inDays;
+    if (days > 0) {
+      return Intl.plural(days, one: '$days day', other: '$days days');
+    }
+
+    final hours = duration.inHours;
+    if (hours > 0) {
+      return Intl.plural(hours, one: '$hours hour', other: '$hours hours');
+    }
+
+    final minutes = duration.inMinutes;
+    if (minutes > 0) {
+      return Intl.plural(minutes,
+          one: '$minutes min', other: '$minutes mins');
+    }
+
+    return 'now';
+  }
 }

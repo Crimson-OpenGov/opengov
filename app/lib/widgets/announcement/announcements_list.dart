@@ -76,8 +76,7 @@ class _AnnouncementsListState extends State<AnnouncementsList> {
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
-                        trailing:
-                            Text('${announcement.postedTimeFormatted} ago'),
+                        trailing: Text('${announcement.durationFormatted} ago'),
                         onTap: () {
                           Navigator.push(
                             context,
