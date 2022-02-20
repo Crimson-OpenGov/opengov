@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/widgets/base/linked_text.dart';
 import 'package:opengov_app/widgets/polls/details/add_comment.dart';
 import 'package:opengov_app/widgets/polls/details/comment_list.dart';
 import 'package:opengov_common/models/comment.dart';
@@ -63,9 +64,9 @@ class _PollDetailsState extends State<PollDetails> {
                     ),
                     const SizedBox(height: 16),
                     if (_poll!.description != null) ...[
-                      Text(
+                      LinkedText(
                         _poll!.description!,
-                        style: const TextStyle(fontSize: 18),
+                        fontSize: 18,
                       ),
                       const SizedBox(height: 16),
                     ],

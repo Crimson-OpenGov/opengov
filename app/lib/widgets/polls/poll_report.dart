@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
+import 'package:opengov_app/widgets/base/linked_text.dart';
 import 'package:opengov_app/widgets/base/list_header.dart';
 import 'package:opengov_app/widgets/polls/neapolitan.dart';
 import 'package:opengov_common/models/comment.dart';
@@ -73,9 +74,9 @@ class _PollReportState extends State<PollReport> {
                   if (widget.poll.description != null) ...[
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
+                      child: LinkedText(
                         widget.poll.description!,
-                        style: const TextStyle(fontSize: 18),
+                        fontSize: 18,
                       ),
                     ),
                     const SizedBox(height: 16),

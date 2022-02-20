@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/widgets/base/dialogs.dart';
+import 'package:opengov_app/widgets/base/linked_text.dart';
 import 'package:opengov_app/widgets/base/list_header.dart';
 import 'package:opengov_app/widgets/polls/edit_poll.dart';
 import 'package:opengov_app/widgets/polls/neapolitan.dart';
@@ -161,15 +162,15 @@ class _PollAdminState extends State<PollAdmin> {
                         Text(
                           _poll.topic,
                           style: const TextStyle(
-                            fontSize: 34,
+                            fontSize: 26,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 16),
                         if (_poll.description != null) ...[
-                          Text(
+                          LinkedText(
                             _poll.description!,
-                            style: const TextStyle(fontSize: 20),
+                            fontSize: 18,
                           ),
                           const SizedBox(height: 16),
                         ],
