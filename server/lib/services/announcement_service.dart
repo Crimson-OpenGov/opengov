@@ -18,7 +18,7 @@ class AnnouncementService {
 
   static const _listAnnouncementsQuery =
       'select a.*, p.emoji as poll_emoji from announcement a '
-      'left join poll p on p.id = a.poll_id';
+      'left join poll p on p.id = a.poll_id order by a.id desc';
 
   @Route.get('/list')
   Future<Response> listAnnouncement(Request request) async {
