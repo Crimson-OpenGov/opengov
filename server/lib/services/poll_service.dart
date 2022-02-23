@@ -186,6 +186,9 @@ class PollService {
 
     final voteRequest = await request.readAsObject(VoteRequest.fromJson);
 
+    await _connection.delete('vote',
+        where: {'user_id': user.id, 'comment_id': voteRequest.commentId});
+
     final dbResponse = await _connection.insert('vote', {
       'user_id': user.id,
       'comment_id': voteRequest.commentId,
