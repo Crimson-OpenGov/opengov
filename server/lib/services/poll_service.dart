@@ -7,6 +7,7 @@ import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/report.dart';
+import 'package:opengov_common/models/token.dart';
 import 'package:opengov_common/models/vote.dart';
 import 'package:opengov_server/common.dart';
 import 'package:opengov_server/environment.dart';
@@ -18,6 +19,8 @@ import 'package:shelf_router/shelf_router.dart';
 part 'poll_service.g.dart';
 
 class PollService {
+  static final appleToken = Token.generate('appletest', secretKey);
+
   final PostgreSQLConnection _connection;
 
   const PollService(this._connection);
@@ -38,7 +41,7 @@ class PollService {
     final pollsResponse = (await _connection.select('poll'))
         .map(Poll.fromJson)
         .where((poll) =>
-            user.token != 'appleTest' ||
+            user.token != appleToken.value ||
             !poll.topic.toLowerCase().contains('covid'))
         .toList(growable: false);
 
