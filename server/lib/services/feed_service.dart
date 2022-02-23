@@ -18,7 +18,7 @@ class FeedService {
       'p.emoji as poll_emoji '
       'from comment c tablesample SYSTEM_ROWS(10) '
       'join poll p on c.poll_id = p.id '
-      'where (select count(1) from vote v '
+      'where p.end > @now and (select count(1) from vote v '
       'where v.user_id = @user_id and v.comment_id = c.id) = 0';
 
   @Route.get('/random')
@@ -29,8 +29,13 @@ class FeedService {
       return Response.forbidden(null);
     }
 
-    final commentsResponse = (await _connection
-            .query(_randomFeedQuery, substitutionValues: {'user_id': user.id}))
+    final commentsResponse = (await _connection.query(
+      _randomFeedQuery,
+      substitutionValues: {
+        'user_id': user.id,
+        'now': DateTime.now().millisecondsSinceEpoch,
+      },
+    ))
         .mapRows(FeedComment.fromJson)
         .toList(growable: false);
 
