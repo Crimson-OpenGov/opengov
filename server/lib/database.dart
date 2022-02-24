@@ -11,8 +11,9 @@ extension PostgresExtension on PostgreSQLExecutionContext {
           ...values.map((key, value) => MapEntry('${key}Value', value)),
       };
 
-  String _listMap(Map<String, dynamic> map, String suffix) =>
-      map.keys.map((e) => '"$e" = @$e$suffix').join(', ');
+  String _listMap(Map<String, dynamic> map, String suffix,
+          {String separator = ', '}) =>
+      map.keys.map((e) => '"$e" = @$e$suffix').join(separator);
 
   Future<List<Map<String, dynamic>>> select(String table,
       {Map<String, dynamic>? where, String? orderBy}) async {
@@ -68,7 +69,7 @@ extension PostgresExtension on PostgreSQLExecutionContext {
 
     final deleteQuery = [
       'DELETE FROM "$table" WHERE',
-      _listMap(where, 'Where'),
+      _listMap(where, 'Where', separator: ' AND '),
     ];
     return (await query(deleteQuery.join(' '),
             substitutionValues: _mergeMaps(where: where)))
