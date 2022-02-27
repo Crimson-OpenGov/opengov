@@ -43,8 +43,9 @@ class _VerificationViewState extends State<VerificationView> {
       ));
 
       final firebaseMessaging = FirebaseMessaging.instance;
-      await firebaseMessaging.requestPermission();
-      if (!kIsWeb) {
+      final permissions = await firebaseMessaging.requestPermission();
+      if (!kIsWeb &&
+          permissions.authorizationStatus == AuthorizationStatus.authorized) {
         await firebaseMessaging.subscribeToTopic('general');
       }
     } else {
