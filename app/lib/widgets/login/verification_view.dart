@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_app/service/http_service.dart';
 import 'package:opengov_app/service/user_service.dart';
-import 'package:opengov_app/widgets/polls/polls_list.dart';
+import 'package:opengov_app/widgets/main_view.dart';
 import 'package:opengov_common/actions/login.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,7 +38,7 @@ class _VerificationViewState extends State<VerificationView> {
 
       unawaited(Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const PollsList()),
+        MaterialPageRoute(builder: (_) => const MainView()),
         (_) => false,
       ));
 
