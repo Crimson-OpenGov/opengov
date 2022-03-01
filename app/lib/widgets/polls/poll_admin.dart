@@ -95,7 +95,7 @@ class _PollAdminState extends State<PollAdmin> {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            Expanded(child: Text(comment.comment)),
+            Expanded(child: LinkedText(comment.comment)),
             const SizedBox(width: 16),
             Neapolitan(
               pieces: [

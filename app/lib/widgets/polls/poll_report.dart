@@ -91,9 +91,9 @@ class _PollReportState extends State<PollReport> {
                           Flexible(
                             flex: 3,
                             fit: FlexFit.tight,
-                            child: Text(
+                            child: LinkedText(
                               comment.comment,
-                              style: const TextStyle(fontSize: 16),
+                              fontSize: 16,
                             ),
                           ),
                           const SizedBox(width: 16),
