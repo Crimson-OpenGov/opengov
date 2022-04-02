@@ -13,11 +13,16 @@ class Firebase {
   static const _scope = "https://www.googleapis.com/auth/cloud-platform";
 
   static final _client = Client();
-  static late Json _json;
+  static Json? _json;
   static var _isDev = false;
 
   static Future<void> setup() async {
-    _json = json.decode(await File('sa.json').readAsString());
+    final file = File('sa.json');
+    if (await file.exists()) {
+      _json = json.decode(await file.readAsString());
+    } else {
+      print('sa.json missing; Firebase functionality disabled.');
+    }
 
     assert(() {
       _isDev = true;
@@ -29,9 +34,9 @@ class Firebase {
     return JWT(
       {'scope': _scope},
       audience: Audience.one(_authUrl.toString()),
-      issuer: _json['client_email'],
+      issuer: _json!['client_email'],
     ).sign(
-      RSAPrivateKey(_json['private_key']),
+      RSAPrivateKey(_json!['private_key']),
       algorithm: JWTAlgorithm.RS256,
       expiresIn: const Duration(hours: 1),
     );
@@ -57,7 +62,7 @@ class Firebase {
       String? fcmToken,
       Map<String, dynamic>? data,
       bool forceOnDev = false}) async {
-    if (_isDev && !forceOnDev) {
+    if (_json == null || (_isDev && !forceOnDev)) {
       return true;
     }
 
@@ -67,7 +72,7 @@ class Firebase {
       Uri(scheme: 'https', host: 'fcm.googleapis.com', pathSegments: [
         'v1',
         'projects',
-        _json['project_id']!,
+        _json!['project_id']!,
         'messages:send',
       ]),
       headers: {
