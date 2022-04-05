@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:opengov_common/actions/create_update.dart';
 import 'package:opengov_common/actions/delete_poll.dart';
 import 'package:opengov_common/actions/update_comment.dart';
+import 'package:opengov_common/actions/update_reply.dart';
 import 'package:opengov_common/models/announcement.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_server/common.dart';
@@ -70,6 +71,24 @@ class AdminService {
     return genericResponse(success: dbResponse != 0);
   }
 
+  /*@Route.post('/delete-comment')
+  Future<Response> deleteComment(Request request) async {
+    final user = await request.decodeAuth(_connection);
+
+    if (user?.isNotAdmin ?? true) {
+      return Response.forbidden(null);
+    }
+
+    final deleteCommentRequest =
+        await request.readAsObject(DeleteCommentRequest.fromJson);
+
+    final dbResponse = await _connection
+        .delete('comment', where: {'id': deleteCommentRequest.commentId});
+
+    return genericResponse(success: dbResponse != 0);
+  }*/
+
+
   @Route.post('/update-comment')
   Future<Response> updateComment(Request request) async {
     final user = await request.decodeAuth(_connection);
@@ -93,6 +112,31 @@ class AdminService {
 
     return genericResponse(success: dbResponse != 0);
   }
+
+  @Route.post('/update-reply')
+  Future<Response> updateReply(Request request) async {
+    final user = await request.decodeAuth(_connection);
+
+    if (user?.isNotAdmin ?? true) {
+      return Response.forbidden(null);
+    }
+
+    final updateReplyRequest =
+        await request.readAsObject(UpdateReplyRequest.fromJson);
+
+    int dbResponse;
+
+    if (updateReplyRequest.action == UpdateReplyAction.delete) {
+      dbResponse = await _connection
+          .delete('reply', where: {'id': updateReplyRequest.replyId});
+    } else {
+      dbResponse = await _connection.update('reply', {'is_approved': 1},
+          where: {'id': updateReplyRequest.replyId});
+    }
+
+    return genericResponse(success: dbResponse != 0);
+  }
+
 
   @Route.post('/create-or-update-announcement')
   Future<Response> createOrUpdateAnnouncement(Request request) async {

@@ -52,3 +52,23 @@ CREATE TABLE announcement
     posted_time BIGINT NOT NULL,
     emoji       TEXT DEFAULT NULL
 );
+
+CREATE TABLE reply
+(
+    id          SERIAL,
+    comment_id  INTEGER NOT NULL,
+    user_id     INTEGER,
+    reply	TEXT    NOT NULL,
+    timestamp   BIGINT  NOT NULL,
+    is_approved BOOLEAN NOT NULL DEFAULT FALSE
+);
+
+CREATE TABLE votereply
+(
+    id         SERIAL,
+    user_id    INTEGER,
+    reply_id   INTEGER NOT NULL,
+    score      INTEGER NOT NULL,
+    reason     TEXT DEFAULT NULL,
+    timestamp  BIGINT  NOT NULL
+);

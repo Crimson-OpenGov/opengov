@@ -65,11 +65,11 @@ class _PollAdminState extends State<PollAdmin> {
     }
   }
 
-  Future<void> _onModeratePressed(Comment comment) async {
+  Future<void> _onModeratePressed(int i) async {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => CommentAdmin(comment: comment)));
+        builder: (_) => ReplyAdmin(commentId:i)));
   }
 
   
@@ -148,7 +148,7 @@ class _PollAdminState extends State<PollAdmin> {
                 side: MaterialStateProperty.all(BorderSide.none),
               ),
               onPressed: () {
-                _onModeratePressed(comment);
+                _onModeratePressed(comment.id);
               },
               child: Row(
                 mainAxisSize: MainAxisSize.min,
