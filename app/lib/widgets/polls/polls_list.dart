@@ -82,9 +82,9 @@ class _PollsListState extends State<PollsList> {
           context,
           MaterialPageRoute(
             builder: (_) => poll.isActive
-                ? isAdmin
-                    ? PollAdmin(poll: poll)
-                    : PollDetails(pollId: poll.id)
+                ? isAdmin 
+                ? PollAdmin(poll: poll, comment: null, isReply: false)
+                    : PollDetails(parentId: poll.id, isReply: false)
                 : PollReport(poll: poll),
           ),
         );

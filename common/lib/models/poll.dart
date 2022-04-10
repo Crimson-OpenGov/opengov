@@ -21,12 +21,12 @@ class Poll {
   final bool isPermanent;
 
   const Poll({
-    required this.id,
-    required this.topic,
-    required this.description,
-    required this.end,
-    required this.emoji,
-    this.isPermanent = false,
+      required this.id,
+      required this.topic,
+      required this.description,
+      required this.end,
+      required this.emoji,
+      this.isPermanent = false,
   });
 
   factory Poll.fromJson(Json json) => _$PollFromJson(json);
@@ -36,32 +36,39 @@ class Poll {
   bool get isActive => end.isAfter(DateTime.now());
 
   String get endFormatted => prettyDuration(
-        end.difference(DateTime.now()),
-        tersity: DurationTersity.minute,
-        spacer: '',
-        conjunction: ', and ',
-        abbreviated: true,
-      );
+    end.difference(DateTime.now()),
+    tersity: DurationTersity.minute,
+    spacer: '',
+    conjunction: ', and ',
+    abbreviated: true,
+  );
 
+  Map<String,dynamic> get details =>
+  {'commentId': 0,
+    'pollId':id,
+    'topic': topic,
+    'description':description
+  };
+  
   Poll copyWith({int? id}) => Poll(
-      id: id ?? this.id,
-      topic: topic,
-      description: description,
-      end: end,
-      emoji: emoji,
-      isPermanent: isPermanent);
+    id: id ?? this.id,
+    topic: topic,
+    description: description,
+    end: end,
+    emoji: emoji,
+    isPermanent: isPermanent);
 
   @override
   bool operator ==(Object other) =>
-      other is Poll &&
-      other.id == id &&
-      other.topic == topic &&
-      other.description == description &&
-      other.end == end &&
-      other.emoji == emoji &&
-      other.isPermanent == isPermanent;
+  other is Poll &&
+  other.id == id &&
+  other.topic == topic &&
+  other.description == description &&
+  other.end == end &&
+  other.emoji == emoji &&
+  other.isPermanent == isPermanent;
 
   @override
   int get hashCode =>
-      Object.hash(id, topic, description, end, emoji, isPermanent);
+  Object.hash(id, topic, description, end, emoji, isPermanent);
 }

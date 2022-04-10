@@ -9,6 +9,7 @@ part of 'comment.dart';
 Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
       id: json['id'] as int,
       pollId: json['poll_id'] as int,
+      parentId: json['parent_id'] as int?,
       userId: json['user_id'] as int?,
       comment: json['comment'] as String,
       timestamp: dateTimeFromJson(json['timestamp'] as int),
@@ -23,6 +24,7 @@ Comment _$CommentFromJson(Map<String, dynamic> json) => Comment(
 Map<String, dynamic> _$CommentToJson(Comment instance) => <String, dynamic>{
       'id': instance.id,
       'poll_id': instance.pollId,
+      'parent_id': instance.parentId,
       'user_id': instance.userId,
       'comment': instance.comment,
       'timestamp': dateTimeToJson(instance.timestamp),

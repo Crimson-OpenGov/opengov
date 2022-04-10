@@ -13,6 +13,7 @@ class FeedService {
 
   const FeedService(this._connection);
 
+  //if don't want replies in feed, then need to get rows from comment where parent_id is null
   static const _randomFeedQuery =
       'select c.id, p.id as poll_id, c.comment, p.topic as poll_topic, '
       'p.emoji as poll_emoji '

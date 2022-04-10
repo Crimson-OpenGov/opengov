@@ -5,9 +5,9 @@ import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/models/poll.dart';
 
 class AddComment extends StatefulWidget {
-  final Poll poll;
-
-  const AddComment({required this.poll});
+  final int pollId;
+  final int parentId; //0 if top level comment
+  const AddComment({required this.pollId, required this.parentId});
 
   @override
   _AddCommentState createState() => _AddCommentState();
@@ -32,22 +32,23 @@ class _AddCommentState extends State<AddComment> {
 
   Future<void> _addComment() async {
     final response = await HttpService.addComment(AddCommentRequest(
-      pollId: widget.poll.id,
-      comment: _textController.text,
-    ));
+          pollId: widget.pollId,
+          comment: _textController.text,
+          parentId: widget.parentId,
+      ));
 
     switch (response?.reason) {
       case null:
       case AddCommentResponseReason.error:
         setState(() {
           _responseMessage =
-              'A server error occurred while posting your comment.';
+              'A server error occurred while posting your message.';
         });
         break;
       case AddCommentResponseReason.curseWords:
         setState(() {
           _responseMessage =
-              "Please ensure that your comment doesn't contain any swear "
+              "Please ensure that your message doesn't contain any swear "
               "words.";
         });
         break;
@@ -56,9 +57,9 @@ class _AddCommentState extends State<AddComment> {
         setState(() {
           _responseMessage = response!.reason ==
                   AddCommentResponseReason.needsApproval
-              ? 'Comment sent! Your comment will be displayed to other users '
+              ? 'Message sent! Your message will be displayed to other users '
                   'once it is approved by an admin.'
-              : 'Comment sent! Your comment is now visible to other users.';
+              : 'Message sent! Your message is now visible to other users.';
           _textController.clear();
         });
         if (await InAppReview.instance.isAvailable()) {
@@ -86,7 +87,7 @@ class _AddCommentState extends State<AddComment> {
             children: [
               const Expanded(
                 child: Text(
-                  'Your comment will appear in other people’s feeds to be '
+                  'Your message will appear in other people’s feeds to be '
                   'voted on.',
                   style: TextStyle(fontStyle: FontStyle.italic),
                 ),

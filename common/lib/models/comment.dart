@@ -21,6 +21,9 @@ class Comment extends CommentBase {
   @JsonKey(name: 'poll_id')
   final int pollId;
 
+  @JsonKey(name: 'parent_id')
+  final int? parentId;
+  
   @JsonKey(name: 'user_id')
   final int? userId;
 
@@ -39,6 +42,7 @@ class Comment extends CommentBase {
   const Comment({
     required this.id,
     required this.pollId,
+    required this.parentId,
     required this.userId,
     required this.comment,
     required this.timestamp,
@@ -48,9 +52,18 @@ class Comment extends CommentBase {
 
   factory Comment.fromJson(Json json) => _$CommentFromJson(json);
 
+  Map<String,dynamic> get details =>
+  {'commentId': id,
+    'pollId':pollId,
+    'topic': comment,
+    'description':timestamp.toString()
+  };
+
+  
   Comment copyWith({required CommentStats stats}) => Comment(
       id: id,
       pollId: pollId,
+      parentId: parentId,
       userId: userId,
       comment: comment,
       timestamp: timestamp,

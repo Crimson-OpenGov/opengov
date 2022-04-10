@@ -1,21 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'poll_details.dart';
+part of 'comment_details.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PollDetailsResponse _$PollDetailsResponseFromJson(Map<String, dynamic> json) =>
-    PollDetailsResponse(
-      parent: Poll.fromJson(json['parent'] as Map<String, dynamic>),
+CommentDetailsResponse _$CommentDetailsResponseFromJson(
+        Map<String, dynamic> json) =>
+    CommentDetailsResponse(
+      parent: Comment.fromJson(json['parent'] as Map<String, dynamic>),
       messages: (json['messages'] as List<dynamic>)
           .map((e) => Comment.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$PollDetailsResponseToJson(
-        PollDetailsResponse instance) =>
+Map<String, dynamic> _$CommentDetailsResponseToJson(
+        CommentDetailsResponse instance) =>
     <String, dynamic>{
       'parent': instance.parent,
       'messages': instance.messages,

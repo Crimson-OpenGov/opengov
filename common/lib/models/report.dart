@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/comment.dart';
+import 'package:opengov_common/models/poll.dart';
 
 part 'report.g.dart';
 

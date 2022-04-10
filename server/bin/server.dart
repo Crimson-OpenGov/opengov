@@ -13,8 +13,7 @@ import 'package:shelf/shelf_io.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 void main(List<String> args) async {
-  final connection = PostgreSQLConnection("localhost", 5432, "opengov",
-      username: dbUsername, password: dbPassword);
+  final connection = PostgreSQLConnection("localhost", 5432, "opengov",username: dbUsername, password: dbPassword);
   await connection.open();
 
   await CurseWords.setup();
@@ -33,10 +32,12 @@ void main(List<String> args) async {
 
   var host = '127.0.0.1';
 
+  
   assert(() {
     host = '192.168.2.198';
     return true;
   }());
+ 
 
   final server = await serve(handler, host, 8017);
 

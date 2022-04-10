@@ -21,7 +21,9 @@ import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/report.dart';
 import 'package:opengov_common/models/token.dart';
 import 'package:opengov_common/models/user.dart';
+import 'package:opengov_common/actions/comment_details.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 
 class HttpService {
   static final _client = Client();
@@ -30,13 +32,14 @@ class HttpService {
     var scheme = 'https';
     var host = 'app.crimsonopengov.us';
     int? port;
-
+    
     assert(() {
       scheme = 'http';
       host = '192.168.2.198';
       port = 8017;
       return true;
     }());
+    
 
     return Uri(scheme: scheme, host: host, port: port, path: 'api/$path');
   }
@@ -83,12 +86,15 @@ class HttpService {
   static Future<Comment?> getCommentDetails(CommentBase comment) =>
       _get('poll/comment/${comment.id}', Comment.fromJson);
 
-  static Future<Report?> getReport(Poll poll) =>
-      _get('poll/report/${poll.id}', Report.fromJson);
+  static Future<Report?> getReport(int pollId, int parentId) =>
+      _get('poll/report/$pollId/$parentId', Report.fromJson);
 
   static Future<AddCommentResponse?> addComment(AddCommentRequest request) =>
       _post('poll/add-comment', request.toJson(), AddCommentResponse.fromJson);
 
+  static Future<CommentDetailsResponse?> getCommentReplies(int commentId) =>
+      _get('poll/details/comment/$commentId', CommentDetailsResponse.fromJson);
+      
   static Future<GenericResponse?> vote(VoteRequest request) =>
       _post('poll/vote', request.toJson(), GenericResponse.fromJson);
 
@@ -123,6 +129,6 @@ class HttpService {
 
   static Future<FeedResponse?> getRandomFeed() =>
       _get('feed/random', FeedResponse.fromJson);
-
+      
   static Future<User?> getMe() => _get('user/me', User.fromJson);
 }

@@ -12,6 +12,7 @@ CREATE TABLE comment
 (
     id          SERIAL,
     poll_id     INTEGER NOT NULL,
+    parent_id   INTEGER,
     user_id     INTEGER,
     comment     TEXT    NOT NULL,
     timestamp   BIGINT  NOT NULL,

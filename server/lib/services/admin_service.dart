@@ -70,6 +70,24 @@ class AdminService {
     return genericResponse(success: dbResponse != 0);
   }
 
+  /*@Route.post('/delete-comment')
+  Future<Response> deleteComment(Request request) async {
+    final user = await request.decodeAuth(_connection);
+
+    if (user?.isNotAdmin ?? true) {
+      return Response.forbidden(null);
+    }
+
+    final deleteCommentRequest =
+        await request.readAsObject(DeleteCommentRequest.fromJson);
+
+    final dbResponse = await _connection
+        .delete('comment', where: {'id': deleteCommentRequest.commentId});
+
+    return genericResponse(success: dbResponse != 0);
+  }*/
+
+
   @Route.post('/update-comment')
   Future<Response> updateComment(Request request) async {
     final user = await request.decodeAuth(_connection);

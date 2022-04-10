@@ -11,7 +11,6 @@ import 'package:opengov_common/models/report.dart';
 
 class PollReport extends StatefulWidget {
   final Poll poll;
-
   const PollReport({required this.poll});
 
   @override
@@ -28,7 +27,7 @@ class _PollReportState extends State<PollReport> {
   }
 
   Future<void> _fetchReport() async {
-    final response = await HttpService.getReport(widget.poll);
+    final response = await HttpService.getReport(widget.poll.id,0);
 
     if (response != null) {
       setState(() {

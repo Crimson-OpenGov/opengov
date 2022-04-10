@@ -7,10 +7,10 @@ part 'poll_details.g.dart';
 
 @JsonSerializable()
 class PollDetailsResponse {
-  final Poll poll;
-  final List<Comment> comments;
+  final Poll parent;
+  final List<Comment> messages;
 
-  PollDetailsResponse({required this.poll, required this.comments});
+  PollDetailsResponse({required this.parent, required this.messages});
 
   factory PollDetailsResponse.fromJson(Json json) =>
       _$PollDetailsResponseFromJson(json);
