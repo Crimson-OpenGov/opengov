@@ -1,16 +1,15 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/comment.dart';
-import 'package:opengov_common/models/reply.dart';
 
 part 'comment_details.g.dart';
 
 @JsonSerializable()
 class CommentDetailsResponse {
-  final Comment comment;
-  final List<Reply> replies;
+  final Comment parent;
+  final List<Comment> messages;
 
-  CommentDetailsResponse({required this.comment, required this.replies});
+  CommentDetailsResponse({required this.parent, required this.messages});
 
   factory CommentDetailsResponse.fromJson(Json json) =>
       _$CommentDetailsResponseFromJson(json);

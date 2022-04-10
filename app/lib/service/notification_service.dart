@@ -21,7 +21,7 @@ class NotificationService {
         context,
         MaterialPageRoute(
             builder: (_) =>
-                PollDetails(pollId: int.parse(message.data['pollId']))),
+                PollDetails(parentId: int.parse(message.data['pollId']), isReply: false)),
       );
     } else if (message.data.containsKey('announcementId')) {
       Navigator.push(

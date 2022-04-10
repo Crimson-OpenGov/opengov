@@ -7,7 +7,6 @@ import 'package:opengov_app/widgets/polls/neapolitan.dart';
 import 'package:opengov_common/actions/feed.dart';
 import 'package:opengov_common/actions/vote.dart';
 import 'package:opengov_common/models/comment.dart';
-import 'package:opengov_app/widgets/polls/reply_details.dart';
 
 enum CommentAction { agree, disagree, pass }
 
@@ -24,8 +23,9 @@ extension CommentActionScore on CommentAction {
 class CommentCard extends StatefulWidget {
   final CommentBase comment;
   final VoidCallback onActionPressed;
-
-  const CommentCard({required this.comment, required this.onActionPressed});
+  final isReply;
+  
+  const CommentCard({required this.comment, required this.onActionPressed, required this.isReply});
 
   @override
   State<CommentCard> createState() => _CommentCardState();
@@ -33,7 +33,7 @@ class CommentCard extends StatefulWidget {
 
 class _CommentCardState extends State<CommentCard> {
   static const _showReason = false;
-
+  
   final _reasonController = TextEditingController();
 
   void _onHelpPressed() {
@@ -63,18 +63,7 @@ class _CommentCardState extends State<CommentCard> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => ReplyListView(commentId:widget.comment.id)));
-
-    //final response = await HttpService.vote(VoteRequest(
-    //    commentId: widget.comment.id, score: action.score, reason: reason));
-    // ReplyListView(widget.comment.id);
-
-    /*showMessageDialog(
-      context,
-      title: 'Share a reason',
-      body: widget.comment.id.toString(),
-    );
-    */
+        builder: (_) => PollDetails(parentId : widget.comment.id, isReply : true)));
   }
       
 
@@ -96,7 +85,9 @@ class _CommentCardState extends State<CommentCard> {
               context,
               MaterialPageRoute(
                 builder: (_) => PollDetails(
-                  pollId: (widget.comment as FeedComment).pollId)),
+                  parentId: (widget.comment as FeedComment).pollId,
+                  isReply: false),
+              ),
             );
           },
         ),
@@ -193,28 +184,30 @@ class _CommentCardState extends State<CommentCard> {
                 ],
               ),
             ),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor:
-                MaterialStateProperty.all(Colors.blue),
-                side: MaterialStateProperty.all(BorderSide.none),
+            if (!widget.isReply) ...[
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateProperty.all(Colors.blue),
+                  side: MaterialStateProperty.all(BorderSide.none),
+                ),
+                onPressed: () {
+                  _onReplyPressed();
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    //to change the icon for reply:
+                    Icon(Icons.redo, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      'View Replies',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
-              onPressed: () {
-                _onReplyPressed();
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  //to change the icon for reply:
-                  Icon(Icons.redo, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text(
-                    'View Replies',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
+            ],
           ],
         ),
       )
@@ -231,28 +224,30 @@ class _CommentCardState extends State<CommentCard> {
               ],
               colors: const [Colors.green, Colors.white, Colors.red],
             ),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor:
-                MaterialStateProperty.all(Colors.blue),
-                side: MaterialStateProperty.all(BorderSide.none),
+            if (!widget.isReply) ...[
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateProperty.all(Colors.blue),
+                  side: MaterialStateProperty.all(BorderSide.none),
+                ),
+                onPressed: () {
+                  _onReplyPressed();
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    //to change the icon for reply:
+                    Icon(Icons.redo, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      'View Replies',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
-              onPressed: () {
-                _onReplyPressed();
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  //to change the icon for reply:
-                  Icon(Icons.redo, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text(
-                    'View Replies',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
+            ],
           ],
         ),
       ),

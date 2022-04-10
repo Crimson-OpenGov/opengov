@@ -9,15 +9,15 @@ part of 'comment_details.dart';
 CommentDetailsResponse _$CommentDetailsResponseFromJson(
         Map<String, dynamic> json) =>
     CommentDetailsResponse(
-      comment: Comment.fromJson(json['comment'] as Map<String, dynamic>),
-      replies: (json['replies'] as List<dynamic>)
-          .map((e) => Reply.fromJson(e as Map<String, dynamic>))
+      parent: Comment.fromJson(json['parent'] as Map<String, dynamic>),
+      messages: (json['messages'] as List<dynamic>)
+          .map((e) => Comment.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
 Map<String, dynamic> _$CommentDetailsResponseToJson(
         CommentDetailsResponse instance) =>
     <String, dynamic>{
-      'comment': instance.comment,
-      'replies': instance.replies,
+      'parent': instance.parent,
+      'messages': instance.messages,
     };

@@ -4,6 +4,7 @@ import 'package:opengov_common/actions/add_comment.dart';
 import 'package:opengov_common/actions/list_polls.dart';
 import 'package:opengov_common/actions/poll_details.dart';
 import 'package:opengov_common/actions/vote.dart';
+import 'package:opengov_common/actions/comment_details.dart';
 import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/report.dart';
@@ -68,7 +69,7 @@ class PollService {
             .map((vote) => vote.commentId)
             .toSet();
 
-    // Fetch all comments.
+    // Fetch all top-level comments.
     final commentsResponse = (await _connection.query(
       _pollCommentsQuery,
       substitutionValues: {
@@ -77,7 +78,7 @@ class PollService {
       },
     ))
         .mapRows(Comment.fromJson)
-        .where((comment) => user.isAdmin || comment.isApproved);
+        .where((comment) => (user.isAdmin || comment.isApproved) && comment.parentId == 0);
 
     // For all comments the user has voted on, fetch the report details.
     final comments = await Future.wait(commentsResponse.map((comment) async =>
@@ -86,8 +87,42 @@ class PollService {
             : comment));
 
     return Response.ok(
-        json.encode(PollDetailsResponse(poll: poll, comments: comments)));
+        json.encode(PollDetailsResponse(parent: poll, messages: comments)));
   }
+    
+  @Route.get('/details/comment/<commentId>')
+  Future<Response> getCommentReplies(Request request) async {
+    final user = await request.decodeAuth(_connection);
+
+    if (user == null) {
+      return Response.forbidden(null);
+    }
+    
+    final commentId = int.parse(request.params['commentId']!);
+
+    final comment = Comment.fromJson(
+      (await _connection.select('comment', where: {'id': commentId})).single);
+
+    // Fetch all of the IDs of replies the user has voted on.
+    final votedReplyIds =
+        (await _connection.select('vote', where: {'user_id': user.id}))
+            .map(Vote.fromJson)
+            .map((vote) => vote.commentId)
+            .toSet();
+
+    // Fetch all replies
+    final repliesResponse = (await _connection.select(
+        'comment', where: {'parent_id': commentId}
+    )).map(Comment.fromJson).where((reply) => user.isAdmin || reply.isApproved);
+
+    // For all replies the user has voted on, fetch the report details.
+    final replies = await Future.wait(repliesResponse.map((reply) async =>
+        votedReplyIds.contains(reply.id)
+            ? await _addStats(reply)
+            : reply));
+
+    return Response.ok(json.encode(CommentDetailsResponse(parent:comment, messages:replies)));
+  } 
 
   @Route.get('/comment/<commentId>')
   Future<Response> getCommentDetails(Request request) async {
@@ -105,7 +140,7 @@ class PollService {
     return Response.ok(json.encode(comment));
   }
 
-  @Route.get('/report/<pollId>')
+  @Route.get('/report/<pollId>/<parentId>')
   Future<Response> getReport(Request request) async {
     final user = await request.decodeAuth(_connection);
 
@@ -114,11 +149,12 @@ class PollService {
     }
 
     final pollId = int.parse(request.params['pollId']!);
-
+    final parentId = int.parse(request.params['parentId']!);
+        
     final commentsResponse =
-        (await _connection.select('comment', where: {'poll_id': pollId}))
+        (await _connection.select('comment', where: {'poll_id': pollId, 'parent_id' : parentId}))
             .map(Comment.fromJson)
-            .where((comment) => user.isAdmin || comment.isApproved);
+            .where((comment) => (user.isAdmin || comment.isApproved));
 
     final comments = await Future.wait(commentsResponse.map(_addStats));
 
@@ -159,6 +195,7 @@ class PollService {
 
     final dbResponse = await _connection.insert('comment', {
       'poll_id': poll.id,
+      'parent_id': addCommentRequest.parentId,  
       'user_id': user.id,
       'comment': addCommentRequest.comment,
       'timestamp': DateTime.now().millisecondsSinceEpoch,

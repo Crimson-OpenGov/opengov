@@ -5,7 +5,6 @@ import 'package:opengov_server/services/auth_service.dart';
 import 'package:opengov_server/services/feed_service.dart';
 import 'package:opengov_server/services/poll_service.dart';
 import 'package:opengov_server/services/user_service.dart';
-import 'package:opengov_server/services/reply_service.dart';
 import 'package:opengov_server/util/curse_words.dart';
 import 'package:opengov_server/util/firebase.dart';
 import 'package:postgres/postgres.dart';
@@ -15,7 +14,6 @@ import 'package:shelf_router/shelf_router.dart';
 
 void main(List<String> args) async {
   final connection = PostgreSQLConnection("localhost", 5432, "opengov",username: dbUsername, password: dbPassword);
-  //final connection = PostgreSQLConnection("localhost", 5432, "opengovdb",username: 'cc', password: 'c'); #test database catherine
   await connection.open();
 
   await CurseWords.setup();
@@ -30,7 +28,6 @@ void main(List<String> args) async {
         ..mount('/api/auth', AuthService(connection).router)
         ..mount('/api/feed', FeedService(connection).router)
         ..mount('/api/poll', PollService(connection).router)
-        ..mount('/api/replies', ReplyService(connection).router)
         ..mount('/api/user', UserService(connection).router));
 
   var host = '127.0.0.1';
@@ -40,7 +37,7 @@ void main(List<String> args) async {
     host = '192.168.2.198';
     return true;
   }());
-
+ 
 
   final server = await serve(handler, host, 8017);
 

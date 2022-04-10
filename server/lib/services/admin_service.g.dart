@@ -11,7 +11,6 @@ Router _$AdminServiceRouter(AdminService service) {
   router.add('POST', r'/create-or-update-poll', service.createOrUpdatePoll);
   router.add('POST', r'/delete-poll', service.deletePoll);
   router.add('POST', r'/update-comment', service.updateComment);
-  router.add('POST', r'/update-reply', service.updateReply);
   router.add('POST', r'/create-or-update-announcement',
       service.createOrUpdateAnnouncement);
   return router;

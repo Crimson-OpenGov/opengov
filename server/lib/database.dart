@@ -21,7 +21,7 @@ extension PostgresExtension on PostgreSQLExecutionContext {
 
     var query = [
       'SELECT * FROM "$table"',
-      if (where != null) ...['WHERE', _listMap(where, 'Where')],
+      if (where != null) ...['WHERE', _listMap(where, 'Where', separator: ' AND ')],
       if (orderBy != null) 'ORDER BY $orderBy',
     ];
 

@@ -12,6 +12,7 @@ CREATE TABLE comment
 (
     id          SERIAL,
     poll_id     INTEGER NOT NULL,
+    parent_id   INTEGER,
     user_id     INTEGER,
     comment     TEXT    NOT NULL,
     timestamp   BIGINT  NOT NULL,
@@ -51,24 +52,4 @@ CREATE TABLE announcement
     description TEXT   NOT NULL,
     posted_time BIGINT NOT NULL,
     emoji       TEXT DEFAULT NULL
-);
-
-CREATE TABLE reply
-(
-    id          SERIAL,
-    comment_id  INTEGER NOT NULL,
-    user_id     INTEGER,
-    reply	TEXT    NOT NULL,
-    timestamp   BIGINT  NOT NULL,
-    is_approved BOOLEAN NOT NULL DEFAULT FALSE
-);
-
-CREATE TABLE votereply
-(
-    id         SERIAL,
-    user_id    INTEGER,
-    reply_id   INTEGER NOT NULL,
-    score      INTEGER NOT NULL,
-    reason     TEXT DEFAULT NULL,
-    timestamp  BIGINT  NOT NULL
 );

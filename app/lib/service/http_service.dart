@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:opengov_app/common.dart';
 import 'package:opengov_common/actions/add_comment.dart';
-import 'package:opengov_common/actions/add_reply.dart';
 import 'package:opengov_common/actions/create_update.dart';
 import 'package:opengov_common/actions/delete_poll.dart';
 import 'package:opengov_common/actions/feed.dart';
@@ -13,9 +12,7 @@ import 'package:opengov_common/actions/login.dart';
 import 'package:opengov_common/actions/announcement_details.dart';
 import 'package:opengov_common/actions/poll_details.dart';
 import 'package:opengov_common/actions/update_comment.dart';
-import 'package:opengov_common/actions/update_reply.dart';
 import 'package:opengov_common/actions/vote.dart';
-import 'package:opengov_common/actions/vote_reply.dart';
 import 'package:opengov_common/common.dart';
 import 'package:opengov_common/models/announcement.dart';
 import 'package:opengov_common/models/comment.dart';
@@ -24,8 +21,6 @@ import 'package:opengov_common/models/poll.dart';
 import 'package:opengov_common/models/report.dart';
 import 'package:opengov_common/models/token.dart';
 import 'package:opengov_common/models/user.dart';
-import 'package:opengov_common/models/reply.dart';
-import 'package:opengov_common/models/reply_report.dart';
 import 'package:opengov_common/actions/comment_details.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -34,10 +29,7 @@ class HttpService {
   static final _client = Client();
 
   static Uri _uri(String path) {
-    /* var scheme = 'http';
-    var host = '127.0.0.1';
-    int port = 8017; testing catherine database */ 
-    var scheme = 'https'
+    var scheme = 'https';
     var host = 'app.crimsonopengov.us';
     int? port;
     
@@ -47,6 +39,7 @@ class HttpService {
       port = 8017;
       return true;
     }());
+    
 
     return Uri(scheme: scheme, host: host, port: port, path: 'api/$path');
   }
@@ -93,12 +86,15 @@ class HttpService {
   static Future<Comment?> getCommentDetails(CommentBase comment) =>
       _get('poll/comment/${comment.id}', Comment.fromJson);
 
-  static Future<Report?> getReport(Poll poll) =>
-      _get('poll/report/${poll.id}', Report.fromJson);
+  static Future<Report?> getReport(int pollId, int parentId) =>
+      _get('poll/report/$pollId/$parentId', Report.fromJson);
 
   static Future<AddCommentResponse?> addComment(AddCommentRequest request) =>
       _post('poll/add-comment', request.toJson(), AddCommentResponse.fromJson);
 
+  static Future<CommentDetailsResponse?> getCommentReplies(int commentId) =>
+      _get('poll/details/comment/$commentId', CommentDetailsResponse.fromJson);
+      
   static Future<GenericResponse?> vote(VoteRequest request) =>
       _post('poll/vote', request.toJson(), GenericResponse.fromJson);
 
@@ -111,9 +107,6 @@ class HttpService {
 
   static Future<GenericResponse?> updateComment(UpdateCommentRequest request) =>
       _post('admin/update-comment', request.toJson(), GenericResponse.fromJson);
-
-  static Future<GenericResponse?> updateReply(UpdateReplyRequest request) =>
-      _post('admin/update-reply', request.toJson(), GenericResponse.fromJson);
 
   static Future<GenericResponse?> login(LoginRequest request) =>
       _post('auth/login', request.toJson(), GenericResponse.fromJson);
@@ -136,22 +129,6 @@ class HttpService {
 
   static Future<FeedResponse?> getRandomFeed() =>
       _get('feed/random', FeedResponse.fromJson);
-
-  static Future<CommentDetailsResponse?> getCommentReplies(int commentId) =>
-      _get('replies/$commentId', CommentDetailsResponse.fromJson);
-
-  static Future<AddReplyResponse?> addReply(AddReplyRequest request) =>
-      _post('replies/add-reply', request.toJson(), AddReplyResponse.fromJson);
-
-  static Future<GenericResponse?> voteReply(VoteReplyRequest request) =>
-      _post('replies/vote-reply', request.toJson(), GenericResponse.fromJson);
-
-  static Future<Reply?> getReplyDetails(ReplyBase reply) =>
-      _get('replies/reply/${reply.id}', Reply.fromJson);
-
-  static Future<ReplyReport?> getReplyReport(Comment comment) =>
-      _get('replies/report/${comment.id}', ReplyReport.fromJson);
-
       
   static Future<User?> getMe() => _get('user/me', User.fromJson);
 }

@@ -7,8 +7,9 @@ part 'add_comment.g.dart';
 class AddCommentRequest {
   final int pollId;
   final String comment;
-
-  const AddCommentRequest({required this.pollId, required this.comment});
+  final int? parentId; //null if top-level comment
+  
+  const AddCommentRequest({required this.pollId, required this.comment, required this.parentId});
 
   factory AddCommentRequest.fromJson(Json json) =>
       _$AddCommentRequestFromJson(json);

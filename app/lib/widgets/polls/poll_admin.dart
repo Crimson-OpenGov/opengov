@@ -9,12 +9,12 @@ import 'package:opengov_common/actions/delete_poll.dart';
 import 'package:opengov_common/actions/update_comment.dart';
 import 'package:opengov_common/models/comment.dart';
 import 'package:opengov_common/models/poll.dart';
-import 'package:opengov_app/widgets/polls/comment_admin.dart';
 
 class PollAdmin extends StatefulWidget {
   final Poll poll;
-
-  const PollAdmin({required this.poll});
+  final Comment? comment;
+  final isReply;
+  const PollAdmin({required this.poll, required this.comment, required this.isReply});
 
   @override
   _PollAdminState createState() => _PollAdminState();
@@ -22,13 +22,16 @@ class PollAdmin extends StatefulWidget {
 
 class _PollAdminState extends State<PollAdmin> {
   late Poll _poll;
+  late Comment? _comment;
   Iterable<Comment>? _moderationQueue;
   Iterable<Comment>? _approvedComments;
-
+  Map<String, dynamic>? _parentText;
+  
   @override
   void initState() {
     super.initState();
     _poll = widget.poll;
+    _comment = widget.comment;
     _fetchComments();
   }
 
@@ -36,21 +39,35 @@ class _PollAdminState extends State<PollAdmin> {
   void didUpdateWidget(covariant PollAdmin oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.poll != oldWidget.poll) {
+    if (widget.poll != oldWidget.poll || widget.comment != oldWidget.comment) {
       _poll = widget.poll;
+      _comment = widget.comment;
       _fetchComments();
     }
   }
 
   Future<void> _fetchComments() async {
-    final response = await HttpService.getReport(_poll);
-
+    final response;
+    if (!widget.isReply) {
+      response = await HttpService.getReport(_poll.id,0);
+      setState(() {_parentText = _poll.details;});
+    } else {
+      response = await HttpService.getReport(_poll.id, _comment!.id);
+      setState(() {_parentText = _comment!.details;});
+    }
+    
     if (response != null) {
       setState(() {
-        _moderationQueue =
-            response.comments.where((comment) => !comment.isApproved);
-        _approvedComments =
-            response.comments.where((comment) => comment.isApproved);
+          _moderationQueue =
+          response.comments.where((comment) => !comment.isApproved);
+          _approvedComments =
+          response.comments.where((comment) => !!comment.isApproved); //??????
+            /* The above line does not seem to work without the '!!' 
+            If I replace lines 52-57 above with: 
+            'final response = await HttpService.getReport(_poll.id,0);'
+            then I don't need the !!, however when I use the if (!widget.isReply)...
+             above, then I do need the !!. I have no clue what is going on here.
+          */
       });
     }
   }
@@ -69,7 +86,7 @@ class _PollAdminState extends State<PollAdmin> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => CommentAdmin(comment: comment)));
+        builder: (_) => PollAdmin(poll: _poll, comment: comment, isReply: true)));
   }
 
   
@@ -140,29 +157,31 @@ class _PollAdminState extends State<PollAdmin> {
                 ),
                 tooltip: 'Approve comment',
               ),
-            const SizedBox(width: 16),
-            TextButton(
-              style: ButtonStyle(
-                backgroundColor:
-                MaterialStateProperty.all(Colors.blue),
-                side: MaterialStateProperty.all(BorderSide.none),
+            if (!widget.isReply) ...[ 
+              const SizedBox(width: 16),
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                  MaterialStateProperty.all(Colors.blue),
+                  side: MaterialStateProperty.all(BorderSide.none),
+                ),
+                onPressed: () {
+                  _onModeratePressed(comment);
+                },
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    //to change the icon for reply:
+                    Icon(Icons.redo, color: Colors.white),
+                    SizedBox(width: 8),
+                    Text(
+                      'Moderate Replies',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ],
+                ),
               ),
-              onPressed: () {
-                _onModeratePressed(comment);
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  //to change the icon for reply:
-                  Icon(Icons.redo, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text(
-                    'Moderate Replies',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ],
-              ),
-            ),
+            ],
           ],
         ),
       );
@@ -192,16 +211,16 @@ class _PollAdminState extends State<PollAdmin> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          _poll.topic,
+                          _parentText!['topic'],
                           style: const TextStyle(
                             fontSize: 26,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
                         const SizedBox(height: 16),
-                        if (_poll.description != null) ...[
+                        if (_parentText!['description'] != null) ...[
                           LinkedText(
-                            _poll.description!,
+                            _parentText!['description']!,
                             fontSize: 18,
                           ),
                           const SizedBox(height: 16),

@@ -63,9 +63,10 @@ class _FeedViewState extends State<FeedView> {
                     CommentList(
                       comments: _comments!,
                       onActionPressed: _fetchComment,
+                      isReply: false,
                     ),
                     OutlinedButton(
-                      child: const Text('Load more comments'),
+                      child: const Text('Load more messages'),
                       onPressed: _fetchData,
                     ),
                   ],

@@ -5,8 +5,9 @@ import 'package:opengov_common/models/comment.dart';
 class CommentList extends StatefulWidget {
   final List<CommentBase> comments;
   final void Function(int i) onActionPressed;
-
-  const CommentList({required this.comments, required this.onActionPressed});
+  final isReply;
+  
+  const CommentList({required this.comments, required this.onActionPressed, required this.isReply});
 
   @override
   State<StatefulWidget> createState() => _CommentListState();
@@ -20,7 +21,7 @@ class _CommentListState extends State<CommentList> {
 
   @override
   Widget build(BuildContext context) => widget.comments.isEmpty
-      ? const Text('No more comments.')
+      ? const Text('No more messages.')
       : Column(
           children: [
             for (var i = 0; i < widget.comments.length; i++)
@@ -39,6 +40,7 @@ class _CommentListState extends State<CommentList> {
                     onActionPressed: () {
                       widget.onActionPressed(i);
                     },
+                    isReply:widget.isReply,
                   ),
                 ),
               ),
